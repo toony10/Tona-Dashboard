@@ -76,6 +76,9 @@ const cardPresetGroups = [
       "default",
       "near-black",
       "carbon",
+      "obsidian",
+      "github",
+      "dark-gray",
       "graphite",
       "charcoal",
       "zinc",
@@ -85,16 +88,25 @@ const cardPresetGroups = [
     key: "coolTones",
     ids: [
       "slate",
+      "slate-blue",
       "storm",
       "blue-gray",
       "navy",
+      "deep-blue",
       "midnight",
       "indigo-night",
     ],
   },
   {
     key: "warmTones",
-    ids: ["forest", "espresso", "wine"],
+    ids: [
+      "teal-dark",
+      "forest",
+      "olive",
+      "espresso",
+      "wine",
+      "purple-haze",
+    ],
   },
 ] as const satisfies ReadonlyArray<{
   key: string
@@ -570,6 +582,8 @@ export function DarkBackgroundPicker() {
           </section>
         )) }
       </div>
+
+      <hr className="border-border" />
 
       <div className="space-y-8">
         <div className="space-y-2">

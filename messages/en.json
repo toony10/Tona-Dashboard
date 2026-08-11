@@ -625,17 +625,25 @@
         "zinc": "Zinc",
         "graphite": "Graphite",
         "charcoal": "Charcoal",
+        "darkGray": "Dark gray",
+        "carbon": "Carbon",
+        "nearBlack": "Near black",
+        "github": "GitHub dark",
+        "obsidian": "Obsidian",
         "slate": "Slate",
+        "slateBlue": "Slate blue",
         "storm": "Storm",
         "blueGray": "Blue gray",
         "navy": "Navy",
+        "deepBlue": "Deep blue",
         "midnight": "Midnight",
         "indigoNight": "Indigo night",
+        "purpleHaze": "Purple haze",
+        "tealDark": "Teal dark",
         "forest": "Forest",
+        "olive": "Olive",
         "espresso": "Espresso",
-        "wine": "Wine",
-        "carbon": "Carbon",
-        "nearBlack": "Near black"
+        "wine": "Wine"
       }
     },
     "groups": {

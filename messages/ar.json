@@ -625,17 +625,25 @@
         "zinc": "زنك",
         "graphite": "غرافيت",
         "charcoal": "فحمي",
+        "darkGray": "رمادي داكن",
+        "carbon": "كربون",
+        "nearBlack": "أسود تقريباً",
+        "github": "وضع GitHub الداكن",
+        "obsidian": "سبج",
         "slate": "أردوازي",
+        "slateBlue": "أزرق رمادي",
         "storm": "عاصفة",
         "blueGray": "رمادي مزرق",
         "navy": "كحلي",
+        "deepBlue": "أزرق عميق",
         "midnight": "منتصف الليل",
         "indigoNight": "نيلي ليلي",
+        "purpleHaze": "ضباب بنفسجي",
+        "tealDark": "تركواز داكن",
         "forest": "غابة",
+        "olive": "زيتوني",
         "espresso": "إسبريسو",
-        "wine": "نبيذي",
-        "carbon": "كربون",
-        "nearBlack": "أسود تقريباً"
+        "wine": "نبيذي"
       }
     },
     "groups": {

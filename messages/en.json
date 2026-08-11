@@ -1,0 +1,699 @@
+{
+  "Metadata": {
+    "title": "Starter Dashboard",
+    "description": "Starter Dashboard using Shadcn and Next.js."
+  },
+  "Common": {
+    "loading": "Loading...",
+    "close": "Close",
+    "all": "All",
+    "searchPages": "Search pages...",
+    "searchShort": "Search...",
+    "commandPlaceholder": "Type a command or search...",
+    "noResults": "No results found.",
+    "pages": "Pages",
+    "toggleTheme": "Toggle theme",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "themeSystem": "System",
+    "myAccount": "My Account",
+    "support": "Support",
+    "logout": "Logout",
+    "toggleSidebar": "Toggle Sidebar",
+    "sidebar": "Sidebar",
+    "sidebarMobileDesc": "Displays the mobile sidebar.",
+    "commandPalette": "Command Palette",
+    "commandDesc": "Search for a command to run...",
+    "pagination": "pagination",
+    "previous": "Previous",
+    "next": "Next",
+    "morePages": "More pages",
+    "logoAlt": "Starter Dash",
+    "backToSettings": "Back to settings",
+    "openAnalytics": "Open analytics",
+    "viewFullTable": "View full table",
+    "browseAllFilters": "Browse all filters",
+    "fromLastMonth": "from last month",
+    "language": "Language",
+    "english": "English",
+    "arabic": "Arabic"
+  },
+  "Nav": {
+    "dashboard": "Dashboard",
+    "forms": "Forms",
+    "formsRichText": "Rich Text Editor",
+    "formsImageUploader": "Image Uploader",
+    "formsFileUploader": "File Uploader",
+    "formsDateInput": "Date Input",
+    "filters": "Filters",
+    "filtersPagination": "Pagination",
+    "filtersSelect": "Select Filter",
+    "filtersMultiSelect": "Multi Select Filter",
+    "filtersTabs": "Tabs Filter",
+    "filtersDate": "Date Filter",
+    "filtersSearch": "Search Filter",
+    "filtersLimit": "Limit Filter",
+    "filtersReset": "Reset Filters",
+    "charts": "Charts",
+    "chartsAnalytics": "Dashboard Charts",
+    "table": "Table",
+    "settings": "Settings",
+    "settingsDarkTheme": "Dark Theme Colors"
+  },
+  "Auth": {
+    "pageTitle": "Sign in | Starter Dash",
+    "pageDescription": "Sign in to your Starter Dash account",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot password?",
+    "emailPlaceholder": "you@company.com",
+    "passwordPlaceholder": "Enter your password",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "submit": "Sign in"
+  },
+  "Dashboard": {
+    "title": "Starter Dashboard",
+    "description": "A production-ready admin shell with reusable charts, tables, filters, forms, and settings — explore each module below.",
+    "analyticsOverviewTitle": "Analytics overview",
+    "analyticsOverviewDesc": "Live chart components from the analytics module.",
+    "exploreModulesTitle": "Explore modules",
+    "exploreModulesDesc": "Jump into each feature area of the dashboard.",
+    "recentProductsTitle": "Recent products",
+    "recentProductsDesc": "DataTable with sorting, formatting, and row actions.",
+    "filterToolkitTitle": "Filter toolkit",
+    "filterToolkitDesc": "Composable filters that sync state to the URL — try them here.",
+    "quickFilterDemoTitle": "Quick filter demo",
+    "quickFilterDemoDesc": "Search and limit controls update the page URL. Reset clears active params.",
+    "modules": {
+      "forms": {
+        "description": "Rich text editing, image uploads, file uploads, and date-time inputs with validation and previews.",
+        "highlights": ["Rich Text Editor", "Image Uploader", "File Uploader", "Date Input"]
+      },
+      "filters": {
+        "description": "URL-synced filters for search, pagination, selects, limits, and one-click reset.",
+        "highlights": ["Search", "Pagination", "Select", "Limit", "Reset"]
+      },
+      "charts": {
+        "description": "Recharts-powered line, area, bar, pie, and radial charts with shadcn styling.",
+        "highlights": ["KPI cards", "Line & area", "Bar & pie", "Radial"]
+      },
+      "table": {
+        "description": "Sortable data tables built with TanStack Table and shadcn/ui primitives.",
+        "highlights": ["Column sorting", "Row actions", "Loading states"]
+      },
+      "settings": {
+        "description": "Customize dashboard appearance, including curated dark theme backgrounds.",
+        "highlights": ["Dark theme presets", "Shell & sidebar colors"]
+      }
+    }
+  },
+  "Filters": {
+    "searchPlaceholder": "Search...",
+    "datePlaceholder": "Pick a date",
+    "limitPlaceholder": "Rows per page",
+    "selectPlaceholder": "Choose an option",
+    "multiSelectPlaceholder": "Choose options",
+    "nSelected": "{count} selected",
+    "resetLabel": "Reset filters",
+    "searchProducts": "Search products...",
+    "filterByStatus": "Filter by status",
+    "filterByCategory": "Filter by category",
+    "filterByTags": "Filter by tags",
+    "sortBy": "Sort by",
+    "options": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "pending": "Pending",
+      "archived": "Archived",
+      "draft": "Draft",
+      "electronics": "Electronics",
+      "clothing": "Clothing",
+      "books": "Books",
+      "homeGarden": "Home & Garden",
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "urgent": "Urgent",
+      "newest": "Newest first",
+      "oldest": "Oldest first",
+      "nameAsc": "Name A–Z",
+      "nameDesc": "Name Z–A",
+      "featured": "Featured",
+      "onSale": "On sale",
+      "new": "New arrival",
+      "limited": "Limited"
+    },
+    "index": {
+      "title": "Filters",
+      "description": "Filters for the application."
+    },
+    "cards": {
+      "pagination": {
+        "title": "Pagination",
+        "description": "Pagination for the application."
+      },
+      "select": {
+        "title": "Select Filter",
+        "description": "Dropdown filter that syncs a selected value to URL search params."
+      },
+      "multiSelect": {
+        "title": "Multiple Select Filter",
+        "description": "Dropdown filter that syncs multiple selected values to URL search params as comma-separated lists."
+      },
+      "tabs": {
+        "title": "Tabs Filter",
+        "description": "Tabbed filter with animated indicator that syncs to URL search params."
+      },
+      "search": {
+        "title": "Search Filter",
+        "description": "Text search that syncs the query to URL search params."
+      },
+      "date": {
+        "title": "Date Filter",
+        "description": "Date picker that syncs selected dates to URL search params in ISO format."
+      },
+      "limit": {
+        "title": "Limit Filter",
+        "description": "Select filter that syncs the page size limit to URL search params."
+      },
+      "reset": {
+        "title": "Reset Filters",
+        "description": "Button that clears selected search params from the URL."
+      }
+    },
+    "pages": {
+      "pagination": {
+        "title": "Pagination",
+        "description": "Pagination for the application."
+      },
+      "select": {
+        "title": "Select Filter",
+        "description": "Dropdown filters that sync selected values to URL search params with debounced updates.",
+        "statusTitle": "Status",
+        "statusDesc": "Writes to the \"status\" search param.",
+        "categoryTitle": "Category",
+        "categoryDesc": "Writes to the \"category\" search param.",
+        "sortTitle": "Sort order",
+        "sortDesc": "Writes to the \"sort\" search param.",
+        "currentParamsTitle": "Current search params",
+        "currentParamsDesc": "URL updates are debounced by {ms}ms after each selection.",
+        "noParamsHint": "No search params set yet. Pick a value above to update the URL."
+      },
+      "multiSelect": {
+        "title": "Multiple Select Filter",
+        "description": "Dropdown filters that sync multiple selected values to URL search params as comma-separated lists.",
+        "statusTitle": "Status",
+        "statusDesc": "Writes to the \"status\" param, e.g. status=active,pending.",
+        "categoryTitle": "Category",
+        "categoryDesc": "Writes to the \"category\" param, e.g. category=electronics,books.",
+        "tagsTitle": "Tags",
+        "tagsDesc": "Writes to the \"tags\" param, e.g. tags=featured,new,on-sale.",
+        "currentParamsTitle": "Current search params",
+        "currentParamsDesc": "URL updates are debounced by {ms}ms after each selection.",
+        "noParamsHint": "No search params set yet. Pick values above to update the URL."
+      },
+      "tabs": {
+        "title": "Tabs Filter",
+        "description": "Tabbed filters that sync the selected option to URL search params with a smooth sliding indicator.",
+        "statusTitle": "Status",
+        "statusDesc": "Writes to the \"status\" search param. \"All\" clears the filter.",
+        "categoryTitle": "Category",
+        "categoryDesc": "Writes to the \"category\" search param.",
+        "priorityTitle": "Priority",
+        "priorityDesc": "Writes to the \"priority\" search param.",
+        "currentParamsTitle": "Current search params",
+        "currentParamsDesc": "URL updates are debounced by {ms}ms after each selection.",
+        "noParamsHint": "No search params set yet. Pick a tab above to update the URL."
+      },
+      "date": {
+        "title": "Date Filter",
+        "description": "Date picker filters that sync selected dates to URL search params in ISO format.",
+        "fromTitle": "From",
+        "fromDesc": "Writes to the \"from\" search param as an ISO datetime (e.g. 2026-07-03T14:21:46.707Z).",
+        "toTitle": "To",
+        "toDesc": "Writes to the \"to\" search param as an ISO datetime (e.g. 2026-07-03T14:21:46.707Z).",
+        "startDatePlaceholder": "Start date",
+        "endDatePlaceholder": "End date",
+        "currentParamsTitle": "Current search params",
+        "currentParamsDesc": "URL updates are debounced by {ms}ms after each selection.",
+        "noParamsHint": "No search params set yet. Pick a date above to update the URL."
+      },
+      "search": {
+        "title": "Search Filter",
+        "description": "Text search that syncs the query to URL search params with debounced updates.",
+        "defaultQueryTitle": "Default query",
+        "defaultQueryDesc": "Writes to the \"q\" search param by default.",
+        "customParamTitle": "Custom param key",
+        "customParamDesc": "Writes to the \"name\" search param when paramKey is set.",
+        "byNamePlaceholder": "Search by name...",
+        "currentParamsTitle": "Current search params",
+        "currentParamsDesc": "URL updates are debounced by {ms}ms after each keystroke.",
+        "noParamsHint": "No search params set yet. Type in the search field above to update the URL."
+      },
+      "limit": {
+        "title": "Limit Filter",
+        "description": "Select how many rows to show per page, synced to URL search params with debounced updates.",
+        "defaultLimitTitle": "Default limit",
+        "defaultLimitDesc": "Writes to the \"limit\" search param by default.",
+        "customOptionsTitle": "Custom options",
+        "customOptionsDesc": "Writes to the \"perPage\" search param with a custom set of values.",
+        "currentParamsTitle": "Current search params",
+        "currentParamsDesc": "URL updates are debounced by {ms}ms after each selection.",
+        "noParamsHint": "No search params set yet. Pick a limit above to update the URL."
+      },
+      "reset": {
+        "title": "Reset Filters",
+        "description": "Clear selected search params from the URL in one action.",
+        "toolbarTitle": "Filter toolbar",
+        "toolbarDesc": "Reset removes \"q\", \"status\", \"limit\", and \"page\" from the URL.",
+        "searchLabel": "Search",
+        "statusLabel": "Status",
+        "limitLabel": "Limit",
+        "statusActive": "Active",
+        "statusDraft": "Draft",
+        "statusArchived": "Archived",
+        "currentParamsTitle": "Current search params",
+        "currentParamsDesc": "Reset is disabled until at least one managed param is present.",
+        "noParamsHint": "No search params set yet. Change a filter above to update the URL."
+      }
+    }
+  },
+  "Forms": {
+    "index": {
+      "title": "Forms",
+      "description": "Reusable form components for rich text, images, file uploads, and date-time inputs."
+    },
+    "cards": {
+      "richText": {
+        "title": "Rich Text Editor",
+        "description": "A full-featured WYSIWYG editor with formatting, lists, links, and color options."
+      },
+      "imageUploader": {
+        "title": "Image Uploader",
+        "description": "Drag and drop or browse to upload images with preview thumbnails and size limits."
+      },
+      "fileUploader": {
+        "title": "File Uploader",
+        "description": "Upload documents, spreadsheets, and archives with validation and file type icons."
+      },
+      "dateInput": {
+        "title": "Date Input",
+        "description": "Calendar date picker with optional time controls for form fields and native submit support."
+      }
+    },
+    "pages": {
+      "richText": {
+        "title": "Rich Text Editor",
+        "description": "A full-featured WYSIWYG editor with formatting, lists, links, and color options."
+      },
+      "imageUploader": {
+        "title": "Image Uploader",
+        "description": "Drag and drop or browse to upload images with preview thumbnails and size limits."
+      },
+      "fileUploader": {
+        "title": "File Uploader",
+        "description": "Upload documents, spreadsheets, and archives with validation and file type icons."
+      },
+      "dateInput": {
+        "title": "Date Input",
+        "description": "Form-ready date and time picker with calendar, time controls, and optional hidden field support.",
+        "dateTimeTitle": "Date & time",
+        "dateTimeDesc": "Default 12-hour picker with hour, minute, and AM/PM controls.",
+        "dateOnlyTitle": "Date only",
+        "dateOnlyDesc": "Calendar-only selection without the time panel.",
+        "withSecondsTitle": "With seconds",
+        "withSecondsDesc": "12-hour clock with seconds and AM/PM.",
+        "minMaxTitle": "Min / max range",
+        "minMaxDesc": "Only dates within the next 30 days are selectable.",
+        "controlledTitle": "Controlled",
+        "controlledDesc": "Uses value and onChange to keep selection in React state.",
+        "nativeSubmitTitle": "Native form submit",
+        "nativeSubmitDesc": "Uses the optional name prop to submit an ISO datetime via a hidden input.",
+        "submitButton": "Submit form",
+        "submittedValueLabel": "Submitted value",
+        "emptyValue": "(empty)",
+        "noDateSelected": "No date selected.",
+        "localLabel": "Local:",
+        "isoLabel": "ISO:",
+        "schedulePlaceholder": "Schedule an event",
+        "pickDatePlaceholder": "Pick a date",
+        "pickDateTimePlaceholder": "Pick date and time",
+        "within30DaysPlaceholder": "Within 30 days",
+        "controlledPlaceholder": "Controlled picker",
+        "eventDateTimePlaceholder": "Event date & time"
+      }
+    },
+    "dateInput": {
+      "placeholder": "Pick a date and time",
+      "clearDate": "Clear date",
+      "time": "Time",
+      "hour": "Hour",
+      "hours": "Hours",
+      "minutes": "Min",
+      "seconds": "Sec",
+      "period": "Period",
+      "am": "AM",
+      "pm": "PM",
+      "selectDateFirst": "Select a date first, then adjust the time.",
+      "now": "Now",
+      "done": "Done"
+    },
+    "fileUploader": {
+      "ariaUploadFiles": "Upload files",
+      "dropHere": "Drop files here",
+      "clickToBrowse": "Click to browse",
+      "orDragDrop": "or drag & drop",
+      "hintTemplate": "PDF, Word, Excel & more · up to {maxFiles} files · max {maxSize} each",
+      "typeNotAllowed": "The type not allowed",
+      "exceedsSize": "Exceeds {maxSize}",
+      "filesAttached": "{count} files attached",
+      "capacityTemplate": "{percent}% capacity",
+      "maxReached": "Maximum of {maxFiles} files reached",
+      "addAnotherFile": "Add another file",
+      "removeFile": "Remove {name}"
+    },
+    "imageUploader": {
+      "ariaUploadImages": "Upload images",
+      "dropHere": "Drop images here",
+      "clickToUpload": "Click to upload",
+      "orDragDrop": "or drag & drop",
+      "hintTemplate": "Up to {maxImages} images · max {maxSize} each",
+      "addMore": "Add more",
+      "addMoreImagesAria": "Add more images",
+      "limitReached": "limit reached",
+      "previewImage": "Preview image",
+      "removeImage": "Remove image",
+      "imagePreviewAria": "Image preview",
+      "closePreview": "Close preview",
+      "rejectType": "{count} files skipped — unsupported type",
+      "rejectSize": "{count} files skipped — larger than {maxSize}",
+      "rejectDuplicate": "{count} duplicate files skipped",
+      "rejectMax": "{count} files skipped — limit of {maxImages} reached"
+    },
+    "richText": {
+      "placeholder": "Write something…",
+      "undo": "Undo (⌘Z)",
+      "redo": "Redo (⌘⇧Z)",
+      "textStyle": "Text style",
+      "paragraph": "Paragraph",
+      "heading1": "Heading 1",
+      "heading2": "Heading 2",
+      "heading3": "Heading 3",
+      "bold": "Bold (⌘B)",
+      "italic": "Italic (⌘I)",
+      "underline": "Underline (⌘U)",
+      "strikethrough": "Strikethrough",
+      "textColor": "Text color",
+      "highlight": "Highlight",
+      "highlightColor": "Highlight color",
+      "alignLeft": "Align left",
+      "alignCenter": "Align center",
+      "alignRight": "Align right",
+      "justify": "Justify",
+      "bulletList": "Bullet list",
+      "numberedList": "Numbered list",
+      "blockquote": "Blockquote",
+      "inlineCode": "Inline code",
+      "codeBlock": "Code block",
+      "divider": "Divider",
+      "addLink": "Add link",
+      "removeLink": "Remove link",
+      "enterUrl": "Enter URL:",
+      "colors": {
+        "default": "Default",
+        "red": "Red",
+        "orange": "Orange",
+        "amber": "Amber",
+        "green": "Green",
+        "teal": "Teal",
+        "blue": "Blue",
+        "violet": "Violet",
+        "pink": "Pink",
+        "slate": "Slate"
+      },
+      "highlightColors": {
+        "none": "None",
+        "yellow": "Yellow",
+        "green": "Green",
+        "blue": "Blue",
+        "pink": "Pink",
+        "orange": "Orange",
+        "purple": "Purple"
+      }
+    }
+  },
+  "Charts": {
+    "index": {
+      "title": "Charts",
+      "description": "Recharts-powered chart components styled with shadcn/ui for modern dashboards."
+    },
+    "cards": {
+      "analyticsDashboard": {
+        "title": "Analytics Dashboard",
+        "description": "A full analytics view with line, area, bar, pie, and radial charts using dummy data."
+      }
+    },
+    "pages": {
+      "analytics": {
+        "title": "Analytics Dashboard",
+        "description": "The most common chart types used in modern dashboards, powered by Recharts."
+      }
+    },
+    "kpi": {
+      "totalRevenueTitle": "Total Revenue",
+      "activeUsersTitle": "Active Users",
+      "conversionRateTitle": "Conversion Rate",
+      "avgOrderValueTitle": "Avg. Order Value"
+    },
+    "revenue": {
+      "title": "Revenue Overview",
+      "description": "Monthly revenue vs expenses for the past year",
+      "trendingUp": "Trending up by 12.5% this year",
+      "seriesRevenue": "Revenue",
+      "seriesExpenses": "Expenses"
+    },
+    "visitors": {
+      "title": "Visitor Traffic",
+      "description": "Stacked area chart by device type"
+    },
+    "weeklyActivity": {
+      "title": "Weekly Activity",
+      "description": "Orders and returns per day",
+      "seriesOrders": "Orders",
+      "seriesReturns": "Returns"
+    },
+    "salesByCategory": {
+      "title": "Sales by Category",
+      "description": "Horizontal bar chart of top categories",
+      "seriesSales": "Sales"
+    },
+    "trafficSources": {
+      "title": "Traffic Sources",
+      "description": "Donut chart of visitor acquisition channels",
+      "totalVisitorsLabel": "Total Visitors",
+      "footer": "Organic search leads at 36%",
+      "seriesVisitors": "Visitors"
+    },
+    "conversionGoal": {
+      "title": "Conversion Goal",
+      "description": "Radial progress toward monthly target",
+      "ofGoal": "of goal",
+      "onTrack": "On track to hit target",
+      "seriesConversion": "Conversion"
+    },
+    "months": {
+      "jan": "Jan",
+      "feb": "Feb",
+      "mar": "Mar",
+      "apr": "Apr",
+      "may": "May",
+      "jun": "Jun",
+      "jul": "Jul",
+      "aug": "Aug",
+      "sep": "Sep",
+      "oct": "Oct",
+      "nov": "Nov",
+      "dec": "Dec"
+    },
+    "weekdays": {
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat",
+      "sun": "Sun"
+    },
+    "categories": {
+      "electronics": "Electronics",
+      "clothing": "Clothing",
+      "home": "Home",
+      "sports": "Sports",
+      "books": "Books"
+    },
+    "devices": {
+      "desktop": "Desktop",
+      "mobile": "Mobile",
+      "tablet": "Tablet"
+    },
+    "trafficSourceLabels": {
+      "organic": "Organic Search",
+      "direct": "Direct",
+      "social": "Social Media",
+      "referral": "Referral",
+      "email": "Email"
+    }
+  },
+  "Table": {
+    "page": {
+      "title": "Table",
+      "description": "A reusable DataTable component powered by TanStack Table and shadcn/ui."
+    },
+    "columns": {
+      "id": "ID",
+      "product": "Product",
+      "category": "Category",
+      "price": "Price",
+      "status": "Status"
+    },
+    "status": {
+      "active": "active",
+      "draft": "draft",
+      "archived": "archived"
+    },
+    "empty": "No results.",
+    "products": {
+      "prd001": { "name": "Wireless Headphones", "category": "Electronics" },
+      "prd002": { "name": "Ergonomic Office Chair", "category": "Furniture" },
+      "prd003": { "name": "Stainless Water Bottle", "category": "Accessories" },
+      "prd004": { "name": "Mechanical Keyboard", "category": "Electronics" },
+      "prd005": { "name": "Desk Lamp", "category": "Furniture" },
+      "prd006": { "name": "Laptop Stand", "category": "Accessories" },
+      "prd007": { "name": "USB-C Hub", "category": "Electronics" },
+      "prd008": { "name": "Monitor Arm", "category": "Furniture" }
+    }
+  },
+  "Settings": {
+    "index": {
+      "title": "Settings",
+      "description": "Customize how the dashboard looks and feels."
+    },
+    "cards": {
+      "darkTheme": {
+        "title": "Dark Theme Colors",
+        "description": "Pick a dark mode background for the dashboard shell and sidebar from curated presets."
+      }
+    },
+    "moreSettings": {
+      "title": "More settings",
+      "description": "Additional appearance options will land here soon."
+    },
+    "pages": {
+      "darkTheme": {
+        "title": "Dark Theme Colors",
+        "description": "Choose dark mode background and card colors for the dashboard shell and sidebar."
+      }
+    },
+    "presets": {
+      "background": {
+        "charcoal": "Charcoal",
+        "nearBlack": "Near black",
+        "slateBlue": "Slate blue",
+        "navy": "Navy",
+        "darkGray": "Dark gray",
+        "deepBlue": "Deep blue",
+        "blueGray": "Blue gray",
+        "graphite": "Graphite",
+        "zinc": "Zinc",
+        "carbon": "Carbon",
+        "github": "GitHub dark",
+        "midnight": "Midnight",
+        "indigoNight": "Indigo night",
+        "purpleHaze": "Purple haze",
+        "storm": "Storm",
+        "tealDark": "Teal dark",
+        "forest": "Forest",
+        "olive": "Olive",
+        "espresso": "Espresso",
+        "wine": "Wine",
+        "slate": "Slate",
+        "obsidian": "Obsidian"
+      },
+      "card": {
+        "default": "Default",
+        "zinc": "Zinc",
+        "graphite": "Graphite",
+        "charcoal": "Charcoal",
+        "slate": "Slate",
+        "storm": "Storm",
+        "blueGray": "Blue gray",
+        "navy": "Navy",
+        "midnight": "Midnight",
+        "indigoNight": "Indigo night",
+        "forest": "Forest",
+        "espresso": "Espresso",
+        "wine": "Wine",
+        "carbon": "Carbon",
+        "nearBlack": "Near black"
+      }
+    },
+    "groups": {
+      "background": {
+        "neutrals": {
+          "title": "Neutrals",
+          "description": "Clean, minimal foundations"
+        },
+        "bluesSlate": {
+          "title": "Blues & slate",
+          "description": "Cool, focused atmospheres"
+        },
+        "natureWarmth": {
+          "title": "Nature & warmth",
+          "description": "Organic and cozy tones"
+        }
+      },
+      "card": {
+        "foundations": {
+          "title": "Foundations",
+          "description": "Neutral card surfaces"
+        },
+        "coolTones": {
+          "title": "Cool tones",
+          "description": "Blue and slate card surfaces"
+        },
+        "warmTones": {
+          "title": "Warm tones",
+          "description": "Organic card surfaces"
+        }
+      }
+    },
+    "picker": {
+      "canvasPreview": "Canvas preview",
+      "livePreview": "Live preview",
+      "activeAtmosphere": "Active atmosphere",
+      "activeAtmosphereDesc": "Your selections paint the page shell, sidebar, and card surfaces in dark mode.",
+      "backgroundLabel": "Background",
+      "cardLabel": "Card",
+      "copyBackgroundAria": "Copy background hex color",
+      "copyCardAria": "Copy card hex color",
+      "backgroundColorCopyLabel": "Background color",
+      "cardColorCopyLabel": "Card color",
+      "copiedToast": "{label} copied",
+      "copyErrorToast": "Could not copy color",
+      "switchToDarkHint": "Switch to dark mode to see your canvas update across the real dashboard instantly.",
+      "liveOnDashboard": "Live on dashboard",
+      "backgroundColorsTitle": "Background colors",
+      "backgroundColorsDesc": "Choose the canvas behind your dashboard content and sidebar.",
+      "cardColorsTitle": "Card colors",
+      "cardColorsDesc": "Customize card surfaces in dark mode. Default uses the theme fallback from globals.css.",
+      "presetsCountTemplate": "{count} presets",
+      "useBackgroundAria": "Use {label} dark background",
+      "useCardAria": "Use {label} dark card color"
+    }
+  },
+  "User": {
+    "name": "John Doe",
+    "email": "john.doe@example.com"
+  }
+}

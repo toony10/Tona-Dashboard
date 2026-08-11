@@ -1,0 +1,699 @@
+{
+  "Metadata": {
+    "title": "لوحة التحكم",
+    "description": "لوحة تحكم جاهزة باستخدام Shadcn و Next.js."
+  },
+  "Common": {
+    "loading": "جاري التحميل...",
+    "close": "إغلاق",
+    "all": "الكل",
+    "searchPages": "البحث في الصفحات...",
+    "searchShort": "بحث...",
+    "commandPlaceholder": "اكتب أمرًا أو ابحث...",
+    "noResults": "لا توجد نتائج.",
+    "pages": "الصفحات",
+    "toggleTheme": "تبديل المظهر",
+    "themeLight": "فاتح",
+    "themeDark": "داكن",
+    "themeSystem": "النظام",
+    "myAccount": "حسابي",
+    "support": "الدعم",
+    "logout": "تسجيل الخروج",
+    "toggleSidebar": "تبديل الشريط الجانبي",
+    "sidebar": "الشريط الجانبي",
+    "sidebarMobileDesc": "يعرض الشريط الجانبي على الجوال.",
+    "commandPalette": "لوحة الأوامر",
+    "commandDesc": "ابحث عن أمر لتنفيذه...",
+    "pagination": "ترقيم الصفحات",
+    "previous": "السابق",
+    "next": "التالي",
+    "morePages": "المزيد من الصفحات",
+    "logoAlt": "لوحة التحكم",
+    "backToSettings": "العودة إلى الإعدادات",
+    "openAnalytics": "فتح التحليلات",
+    "viewFullTable": "عرض الجدول الكامل",
+    "browseAllFilters": "تصفح كل الفلاتر",
+    "fromLastMonth": "عن الشهر الماضي",
+    "language": "اللغة",
+    "english": "الإنجليزية",
+    "arabic": "العربية"
+  },
+  "Nav": {
+    "dashboard": "لوحة التحكم",
+    "forms": "النماذج",
+    "formsRichText": "محرر النصوص",
+    "formsImageUploader": "رفع الصور",
+    "formsFileUploader": "رفع الملفات",
+    "formsDateInput": "إدخال التاريخ",
+    "filters": "الفلاتر",
+    "filtersPagination": "ترقيم الصفحات",
+    "filtersSelect": "فلتر الاختيار",
+    "filtersMultiSelect": "فلتر الاختيار المتعدد",
+    "filtersTabs": "فلتر التبويبات",
+    "filtersDate": "فلتر التاريخ",
+    "filtersSearch": "فلتر البحث",
+    "filtersLimit": "فلتر الحد",
+    "filtersReset": "إعادة تعيين الفلاتر",
+    "charts": "الرسوم البيانية",
+    "chartsAnalytics": "رسوم التحليلات",
+    "table": "الجدول",
+    "settings": "الإعدادات",
+    "settingsDarkTheme": "ألوان الوضع الداكن"
+  },
+  "Auth": {
+    "pageTitle": "تسجيل الدخول | لوحة التحكم",
+    "pageDescription": "سجّل الدخول إلى حسابك في لوحة التحكم",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "emailPlaceholder": "name@example.com",
+    "passwordPlaceholder": "أدخل كلمة المرور",
+    "showPassword": "إظهار كلمة المرور",
+    "hidePassword": "إخفاء كلمة المرور",
+    "submit": "تسجيل الدخول"
+  },
+  "Dashboard": {
+    "title": "لوحة التحكم",
+    "description": "واجهة إدارية جاهزة للإنتاج مع رسوم بيانية وجداول وفلاتر ونماذج وإعدادات — استكشف كل وحدة أدناه.",
+    "analyticsOverviewTitle": "نظرة عامة على التحليلات",
+    "analyticsOverviewDesc": "مكوّنات الرسوم البيانية الحية من وحدة التحليلات.",
+    "exploreModulesTitle": "استكشاف الوحدات",
+    "exploreModulesDesc": "انتقل إلى كل منطقة ميزات في لوحة التحكم.",
+    "recentProductsTitle": "المنتجات الأخيرة",
+    "recentProductsDesc": "جدول بيانات مع الفرز والتنسيق وإجراءات الصف.",
+    "filterToolkitTitle": "مجموعة الفلاتر",
+    "filterToolkitDesc": "فلاتر قابلة للتركيب تزامن الحالة مع الرابط — جرّبها هنا.",
+    "quickFilterDemoTitle": "عرض سريع للفلاتر",
+    "quickFilterDemoDesc": "عناصر البحث والحد تحدّث رابط الصفحة. إعادة التعيين تمسح المعاملات النشطة.",
+    "modules": {
+      "forms": {
+        "description": "تحرير نصوص غنية، رفع صور، ورفع ملفات مع التحقق والمعاينات.",
+        "highlights": ["محرر النصوص", "رفع الصور", "رفع الملفات", "إدخال التاريخ"]
+      },
+      "filters": {
+        "description": "فلاتر متزامنة مع الرابط للبحث والترقيم والاختيار والحد وإعادة التعيين.",
+        "highlights": ["بحث", "ترقيم", "اختيار", "حد", "إعادة تعيين"]
+      },
+      "charts": {
+        "description": "رسوم خطية ومنطقة وأعمدة ودائرية وشعاعية باستخدام Recharts وتنسيق shadcn.",
+        "highlights": ["بطاقات KPI", "خط ومنطقة", "أعمدة ودائرية", "شعاعي"]
+      },
+      "table": {
+        "description": "جداول بيانات قابلة للفرز مبنية بـ TanStack Table ومكوّنات shadcn/ui.",
+        "highlights": ["فرز الأعمدة", "إجراءات الصف", "حالات التحميل"]
+      },
+      "settings": {
+        "description": "تخصيص مظهر لوحة التحكم، بما في ذلك خلفيات الوضع الداكن.",
+        "highlights": ["قوالب الوضع الداكن", "ألوان الشريط الجانبي"]
+      }
+    }
+  },
+  "Filters": {
+    "searchPlaceholder": "بحث...",
+    "datePlaceholder": "اختر تاريخاً",
+    "limitPlaceholder": "صفوف لكل صفحة",
+    "selectPlaceholder": "اختر خياراً",
+    "multiSelectPlaceholder": "اختر الخيارات",
+    "nSelected": "{count} محدد",
+    "resetLabel": "إعادة تعيين الفلاتر",
+    "searchProducts": "البحث في المنتجات...",
+    "filterByStatus": "تصفية حسب الحالة",
+    "filterByCategory": "تصفية حسب الفئة",
+    "filterByTags": "تصفية حسب الوسوم",
+    "sortBy": "ترتيب حسب",
+    "options": {
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "pending": "قيد الانتظار",
+      "archived": "مؤرشف",
+      "draft": "مسودة",
+      "electronics": "إلكترونيات",
+      "clothing": "ملابس",
+      "books": "كتب",
+      "homeGarden": "المنزل والحديقة",
+      "low": "منخفض",
+      "medium": "متوسط",
+      "high": "مرتفع",
+      "urgent": "عاجل",
+      "newest": "الأحدث أولاً",
+      "oldest": "الأقدم أولاً",
+      "nameAsc": "الاسم أ–ي",
+      "nameDesc": "الاسم ي–أ",
+      "featured": "مميز",
+      "onSale": "في التخفيض",
+      "new": "وصل حديثاً",
+      "limited": "محدود"
+    },
+    "index": {
+      "title": "الفلاتر",
+      "description": "فلاتر للتطبيق."
+    },
+    "cards": {
+      "pagination": {
+        "title": "ترقيم الصفحات",
+        "description": "ترقيم الصفحات للتطبيق."
+      },
+      "select": {
+        "title": "فلتر الاختيار",
+        "description": "فلتر منسدل يزامن القيمة المحددة مع معاملات البحث في الرابط."
+      },
+      "multiSelect": {
+        "title": "فلتر الاختيار المتعدد",
+        "description": "فلتر منسدل يزامن عدة قيم محددة مع معاملات البحث في الرابط كقوائم مفصولة بفواصل."
+      },
+      "tabs": {
+        "title": "فلتر التبويبات",
+        "description": "فلتر بتبويبات مع مؤشر متحرك يزامن مع معاملات البحث في الرابط."
+      },
+      "search": {
+        "title": "فلتر البحث",
+        "description": "بحث نصي يزامن الاستعلام مع معاملات البحث في الرابط."
+      },
+      "date": {
+        "title": "فلتر التاريخ",
+        "description": "منتقي تاريخ يزامن التواريخ المحددة مع معاملات البحث في الرابط بصيغة ISO."
+      },
+      "limit": {
+        "title": "فلتر الحد",
+        "description": "فلتر اختيار يزامن حد حجم الصفحة مع معاملات البحث في الرابط."
+      },
+      "reset": {
+        "title": "إعادة تعيين الفلاتر",
+        "description": "زر يمسح معاملات البحث المحددة من الرابط."
+      }
+    },
+    "pages": {
+      "pagination": {
+        "title": "ترقيم الصفحات",
+        "description": "ترقيم الصفحات للتطبيق."
+      },
+      "select": {
+        "title": "فلتر الاختيار",
+        "description": "فلاتر منسدلة تزامن القيم المحددة مع معاملات البحث في الرابط مع تحديثات مؤجّلة.",
+        "statusTitle": "الحالة",
+        "statusDesc": "يكتب إلى معامل البحث \"status\".",
+        "categoryTitle": "الفئة",
+        "categoryDesc": "يكتب إلى معامل البحث \"category\".",
+        "sortTitle": "ترتيب الفرز",
+        "sortDesc": "يكتب إلى معامل البحث \"sort\".",
+        "currentParamsTitle": "معاملات البحث الحالية",
+        "currentParamsDesc": "تحديثات الرابط تُؤجّل {ms} مللي ثانية بعد كل اختيار.",
+        "noParamsHint": "لم يتم تعيين معاملات بحث بعد. اختر قيمة أعلاه لتحديث الرابط."
+      },
+      "multiSelect": {
+        "title": "فلتر الاختيار المتعدد",
+        "description": "فلاتر منسدلة تزامن عدة قيم محددة مع معاملات البحث في الرابط كقوائم مفصولة بفواصل.",
+        "statusTitle": "الحالة",
+        "statusDesc": "يكتب إلى معامل البحث \"status\"، مثال: status=active,pending.",
+        "categoryTitle": "الفئة",
+        "categoryDesc": "يكتب إلى معامل البحث \"category\"، مثال: category=electronics,books.",
+        "tagsTitle": "الوسوم",
+        "tagsDesc": "يكتب إلى معامل البحث \"tags\"، مثال: tags=featured,new,on-sale.",
+        "currentParamsTitle": "معاملات البحث الحالية",
+        "currentParamsDesc": "تحديثات الرابط تُؤجّل {ms} مللي ثانية بعد كل اختيار.",
+        "noParamsHint": "لم يتم تعيين معاملات بحث بعد. اختر قيماً أعلاه لتحديث الرابط."
+      },
+      "tabs": {
+        "title": "فلتر التبويبات",
+        "description": "فلاتر بتبويبات تزامن الخيار المحدد مع معاملات البحث في الرابط مع مؤشر انزلاقي سلس.",
+        "statusTitle": "الحالة",
+        "statusDesc": "يكتب إلى معامل البحث \"status\". \"الكل\" يمسح الفلتر.",
+        "categoryTitle": "الفئة",
+        "categoryDesc": "يكتب إلى معامل البحث \"category\".",
+        "priorityTitle": "الأولوية",
+        "priorityDesc": "يكتب إلى معامل البحث \"priority\".",
+        "currentParamsTitle": "معاملات البحث الحالية",
+        "currentParamsDesc": "تحديثات الرابط تُؤجّل {ms} مللي ثانية بعد كل اختيار.",
+        "noParamsHint": "لم يتم تعيين معاملات بحث بعد. اختر تبويباً أعلاه لتحديث الرابط."
+      },
+      "date": {
+        "title": "فلتر التاريخ",
+        "description": "فلاتر اختيار التاريخ تزامن التواريخ المحددة مع معاملات البحث في الرابط بصيغة ISO.",
+        "fromTitle": "من",
+        "fromDesc": "يكتب إلى معامل البحث \"from\" كتاريخ ووقت ISO (مثال: 2026-07-03T14:21:46.707Z).",
+        "toTitle": "إلى",
+        "toDesc": "يكتب إلى معامل البحث \"to\" كتاريخ ووقت ISO (مثال: 2026-07-03T14:21:46.707Z).",
+        "startDatePlaceholder": "تاريخ البداية",
+        "endDatePlaceholder": "تاريخ النهاية",
+        "currentParamsTitle": "معاملات البحث الحالية",
+        "currentParamsDesc": "تحديثات الرابط تُؤجّل {ms} مللي ثانية بعد كل اختيار.",
+        "noParamsHint": "لم يتم تعيين معاملات بحث بعد. اختر تاريخاً أعلاه لتحديث الرابط."
+      },
+      "search": {
+        "title": "فلتر البحث",
+        "description": "بحث نصي يزامن الاستعلام مع معاملات البحث في الرابط مع تحديثات مؤجّلة.",
+        "defaultQueryTitle": "الاستعلام الافتراضي",
+        "defaultQueryDesc": "يكتب إلى معامل البحث \"q\" افتراضياً.",
+        "customParamTitle": "مفتاح معامل مخصص",
+        "customParamDesc": "يكتب إلى معامل البحث \"name\" عند تعيين paramKey.",
+        "byNamePlaceholder": "البحث بالاسم...",
+        "currentParamsTitle": "معاملات البحث الحالية",
+        "currentParamsDesc": "تحديثات الرابط تُؤجّل {ms} مللي ثانية بعد كل ضغطة مفتاح.",
+        "noParamsHint": "لم يتم تعيين معاملات بحث بعد. اكتب في حقل البحث أعلاه لتحديث الرابط."
+      },
+      "limit": {
+        "title": "فلتر الحد",
+        "description": "اختر عدد الصفوف المعروضة في الصفحة، متزامن مع معاملات البحث في الرابط مع تحديثات مؤجّلة.",
+        "defaultLimitTitle": "الحد الافتراضي",
+        "defaultLimitDesc": "يكتب إلى معامل البحث \"limit\" افتراضياً.",
+        "customOptionsTitle": "خيارات مخصصة",
+        "customOptionsDesc": "يكتب إلى معامل البحث \"perPage\" مع مجموعة قيم مخصصة.",
+        "currentParamsTitle": "معاملات البحث الحالية",
+        "currentParamsDesc": "تحديثات الرابط تُؤجّل {ms} مللي ثانية بعد كل اختيار.",
+        "noParamsHint": "لم يتم تعيين معاملات بحث بعد. اختر حداً أعلاه لتحديث الرابط."
+      },
+      "reset": {
+        "title": "إعادة تعيين الفلاتر",
+        "description": "امسح معاملات البحث المحددة من الرابط بإجراء واحد.",
+        "toolbarTitle": "شريط الفلاتر",
+        "toolbarDesc": "إعادة التعيين تزيل \"q\" و \"status\" و \"limit\" و \"page\" من الرابط.",
+        "searchLabel": "بحث",
+        "statusLabel": "الحالة",
+        "limitLabel": "الحد",
+        "statusActive": "نشط",
+        "statusDraft": "مسودة",
+        "statusArchived": "مؤرشف",
+        "currentParamsTitle": "معاملات البحث الحالية",
+        "currentParamsDesc": "إعادة التعيين معطّلة حتى يكون هناك معامل واحد على الأقل.",
+        "noParamsHint": "لم يتم تعيين معاملات بحث بعد. غيّر أحد الفلاتر أعلاه لتحديث الرابط."
+      }
+    }
+  },
+  "Forms": {
+    "index": {
+      "title": "النماذج",
+      "description": "مكوّنات نماذج قابلة لإعادة الاستخدام للنص الغني والصور ورفع الملفات وإدخال التاريخ والوقت."
+    },
+    "cards": {
+      "richText": {
+        "title": "محرر النصوص",
+        "description": "محرر نصوص متكامل مع التنسيق والقوائم والروابط وخيارات الألوان."
+      },
+      "imageUploader": {
+        "title": "رفع الصور",
+        "description": "اسحب وأفلت أو تصفّح لرفع الصور مع معاينات مصغّرة وحدود للحجم."
+      },
+      "fileUploader": {
+        "title": "رفع الملفات",
+        "description": "ارفع المستندات وجداول البيانات والأرشيف مع التحقق وأيقونات أنواع الملفات."
+      },
+      "dateInput": {
+        "title": "إدخال التاريخ",
+        "description": "منتقي تاريخ بتقويم مع عناصر تحكم اختيارية بالوقت لحقول النماذج ودعم الإرسال الأصلي."
+      }
+    },
+    "pages": {
+      "richText": {
+        "title": "محرر النصوص",
+        "description": "محرر نصوص متكامل مع التنسيق والقوائم والروابط وخيارات الألوان."
+      },
+      "imageUploader": {
+        "title": "رفع الصور",
+        "description": "اسحب وأفلت أو تصفّح لرفع الصور مع معاينات مصغّرة وحدود للحجم."
+      },
+      "fileUploader": {
+        "title": "رفع الملفات",
+        "description": "ارفع المستندات وجداول البيانات والأرشيف مع التحقق وأيقونات أنواع الملفات."
+      },
+      "dateInput": {
+        "title": "إدخال التاريخ",
+        "description": "منتقي تاريخ ووقت جاهز للنماذج مع تقويم وعناصر تحكم بالوقت ودعم اختياري لحقل مخفي.",
+        "dateTimeTitle": "التاريخ والوقت",
+        "dateTimeDesc": "منتقي 12 ساعة افتراضي مع عناصر تحكم بالساعة والدقيقة وص/م.",
+        "dateOnlyTitle": "التاريخ فقط",
+        "dateOnlyDesc": "اختيار من التقويم فقط بدون لوحة الوقت.",
+        "withSecondsTitle": "مع الثواني",
+        "withSecondsDesc": "ساعة 12 ساعة مع الثواني وص/م.",
+        "minMaxTitle": "نطاق الحد الأدنى / الأقصى",
+        "minMaxDesc": "يمكن اختيار التواريخ ضمن الـ 30 يوماً القادمة فقط.",
+        "controlledTitle": "مُتحكَّم به",
+        "controlledDesc": "يستخدم value و onChange للاحتفاظ بالاختيار في حالة React.",
+        "nativeSubmitTitle": "إرسال نموذج أصلي",
+        "nativeSubmitDesc": "يستخدم خاصية name الاختيارية لإرسال تاريخ ووقت ISO عبر حقل مخفي.",
+        "submitButton": "إرسال النموذج",
+        "submittedValueLabel": "القيمة المُرسَلة",
+        "emptyValue": "(فارغ)",
+        "noDateSelected": "لم يتم اختيار تاريخ.",
+        "localLabel": "محلي:",
+        "isoLabel": "آيزو:",
+        "schedulePlaceholder": "جدولة حدث",
+        "pickDatePlaceholder": "اختر تاريخاً",
+        "pickDateTimePlaceholder": "اختر التاريخ والوقت",
+        "within30DaysPlaceholder": "خلال 30 يوماً",
+        "controlledPlaceholder": "منتقي متحكم به",
+        "eventDateTimePlaceholder": "تاريخ ووقت الحدث"
+      }
+    },
+    "dateInput": {
+      "placeholder": "اختر التاريخ والوقت",
+      "clearDate": "مسح التاريخ",
+      "time": "الوقت",
+      "hour": "ساعة",
+      "hours": "ساعات",
+      "minutes": "دقيقة",
+      "seconds": "ثانية",
+      "period": "الفترة",
+      "am": "ص",
+      "pm": "م",
+      "selectDateFirst": "اختر التاريخ أولاً، ثم عدّل الوقت.",
+      "now": "الآن",
+      "done": "تم"
+    },
+    "fileUploader": {
+      "ariaUploadFiles": "رفع الملفات",
+      "dropHere": "أفلت الملفات هنا",
+      "clickToBrowse": "انقر للاستعراض",
+      "orDragDrop": "أو اسحب وأفلت",
+      "hintTemplate": "PDF وWord وExcel والمزيد · حتى {maxFiles} ملف · بحد أقصى {maxSize} لكل ملف",
+      "typeNotAllowed": "نوع الملف غير مسموح",
+      "exceedsSize": "يتجاوز {maxSize}",
+      "filesAttached": "{count} ملف مرفق",
+      "capacityTemplate": "{percent}% من السعة",
+      "maxReached": "تم بلوغ الحد الأقصى: {maxFiles} ملف",
+      "addAnotherFile": "إضافة ملف آخر",
+      "removeFile": "إزالة {name}"
+    },
+    "imageUploader": {
+      "ariaUploadImages": "رفع الصور",
+      "dropHere": "أفلت الصور هنا",
+      "clickToUpload": "انقر للرفع",
+      "orDragDrop": "أو اسحب وأفلت",
+      "hintTemplate": "حتى {maxImages} صورة · بحد أقصى {maxSize} لكل صورة",
+      "addMore": "إضافة المزيد",
+      "addMoreImagesAria": "إضافة المزيد من الصور",
+      "limitReached": "تم بلوغ الحد",
+      "previewImage": "معاينة الصورة",
+      "removeImage": "إزالة الصورة",
+      "imagePreviewAria": "معاينة الصورة",
+      "closePreview": "إغلاق المعاينة",
+      "rejectType": "{count} ملف تم تخطيه — نوع غير مدعوم",
+      "rejectSize": "{count} ملف تم تخطيه — أكبر من {maxSize}",
+      "rejectDuplicate": "{count} ملف مكرر تم تخطيه",
+      "rejectMax": "{count} ملف تم تخطيه — تم بلوغ الحد الأقصى ({maxImages})"
+    },
+    "richText": {
+      "placeholder": "اكتب شيئاً…",
+      "undo": "تراجع (⌘Z)",
+      "redo": "إعادة (⌘⇧Z)",
+      "textStyle": "نمط النص",
+      "paragraph": "فقرة",
+      "heading1": "عنوان 1",
+      "heading2": "عنوان 2",
+      "heading3": "عنوان 3",
+      "bold": "عريض (⌘B)",
+      "italic": "مائل (⌘I)",
+      "underline": "تسطير (⌘U)",
+      "strikethrough": "يتوسطه خط",
+      "textColor": "لون النص",
+      "highlight": "تمييز",
+      "highlightColor": "لون التمييز",
+      "alignLeft": "محاذاة لليسار",
+      "alignCenter": "محاذاة للوسط",
+      "alignRight": "محاذاة لليمين",
+      "justify": "ضبط كامل",
+      "bulletList": "قائمة نقطية",
+      "numberedList": "قائمة مرقّمة",
+      "blockquote": "اقتباس",
+      "inlineCode": "رمز مضمّن",
+      "codeBlock": "كتلة رمز",
+      "divider": "فاصل",
+      "addLink": "إضافة رابط",
+      "removeLink": "إزالة الرابط",
+      "enterUrl": "أدخل الرابط:",
+      "colors": {
+        "default": "افتراضي",
+        "red": "أحمر",
+        "orange": "برتقالي",
+        "amber": "كهرماني",
+        "green": "أخضر",
+        "teal": "فيروزي",
+        "blue": "أزرق",
+        "violet": "بنفسجي",
+        "pink": "وردي",
+        "slate": "رمادي"
+      },
+      "highlightColors": {
+        "none": "بدون",
+        "yellow": "أصفر",
+        "green": "أخضر",
+        "blue": "أزرق",
+        "pink": "وردي",
+        "orange": "برتقالي",
+        "purple": "بنفسجي"
+      }
+    }
+  },
+  "Charts": {
+    "index": {
+      "title": "الرسوم البيانية",
+      "description": "مكوّنات رسوم بيانية باستخدام Recharts وتنسيق shadcn/ui للوحات التحكم الحديثة."
+    },
+    "cards": {
+      "analyticsDashboard": {
+        "title": "لوحة التحليلات",
+        "description": "عرض تحليلات كامل مع رسوم خطية ومنطقة وأعمدة ودائرية وشعاعية ببيانات تجريبية."
+      }
+    },
+    "pages": {
+      "analytics": {
+        "title": "لوحة التحليلات",
+        "description": "أنواع الرسوم البيانية الأكثر شيوعاً في لوحات التحكم الحديثة، باستخدام Recharts."
+      }
+    },
+    "kpi": {
+      "totalRevenueTitle": "إجمالي الإيرادات",
+      "activeUsersTitle": "المستخدمون النشطون",
+      "conversionRateTitle": "معدل التحويل",
+      "avgOrderValueTitle": "متوسط قيمة الطلب"
+    },
+    "revenue": {
+      "title": "نظرة عامة على الإيرادات",
+      "description": "الإيرادات مقابل المصروفات الشهرية خلال العام الماضي",
+      "trendingUp": "ارتفاع بنسبة 12.5% هذا العام",
+      "seriesRevenue": "الإيرادات",
+      "seriesExpenses": "المصروفات"
+    },
+    "visitors": {
+      "title": "حركة الزوار",
+      "description": "رسم بياني مساحي مكدّس حسب نوع الجهاز"
+    },
+    "weeklyActivity": {
+      "title": "النشاط الأسبوعي",
+      "description": "الطلبات والمرتجعات يومياً",
+      "seriesOrders": "الطلبات",
+      "seriesReturns": "المرتجعات"
+    },
+    "salesByCategory": {
+      "title": "المبيعات حسب الفئة",
+      "description": "رسم بياني أفقي لأعلى الفئات",
+      "seriesSales": "المبيعات"
+    },
+    "trafficSources": {
+      "title": "مصادر الزيارات",
+      "description": "رسم دائري لقنوات اكتساب الزوار",
+      "totalVisitorsLabel": "إجمالي الزوار",
+      "footer": "البحث العضوي يتصدر بنسبة 36%",
+      "seriesVisitors": "الزوار"
+    },
+    "conversionGoal": {
+      "title": "هدف التحويل",
+      "description": "التقدم الشعاعي نحو الهدف الشهري",
+      "ofGoal": "من الهدف",
+      "onTrack": "على المسار لتحقيق الهدف",
+      "seriesConversion": "التحويل"
+    },
+    "months": {
+      "jan": "يناير",
+      "feb": "فبراير",
+      "mar": "مارس",
+      "apr": "أبريل",
+      "may": "مايو",
+      "jun": "يونيو",
+      "jul": "يوليو",
+      "aug": "أغسطس",
+      "sep": "سبتمبر",
+      "oct": "أكتوبر",
+      "nov": "نوفمبر",
+      "dec": "ديسمبر"
+    },
+    "weekdays": {
+      "mon": "الإثنين",
+      "tue": "الثلاثاء",
+      "wed": "الأربعاء",
+      "thu": "الخميس",
+      "fri": "الجمعة",
+      "sat": "السبت",
+      "sun": "الأحد"
+    },
+    "categories": {
+      "electronics": "إلكترونيات",
+      "clothing": "ملابس",
+      "home": "منزل",
+      "sports": "رياضة",
+      "books": "كتب"
+    },
+    "devices": {
+      "desktop": "سطح المكتب",
+      "mobile": "الجوال",
+      "tablet": "الجهاز اللوحي"
+    },
+    "trafficSourceLabels": {
+      "organic": "البحث العضوي",
+      "direct": "مباشر",
+      "social": "وسائل التواصل",
+      "referral": "إحالة",
+      "email": "البريد الإلكتروني"
+    }
+  },
+  "Table": {
+    "page": {
+      "title": "الجدول",
+      "description": "مكوّن DataTable قابل لإعادة الاستخدام باستخدام TanStack Table و shadcn/ui."
+    },
+    "columns": {
+      "id": "المعرف",
+      "product": "المنتج",
+      "category": "الفئة",
+      "price": "السعر",
+      "status": "الحالة"
+    },
+    "status": {
+      "active": "نشط",
+      "draft": "مسودة",
+      "archived": "مؤرشف"
+    },
+    "empty": "لا توجد نتائج.",
+    "products": {
+      "prd001": { "name": "سماعات لاسلكية", "category": "إلكترونيات" },
+      "prd002": { "name": "كرسي مكتب مريح", "category": "أثاث" },
+      "prd003": { "name": "زجاجة ماء ستانلس", "category": "إكسسوارات" },
+      "prd004": { "name": "لوحة مفاتيح ميكانيكية", "category": "إلكترونيات" },
+      "prd005": { "name": "مصباح مكتب", "category": "أثاث" },
+      "prd006": { "name": "حامل لابتوب", "category": "إكسسوارات" },
+      "prd007": { "name": "محول USB-C", "category": "إلكترونيات" },
+      "prd008": { "name": "ذراع شاشة", "category": "أثاث" }
+    }
+  },
+  "Settings": {
+    "index": {
+      "title": "الإعدادات",
+      "description": "خصّص مظهر لوحة التحكم وشعورها."
+    },
+    "cards": {
+      "darkTheme": {
+        "title": "ألوان الوضع الداكن",
+        "description": "اختر خلفية الوضع الداكن لواجهة لوحة التحكم والشريط الجانبي من قوالب جاهزة."
+      }
+    },
+    "moreSettings": {
+      "title": "المزيد من الإعدادات",
+      "description": "ستتوفر خيارات مظهر إضافية هنا قريباً."
+    },
+    "pages": {
+      "darkTheme": {
+        "title": "ألوان الوضع الداكن",
+        "description": "اختر ألوان الخلفية والبطاقات في الوضع الداكن لواجهة لوحة التحكم والشريط الجانبي."
+      }
+    },
+    "presets": {
+      "background": {
+        "charcoal": "فحمي",
+        "nearBlack": "أسود تقريباً",
+        "slateBlue": "أزرق رمادي",
+        "navy": "كحلي",
+        "darkGray": "رمادي داكن",
+        "deepBlue": "أزرق عميق",
+        "blueGray": "رمادي مزرق",
+        "graphite": "غرافيت",
+        "zinc": "زنك",
+        "carbon": "كربون",
+        "github": "وضع GitHub الداكن",
+        "midnight": "منتصف الليل",
+        "indigoNight": "نيلي ليلي",
+        "purpleHaze": "ضباب بنفسجي",
+        "storm": "عاصفة",
+        "tealDark": "تركواز داكن",
+        "forest": "غابة",
+        "olive": "زيتوني",
+        "espresso": "إسبريسو",
+        "wine": "نبيذي",
+        "slate": "أردوازي",
+        "obsidian": "سبج"
+      },
+      "card": {
+        "default": "افتراضي",
+        "zinc": "زنك",
+        "graphite": "غرافيت",
+        "charcoal": "فحمي",
+        "slate": "أردوازي",
+        "storm": "عاصفة",
+        "blueGray": "رمادي مزرق",
+        "navy": "كحلي",
+        "midnight": "منتصف الليل",
+        "indigoNight": "نيلي ليلي",
+        "forest": "غابة",
+        "espresso": "إسبريسو",
+        "wine": "نبيذي",
+        "carbon": "كربون",
+        "nearBlack": "أسود تقريباً"
+      }
+    },
+    "groups": {
+      "background": {
+        "neutrals": {
+          "title": "محايدة",
+          "description": "أساسيات نظيفة وبسيطة"
+        },
+        "bluesSlate": {
+          "title": "زرقاء ورمادية",
+          "description": "أجواء باردة ومركّزة"
+        },
+        "natureWarmth": {
+          "title": "طبيعية ودافئة",
+          "description": "ألوان عضوية ومريحة"
+        }
+      },
+      "card": {
+        "foundations": {
+          "title": "أساسية",
+          "description": "أسطح بطاقات محايدة"
+        },
+        "coolTones": {
+          "title": "ألوان باردة",
+          "description": "أسطح بطاقات زرقاء ورمادية"
+        },
+        "warmTones": {
+          "title": "ألوان دافئة",
+          "description": "أسطح بطاقات عضوية"
+        }
+      }
+    },
+    "picker": {
+      "canvasPreview": "معاينة اللوحة",
+      "livePreview": "معاينة مباشرة",
+      "activeAtmosphere": "الجو النشط",
+      "activeAtmosphereDesc": "اختياراتك تلوّن واجهة الصفحة والشريط الجانبي وأسطح البطاقات في الوضع الداكن.",
+      "backgroundLabel": "الخلفية",
+      "cardLabel": "البطاقة",
+      "copyBackgroundAria": "نسخ لون الخلفية",
+      "copyCardAria": "نسخ لون البطاقة",
+      "backgroundColorCopyLabel": "لون الخلفية",
+      "cardColorCopyLabel": "لون البطاقة",
+      "copiedToast": "تم نسخ {label}",
+      "copyErrorToast": "تعذّر نسخ اللون",
+      "switchToDarkHint": "انتقل إلى الوضع الداكن لرؤية تحديث اللوحة فوراً عبر لوحة التحكم الحقيقية.",
+      "liveOnDashboard": "مفعّل على لوحة التحكم",
+      "backgroundColorsTitle": "ألوان الخلفية",
+      "backgroundColorsDesc": "اختر اللوحة خلف محتوى لوحة التحكم والشريط الجانبي.",
+      "cardColorsTitle": "ألوان البطاقات",
+      "cardColorsDesc": "خصّص أسطح البطاقات في الوضع الداكن. الافتراضي يستخدم القيمة الاحتياطية من globals.css.",
+      "presetsCountTemplate": "{count} قالب",
+      "useBackgroundAria": "استخدام خلفية داكنة: {label}",
+      "useCardAria": "استخدام لون بطاقة داكن: {label}"
+    }
+  },
+  "User": {
+    "name": "انطون امير",
+    "email": "anton.amir@example.com"
+  }
+}

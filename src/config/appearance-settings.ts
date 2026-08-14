@@ -1,152 +1,93 @@
-export const DARK_BACKGROUND_STORAGE_KEY = "dashboard-dark-background"
-export const DARK_CARD_STORAGE_KEY = "dashboard-dark-card"
+export const DARK_THEME_STORAGE_KEY = "dashboard-dark-background"
+const LEGACY_DARK_CARD_STORAGE_KEY = "dashboard-dark-card"
 
-export const defaultDarkCardColor = "oklch(0.205 0 0)"
-
-/** Ids are stable lookup keys — labels live in `Settings.presets.background.*`. */
-export const darkBackgroundPresets = [
-  { id: "charcoal", value: "#2C2C2C" },
-  { id: "near-black", value: "#0F0E0E" },
-  { id: "slate-blue", value: "#2C3947" },
-  { id: "navy", value: "#30364F" },
-  { id: "dark-gray", value: "#222222" },
-  { id: "deep-blue", value: "#132440" },
-  { id: "blue-gray", value: "#213448" },
-  { id: "graphite", value: "#2D2D2D" },
-  { id: "zinc", value: "#18181B" },
-  { id: "carbon", value: "#161616" },
-  { id: "github", value: "#0D1117" },
-  { id: "midnight", value: "#1A1A2E" },
-  { id: "indigo-night", value: "#1E1E2F" },
-  { id: "purple-haze", value: "#1A1625" },
-  { id: "storm", value: "#1C2833" },
-  { id: "teal-dark", value: "#152825" },
-  { id: "forest", value: "#172121" },
-  { id: "olive", value: "#1C1F18" },
-  { id: "espresso", value: "#2C1810" },
-  { id: "wine", value: "#2A1A1F" },
-  { id: "slate", value: "#1E293B" },
-  { id: "obsidian", value: "#0B0F14" },
+/** Ids are stable lookup keys — labels live in `Settings.presets.theme.*`. */
+export const darkThemePresets = [
+  { id: "charcoal", value: "#2C2C2C", card: "#363636" },
+  { id: "near-black", value: "#0F0E0E", card: "#1A1A1A" },
+  { id: "slate-blue", value: "#2C3947", card: "#354555" },
+  { id: "navy", value: "#30364F", card: "#3D4463" },
+  { id: "dark-gray", value: "#222222", card: "#2E2E2E" },
+  { id: "deep-blue", value: "#132440", card: "#1C3458" },
+  { id: "blue-gray", value: "#213448", card: "#2A3A4A" },
+  { id: "graphite", value: "#2D2D2D", card: "#3A3A3A" },
+  { id: "zinc", value: "#18181B", card: "#27272A" },
+  { id: "carbon", value: "#161616", card: "#212121" },
+  { id: "github", value: "#0D1117", card: "#161B22" },
+  { id: "midnight", value: "#1A1A2E", card: "#252538" },
+  { id: "indigo-night", value: "#1E1E2F", card: "#2A2A3D" },
+  { id: "purple-haze", value: "#1A1625", card: "#2A2438" },
+  { id: "storm", value: "#1C2833", card: "#243040" },
+  { id: "teal-dark", value: "#152825", card: "#1F3834" },
+  { id: "forest", value: "#172121", card: "#1F2B2B" },
+  { id: "olive", value: "#1C1F18", card: "#2A3024" },
+  { id: "espresso", value: "#2C1810", card: "#3A2820" },
+  { id: "wine", value: "#2A1A1F", card: "#35252B" },
+  { id: "slate", value: "#1E293B", card: "#334155" },
+  { id: "obsidian", value: "#0B0F14", card: "#151A20" },
 ] as const
 
-export type DarkBackgroundPresetId =
-  (typeof darkBackgroundPresets)[number]["id"]
+export type DarkThemePresetId = (typeof darkThemePresets)[number]["id"]
 
-export type DarkBackgroundPreset = {
-  id: DarkBackgroundPresetId
+export type DarkThemePreset = {
+  id: DarkThemePresetId
   value: string
+  card: string
 }
 
-export const defaultDarkBackgroundPresetId: DarkBackgroundPresetId = "charcoal"
+export const defaultDarkThemePresetId: DarkThemePresetId = "charcoal"
 
-/** Ids are stable lookup keys — labels live in `Settings.presets.card.*`. */
-export const darkCardPresets = [
-  { id: "default", value: null },
-  { id: "zinc", value: "#27272A" },
-  { id: "graphite", value: "#333333" },
-  { id: "charcoal", value: "#363636" },
-  { id: "dark-gray", value: "#2E2E2E" },
-  { id: "carbon", value: "#212121" },
-  { id: "near-black", value: "#1A1A1A" },
-  { id: "github", value: "#161B22" },
-  { id: "obsidian", value: "#151A20" },
-  { id: "slate", value: "#1E293B" },
-  { id: "slate-blue", value: "#354555" },
-  { id: "storm", value: "#243040" },
-  { id: "blue-gray", value: "#2A3A4A" },
-  { id: "navy", value: "#30364F" },
-  { id: "deep-blue", value: "#1C3458" },
-  { id: "midnight", value: "#252538" },
-  { id: "indigo-night", value: "#2A2A3D" },
-  { id: "purple-haze", value: "#2A2438" },
-  { id: "teal-dark", value: "#1F3834" },
-  { id: "forest", value: "#1F2B2B" },
-  { id: "olive", value: "#2A3024" },
-  { id: "espresso", value: "#3A2820" },
-  { id: "wine", value: "#35252B" },
-] as const
+const themePresetMap = Object.fromEntries(
+  darkThemePresets.map((preset) => [
+    preset.id,
+    { value: preset.value, card: preset.card },
+  ]),
+) as Record<DarkThemePresetId, { value: string; card: string }>
 
-export type DarkCardPresetId = (typeof darkCardPresets)[number]["id"]
-
-export type DarkCardPreset = {
-  id: DarkCardPresetId
-  value: string | null
-}
-
-export const defaultDarkCardPresetId: DarkCardPresetId = "default"
-
-const backgroundPresetMap = Object.fromEntries(
-  darkBackgroundPresets.map((preset) => [preset.id, preset.value]),
-) as Record<DarkBackgroundPresetId, string>
-
-const cardPresetMap = Object.fromEntries(
-  darkCardPresets.map((preset) => [preset.id, preset.value]),
-) as Record<DarkCardPresetId, string | null>
-
-export function isDarkBackgroundPresetId(
+export function isDarkThemePresetId(
   value: string,
-): value is DarkBackgroundPresetId {
-  return value in backgroundPresetMap
+): value is DarkThemePresetId {
+  return value in themePresetMap
 }
 
-export function isDarkCardPresetId(value: string): value is DarkCardPresetId {
-  return value in cardPresetMap
-}
-
-export function getStoredDarkBackgroundPresetId(): DarkBackgroundPresetId {
+export function getStoredDarkThemePresetId(): DarkThemePresetId {
   if (typeof window === "undefined") {
-    return defaultDarkBackgroundPresetId
+    return defaultDarkThemePresetId
   }
 
-  const stored = localStorage.getItem(DARK_BACKGROUND_STORAGE_KEY)
-  if (stored && isDarkBackgroundPresetId(stored)) {
+  const stored = localStorage.getItem(DARK_THEME_STORAGE_KEY)
+  if (stored && isDarkThemePresetId(stored)) {
     return stored
   }
 
-  return defaultDarkBackgroundPresetId
+  return defaultDarkThemePresetId
 }
 
-export function getDarkBackgroundValue(id: DarkBackgroundPresetId): string {
+export function getDarkThemePreset(id: DarkThemePresetId): DarkThemePreset {
   return (
-    backgroundPresetMap[id] ?? backgroundPresetMap[defaultDarkBackgroundPresetId]
+    darkThemePresets.find((preset) => preset.id === id) ?? darkThemePresets[0]
   )
-}
-
-export function getStoredDarkCardPresetId(): DarkCardPresetId {
-  if (typeof window === "undefined") {
-    return defaultDarkCardPresetId
-  }
-
-  const stored = localStorage.getItem(DARK_CARD_STORAGE_KEY)
-  if (stored && isDarkCardPresetId(stored)) {
-    return stored
-  }
-
-  return defaultDarkCardPresetId
-}
-
-export function getDarkCardValue(id: DarkCardPresetId): string | null {
-  return cardPresetMap[id] ?? cardPresetMap[defaultDarkCardPresetId]
-}
-
-export function getDarkCardDisplayValue(id: DarkCardPresetId): string {
-  return getDarkCardValue(id) ?? defaultDarkCardColor
 }
 
 export function isDarkTheme(theme: string | undefined): boolean {
   return theme === "dark"
 }
 
+function clearLegacyCardStorage(): void {
+  localStorage.removeItem(LEGACY_DARK_CARD_STORAGE_KEY)
+}
+
 export function applyDarkAppearance(
   options?: {
-    backgroundPresetId?: DarkBackgroundPresetId
-    cardPresetId?: DarkCardPresetId
+    presetId?: DarkThemePresetId
     theme?: string | undefined
   },
 ): void {
   if (typeof window === "undefined") {
     return
   }
+
+  clearLegacyCardStorage()
 
   const html = document.documentElement
   const isDark =
@@ -160,45 +101,24 @@ export function applyDarkAppearance(
     return
   }
 
-  const backgroundId =
-    options?.backgroundPresetId ?? getStoredDarkBackgroundPresetId()
-  html.style.setProperty("--background", getDarkBackgroundValue(backgroundId))
+  const presetId = options?.presetId ?? getStoredDarkThemePresetId()
+  const preset =
+    themePresetMap[presetId] ?? themePresetMap[defaultDarkThemePresetId]
 
-  const cardId = options?.cardPresetId ?? getStoredDarkCardPresetId()
-  const cardValue = getDarkCardValue(cardId)
-  if (cardValue) {
-    html.style.setProperty("--card", cardValue)
-  } else {
-    html.style.removeProperty("--card")
-  }
+  html.style.setProperty("--background", preset.value)
+  html.style.setProperty("--card", preset.card)
 }
 
-export function applyDarkBackground(
-  presetId?: DarkBackgroundPresetId,
+export function setDarkThemePreset(
+  id: DarkThemePresetId,
   theme?: string | undefined,
 ): void {
-  applyDarkAppearance({ backgroundPresetId: presetId, theme })
-}
-
-export function setDarkBackgroundPreset(
-  id: DarkBackgroundPresetId,
-  theme?: string | undefined,
-): void {
-  localStorage.setItem(DARK_BACKGROUND_STORAGE_KEY, id)
-  applyDarkAppearance({ backgroundPresetId: id, theme })
-}
-
-export function setDarkCardPreset(
-  id: DarkCardPresetId,
-  theme?: string | undefined,
-): void {
-  localStorage.setItem(DARK_CARD_STORAGE_KEY, id)
-  applyDarkAppearance({ cardPresetId: id, theme })
+  localStorage.setItem(DARK_THEME_STORAGE_KEY, id)
+  applyDarkAppearance({ presetId: id, theme })
 }
 
 export function getAppearanceInitScript(): string {
-  const backgroundPresets = JSON.stringify(backgroundPresetMap)
-  const cardPresets = JSON.stringify(cardPresetMap)
+  const presets = JSON.stringify(themePresetMap)
 
-  return `(function(){try{var backgroundKey=${JSON.stringify(DARK_BACKGROUND_STORAGE_KEY)};var cardKey=${JSON.stringify(DARK_CARD_STORAGE_KEY)};var backgroundPresets=${backgroundPresets};var cardPresets=${cardPresets};var defaultBackgroundId=${JSON.stringify(defaultDarkBackgroundPresetId)};var defaultCardId=${JSON.stringify(defaultDarkCardPresetId)};var backgroundId=localStorage.getItem(backgroundKey)||defaultBackgroundId;var cardId=localStorage.getItem(cardKey)||defaultCardId;var backgroundColor=backgroundPresets[backgroundId]||backgroundPresets[defaultBackgroundId];var cardColor=cardPresets[cardId];var theme=localStorage.getItem("theme");var isDark=theme==="dark"||(theme!=="light"&&window.matchMedia("(prefers-color-scheme: dark)").matches);if(!isDark)return;var html=document.documentElement;html.style.setProperty("--background",backgroundColor);if(cardColor){html.style.setProperty("--card",cardColor)}else{html.style.removeProperty("--card")}}catch(e){}})();`
+  return `(function(){try{var key=${JSON.stringify(DARK_THEME_STORAGE_KEY)};var legacyCardKey=${JSON.stringify(LEGACY_DARK_CARD_STORAGE_KEY)};var presets=${presets};var defaultId=${JSON.stringify(defaultDarkThemePresetId)};var id=localStorage.getItem(key)||defaultId;var preset=presets[id]||presets[defaultId];var theme=localStorage.getItem("theme");var isDark=theme==="dark"||(theme!=="light"&&window.matchMedia("(prefers-color-scheme: dark)").matches);if(!isDark)return;var html=document.documentElement;html.style.setProperty("--background",preset.value);html.style.setProperty("--card",preset.card);try{localStorage.removeItem(legacyCardKey)}catch(e){}}catch(e){}})();`
 }

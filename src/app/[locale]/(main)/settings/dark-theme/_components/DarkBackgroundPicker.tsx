@@ -8,23 +8,17 @@ import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
 import {
-  darkBackgroundPresets,
-  darkCardPresets,
-  defaultDarkBackgroundPresetId,
-  defaultDarkCardPresetId,
-  getDarkCardDisplayValue,
-  getStoredDarkBackgroundPresetId,
-  getStoredDarkCardPresetId,
-  setDarkBackgroundPreset,
-  setDarkCardPreset,
-  type DarkBackgroundPreset,
-  type DarkBackgroundPresetId,
-  type DarkCardPreset,
-  type DarkCardPresetId,
+  darkThemePresets,
+  defaultDarkThemePresetId,
+  getDarkThemePreset,
+  getStoredDarkThemePresetId,
+  setDarkThemePreset,
+  type DarkThemePreset,
+  type DarkThemePresetId,
 } from "@/config/appearance-settings"
 import { cn } from "@/lib/utils"
 
-/** `key` resolves to `Settings.groups.background.{key}`. */
+/** `key` resolves to `Settings.groups.theme.{key}`. */
 const presetGroups = [
   {
     key: "neutrals",
@@ -65,68 +59,12 @@ const presetGroups = [
   },
 ] as const satisfies ReadonlyArray<{
   key: string
-  ids: readonly DarkBackgroundPresetId[]
+  ids: readonly DarkThemePresetId[]
 }>
 
-/** `key` resolves to `Settings.groups.card.{key}`. */
-const cardPresetGroups = [
-  {
-    key: "foundations",
-    ids: [
-      "default",
-      "near-black",
-      "carbon",
-      "obsidian",
-      "github",
-      "dark-gray",
-      "graphite",
-      "charcoal",
-      "zinc",
-    ],
-  },
-  {
-    key: "coolTones",
-    ids: [
-      "slate",
-      "slate-blue",
-      "storm",
-      "blue-gray",
-      "navy",
-      "deep-blue",
-      "midnight",
-      "indigo-night",
-    ],
-  },
-  {
-    key: "warmTones",
-    ids: [
-      "teal-dark",
-      "forest",
-      "olive",
-      "espresso",
-      "wine",
-      "purple-haze",
-    ],
-  },
-] as const satisfies ReadonlyArray<{
-  key: string
-  ids: readonly DarkCardPresetId[]
-}>
-
-/** `near-black` → `nearBlack`, the preset key used under `Settings.presets.*`. */
+/** `near-black` → `nearBlack`, the preset key used under `Settings.presets.theme`. */
 function toPresetKey(id: string): string {
   return id.replace(/-([a-z])/g, (_, char: string) => char.toUpperCase())
-}
-
-function getPresetById(id: DarkBackgroundPresetId): DarkBackgroundPreset {
-  return (
-    darkBackgroundPresets.find((preset) => preset.id === id) ??
-    darkBackgroundPresets[0]
-  )
-}
-
-function getCardPresetById(id: DarkCardPresetId): DarkCardPreset {
-  return darkCardPresets.find((preset) => preset.id === id) ?? darkCardPresets[0]
 }
 
 function DashboardPreview({
@@ -225,10 +163,10 @@ function SwatchButton({
   isSelected,
   onSelect,
 }: {
-  preset: DarkBackgroundPreset
+  preset: DarkThemePreset
   label: string
   isSelected: boolean
-  onSelect: (id: DarkBackgroundPresetId) => void
+  onSelect: (id: DarkThemePresetId) => void
 }) {
   const t = useTranslations("Settings.picker")
 
@@ -242,7 +180,7 @@ function SwatchButton({
         isSelected && "scale-[1.02]",
       ) }
       aria-pressed={ isSelected }
-      aria-label={ t("useBackgroundAria", { label }) }
+      aria-label={ t("useThemeAria", { label }) }
       style={ {
         boxShadow: isSelected
           ? `0 0 0 1px ${ preset.value }, 0 12px 30px -12px ${ preset.value }`
@@ -257,65 +195,11 @@ function SwatchButton({
         ) }
         style={ { backgroundColor: preset.value } }
       >
-        <span className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.22),transparent_55%)]" />
-        { isSelected ? (
-          <span className="absolute inset-0 flex items-center justify-center bg-black/25">
-            <Check className="size-4 text-white drop-shadow-sm" />
-          </span>
-        ) : null }
-      </span>
-      <span
-        className={ cn(
-          "max-w-22 truncate text-xs font-medium transition-colors",
-          isSelected ? "text-foreground" : "text-muted-foreground",
-        ) }
-      >
-        { label }
-      </span>
-    </button>
-  )
-}
-
-function CardSwatchButton({
-  preset,
-  label,
-  isSelected,
-  onSelect,
-}: {
-  preset: DarkCardPreset
-  label: string
-  isSelected: boolean
-  onSelect: (id: DarkCardPresetId) => void
-}) {
-  const t = useTranslations("Settings.picker")
-  const swatchColor = preset.value ?? getDarkCardDisplayValue(preset.id)
-
-  return (
-    <button
-      type="button"
-      onClick={ () => onSelect(preset.id) }
-      className={ cn(
-        "group relative flex flex-col items-center gap-2 rounded-2xl p-2 text-center transition-all duration-300",
-        "hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-        isSelected && "scale-[1.02]",
-      ) }
-      aria-pressed={ isSelected }
-      aria-label={ t("useCardAria", { label }) }
-      style={ {
-        boxShadow: isSelected
-          ? `0 0 0 1px ${ swatchColor }, 0 12px 30px -12px ${ swatchColor }`
-          : undefined,
-      } }
-    >
-      <span
-        className={ cn(
-          "relative size-14 overflow-hidden rounded-2xl border border-white/10 transition-transform duration-300 sm:size-16",
-          "group-hover:scale-105",
-          isSelected && "ring-2 ring-white/30",
-        ) }
-        style={ { backgroundColor: swatchColor } }
-      >
-        <span className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.22),transparent_55%)]" />
+        <span
+          className="absolute inset-x-2 bottom-2 top-[42%] rounded-md border border-white/10 shadow-sm"
+          style={ { backgroundColor: preset.card } }
+        />
+        <span className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.18),transparent_50%)]" />
         { isSelected ? (
           <span className="absolute inset-0 flex items-center justify-center bg-black/25">
             <Check className="size-4 text-white drop-shadow-sm" />
@@ -339,45 +223,29 @@ export function DarkBackgroundPicker() {
   const tPresets = useTranslations("Settings.presets")
   const tGroups = useTranslations("Settings.groups")
   const { resolvedTheme } = useTheme()
-  const [selectedBackgroundId, setSelectedBackgroundId] =
-    useState<DarkBackgroundPresetId>(defaultDarkBackgroundPresetId)
-  const [selectedCardId, setSelectedCardId] = useState<DarkCardPresetId>(
-    defaultDarkCardPresetId,
+  const [selectedPresetId, setSelectedPresetId] = useState<DarkThemePresetId>(
+    defaultDarkThemePresetId,
   )
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     startTransition(() => {
-      setSelectedBackgroundId(getStoredDarkBackgroundPresetId())
-      setSelectedCardId(getStoredDarkCardPresetId())
+      setSelectedPresetId(getStoredDarkThemePresetId())
       setMounted(true)
     })
   }, [])
 
-  const selectedBackgroundPreset = useMemo(
-    () => getPresetById(selectedBackgroundId),
-    [selectedBackgroundId],
+  const selectedPreset = useMemo(
+    () => getDarkThemePreset(selectedPresetId),
+    [selectedPresetId],
   )
 
-  const selectedCardPreset = useMemo(
-    () => getCardPresetById(selectedCardId),
-    [selectedCardId],
-  )
-
-  const selectedCardColor = useMemo(
-    () => getDarkCardDisplayValue(selectedCardId),
-    [selectedCardId],
-  )
-
-  const backgroundLabel = (id: DarkBackgroundPresetId) =>
-    tPresets(`background.${ toPresetKey(id) }`)
-
-  const cardLabel = (id: DarkCardPresetId) =>
-    tPresets(`card.${ toPresetKey(id) }`)
+  const themeLabel = (id: DarkThemePresetId) =>
+    tPresets(`theme.${ toPresetKey(id) }`)
 
   const groupedPresets = useMemo(() => {
     const presetById = new Map(
-      darkBackgroundPresets.map((preset) => [preset.id, preset]),
+      darkThemePresets.map((preset) => [preset.id, preset]),
     )
 
     return presetGroups.map((group) => ({
@@ -389,28 +257,9 @@ export function DarkBackgroundPicker() {
     }))
   }, [])
 
-  const groupedCardPresets = useMemo(() => {
-    const presetById = new Map(
-      darkCardPresets.map((preset) => [preset.id, preset]),
-    )
-
-    return cardPresetGroups.map((group) => ({
-      ...group,
-      presets: group.ids.flatMap((id) => {
-        const preset = presetById.get(id)
-        return preset ? [preset] : []
-      }),
-    }))
-  }, [])
-
-  function handleBackgroundSelect(id: DarkBackgroundPresetId) {
-    setSelectedBackgroundId(id)
-    setDarkBackgroundPreset(id, resolvedTheme)
-  }
-
-  function handleCardSelect(id: DarkCardPresetId) {
-    setSelectedCardId(id)
-    setDarkCardPreset(id, resolvedTheme)
+  function handleSelect(id: DarkThemePresetId) {
+    setSelectedPresetId(id)
+    setDarkThemePreset(id, resolvedTheme)
   }
 
   async function copyHex(value: string, label: string) {
@@ -436,9 +285,9 @@ export function DarkBackgroundPicker() {
           </div>
           { mounted ? (
             <DashboardPreview
-              color={ selectedBackgroundPreset.value }
-              cardColor={ selectedCardColor }
-              label={ backgroundLabel(selectedBackgroundPreset.id) }
+              color={ selectedPreset.value }
+              cardColor={ selectedPreset.card }
+              label={ themeLabel(selectedPreset.id) }
             />
           ) : (
             <div className="min-h-56 animate-pulse rounded-[1.75rem] bg-muted sm:min-h-64" />
@@ -455,24 +304,41 @@ export function DarkBackgroundPicker() {
             </p>
           </div>
 
-          <div className="mb-5 space-y-3">
-            <p className="text-xs font-semibold tracking-[0.2em] text-muted-foreground uppercase">
-              { t("backgroundLabel") }
-            </p>
-            <div className="flex items-center gap-3 rounded-2xl border bg-muted/30 p-3">
+          <div className="mb-5 flex items-center gap-3 rounded-2xl border bg-muted/30 p-3">
+            <span
+              className="relative size-12 shrink-0 overflow-hidden rounded-xl border border-foreground/10 shadow-inner"
+              style={ { backgroundColor: selectedPreset.value } }
+            >
               <span
-                className="size-12 shrink-0 rounded-xl border border-foreground/10 shadow-inner"
-                style={ { backgroundColor: selectedBackgroundPreset.value } }
+                className="absolute inset-x-1.5 bottom-1.5 top-[45%] rounded-md border border-white/10"
+                style={ { backgroundColor: selectedPreset.card } }
+              />
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="truncate font-medium">
+                { themeLabel(selectedPreset.id) }
+              </p>
+              <p className="truncate text-xs text-muted-foreground">
+                { t("pairedSubtitle") }
+              </p>
+            </div>
+          </div>
+
+          <div className="mb-5 space-y-2">
+            <div className="flex items-center gap-3 rounded-xl border bg-muted/20 px-3 py-2">
+              <span
+                className="size-6 shrink-0 rounded-md border border-foreground/10"
+                style={ { backgroundColor: selectedPreset.value } }
               />
               <div className="min-w-0 flex-1">
-                <p className="truncate font-medium">
-                  { backgroundLabel(selectedBackgroundPreset.id) }
+                <p className="text-[11px] font-medium tracking-[0.16em] text-muted-foreground uppercase">
+                  { t("canvasLabel") }
                 </p>
                 <p
-                  className="truncate font-mono text-xs text-muted-foreground"
+                  className="truncate font-mono text-xs"
                   dir="ltr"
                 >
-                  { selectedBackgroundPreset.value }
+                  { selectedPreset.value }
                 </p>
               </div>
               <Button
@@ -480,36 +346,28 @@ export function DarkBackgroundPicker() {
                 variant="outline"
                 size="icon-sm"
                 onClick={ () =>
-                  copyHex(
-                    selectedBackgroundPreset.value,
-                    t("backgroundColorCopyLabel"),
-                  )
+                  copyHex(selectedPreset.value, t("canvasColorCopyLabel"))
                 }
-                aria-label={ t("copyBackgroundAria") }
+                aria-label={ t("copyCanvasAria") }
               >
                 <Copy className="size-3.5" />
               </Button>
             </div>
-          </div>
 
-          <div className="mb-5 space-y-3">
-            <p className="text-xs font-semibold tracking-[0.2em] text-muted-foreground uppercase">
-              { t("cardLabel") }
-            </p>
-            <div className="flex items-center gap-3 rounded-2xl border bg-muted/30 p-3">
+            <div className="flex items-center gap-3 rounded-xl border bg-muted/20 px-3 py-2">
               <span
-                className="size-12 shrink-0 rounded-xl border border-foreground/10 shadow-inner"
-                style={ { backgroundColor: selectedCardColor } }
+                className="size-6 shrink-0 rounded-md border border-foreground/10"
+                style={ { backgroundColor: selectedPreset.card } }
               />
               <div className="min-w-0 flex-1">
-                <p className="truncate font-medium">
-                  { cardLabel(selectedCardPreset.id) }
+                <p className="text-[11px] font-medium tracking-[0.16em] text-muted-foreground uppercase">
+                  { t("cardsLabel") }
                 </p>
                 <p
-                  className="truncate font-mono text-xs text-muted-foreground"
+                  className="truncate font-mono text-xs"
                   dir="ltr"
                 >
-                  { selectedCardColor }
+                  { selectedPreset.card }
                 </p>
               </div>
               <Button
@@ -517,7 +375,7 @@ export function DarkBackgroundPicker() {
                 variant="outline"
                 size="icon-sm"
                 onClick={ () =>
-                  copyHex(selectedCardColor, t("cardColorCopyLabel"))
+                  copyHex(selectedPreset.card, t("cardColorCopyLabel"))
                 }
                 aria-label={ t("copyCardAria") }
               >
@@ -545,10 +403,10 @@ export function DarkBackgroundPicker() {
       <div className="space-y-8">
         <div className="space-y-2">
           <h2 className="font-heading text-lg font-semibold tracking-tight">
-            { t("backgroundColorsTitle") }
+            { t("themeColorsTitle") }
           </h2>
           <p className="text-sm text-muted-foreground">
-            { t("backgroundColorsDesc") }
+            { t("themeColorsDesc") }
           </p>
         </div>
 
@@ -557,10 +415,10 @@ export function DarkBackgroundPicker() {
             <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <h3 className="font-heading text-base font-semibold">
-                  { tGroups(`background.${ group.key }.title`) }
+                  { tGroups(`theme.${ group.key }.title`) }
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  { tGroups(`background.${ group.key }.description`) }
+                  { tGroups(`theme.${ group.key }.description`) }
                 </p>
               </div>
               <span className="text-xs text-muted-foreground">
@@ -573,52 +431,9 @@ export function DarkBackgroundPicker() {
                 <SwatchButton
                   key={ preset.id }
                   preset={ preset }
-                  label={ backgroundLabel(preset.id) }
-                  isSelected={ mounted && selectedBackgroundId === preset.id }
-                  onSelect={ handleBackgroundSelect }
-                />
-              )) }
-            </div>
-          </section>
-        )) }
-      </div>
-
-      <hr className="border-border" />
-
-      <div className="space-y-8">
-        <div className="space-y-2">
-          <h2 className="font-heading text-lg font-semibold tracking-tight">
-            { t("cardColorsTitle") }
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            { t("cardColorsDesc") }
-          </p>
-        </div>
-
-        { groupedCardPresets.map((group) => (
-          <section key={ group.key } className="space-y-4">
-            <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <h3 className="font-heading text-base font-semibold">
-                  { tGroups(`card.${ group.key }.title`) }
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  { tGroups(`card.${ group.key }.description`) }
-                </p>
-              </div>
-              <span className="text-xs text-muted-foreground">
-                { t("presetsCountTemplate", { count: group.presets.length }) }
-              </span>
-            </div>
-
-            <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
-              { group.presets.map((preset) => (
-                <CardSwatchButton
-                  key={ preset.id }
-                  preset={ preset }
-                  label={ cardLabel(preset.id) }
-                  isSelected={ mounted && selectedCardId === preset.id }
-                  onSelect={ handleCardSelect }
+                  label={ themeLabel(preset.id) }
+                  isSelected={ mounted && selectedPresetId === preset.id }
+                  onSelect={ handleSelect }
                 />
               )) }
             </div>

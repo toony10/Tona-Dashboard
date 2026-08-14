@@ -103,8 +103,8 @@
         "highlights": ["فرز الأعمدة", "إجراءات الصف", "حالات التحميل"]
       },
       "settings": {
-        "description": "تخصيص مظهر لوحة التحكم، بما في ذلك خلفيات الوضع الداكن.",
-        "highlights": ["قوالب الوضع الداكن", "ألوان الشريط الجانبي"]
+        "description": "تخصيص مظهر لوحة التحكم بقوالب الوضع الداكن المتناسقة.",
+        "highlights": ["لوحة وبطاقات متناسقة", "ألوان الشريط الجانبي"]
       }
     }
   },
@@ -582,7 +582,7 @@
     "cards": {
       "darkTheme": {
         "title": "ألوان الوضع الداكن",
-        "description": "اختر خلفية الوضع الداكن لواجهة لوحة التحكم والشريط الجانبي من قوالب جاهزة."
+        "description": "اختر سمة داكنة. ألوان اللوحة والبطاقات مقترنة تلقائياً."
       }
     },
     "moreSettings": {
@@ -592,11 +592,11 @@
     "pages": {
       "darkTheme": {
         "title": "ألوان الوضع الداكن",
-        "description": "اختر ألوان الخلفية والبطاقات في الوضع الداكن لواجهة لوحة التحكم والشريط الجانبي."
+        "description": "اختر سمة داكنة واحدة. كل قالب يقرن لون اللوحة بلون بطاقة مناسب."
       }
     },
     "presets": {
-      "background": {
+      "theme": {
         "charcoal": "فحمي",
         "nearBlack": "أسود تقريباً",
         "slateBlue": "أزرق رمادي",
@@ -619,35 +619,10 @@
         "wine": "نبيذي",
         "slate": "أردوازي",
         "obsidian": "سبج"
-      },
-      "card": {
-        "default": "افتراضي",
-        "zinc": "زنك",
-        "graphite": "غرافيت",
-        "charcoal": "فحمي",
-        "darkGray": "رمادي داكن",
-        "carbon": "كربون",
-        "nearBlack": "أسود تقريباً",
-        "github": "وضع GitHub الداكن",
-        "obsidian": "سبج",
-        "slate": "أردوازي",
-        "slateBlue": "أزرق رمادي",
-        "storm": "عاصفة",
-        "blueGray": "رمادي مزرق",
-        "navy": "كحلي",
-        "deepBlue": "أزرق عميق",
-        "midnight": "منتصف الليل",
-        "indigoNight": "نيلي ليلي",
-        "purpleHaze": "ضباب بنفسجي",
-        "tealDark": "تركواز داكن",
-        "forest": "غابة",
-        "olive": "زيتوني",
-        "espresso": "إسبريسو",
-        "wine": "نبيذي"
       }
     },
     "groups": {
-      "background": {
+      "theme": {
         "neutrals": {
           "title": "محايدة",
           "description": "أساسيات نظيفة وبسيطة"
@@ -660,44 +635,28 @@
           "title": "طبيعية ودافئة",
           "description": "ألوان عضوية ومريحة"
         }
-      },
-      "card": {
-        "foundations": {
-          "title": "أساسية",
-          "description": "أسطح بطاقات محايدة"
-        },
-        "coolTones": {
-          "title": "ألوان باردة",
-          "description": "أسطح بطاقات زرقاء ورمادية"
-        },
-        "warmTones": {
-          "title": "ألوان دافئة",
-          "description": "أسطح بطاقات عضوية"
-        }
       }
     },
     "picker": {
       "canvasPreview": "معاينة اللوحة",
       "livePreview": "معاينة مباشرة",
       "activeAtmosphere": "الجو النشط",
-      "activeAtmosphereDesc": "اختياراتك تلوّن واجهة الصفحة والشريط الجانبي وأسطح البطاقات في الوضع الداكن.",
-      "backgroundLabel": "الخلفية",
-      "cardLabel": "البطاقة",
-      "copyBackgroundAria": "نسخ لون الخلفية",
+      "activeAtmosphereDesc": "سمة واحدة تلوّن واجهة الصفحة والشريط الجانبي وأسطح البطاقات كزوج متناسق.",
+      "pairedSubtitle": "اللوحة والبطاقات، متناسقان",
+      "canvasLabel": "اللوحة",
+      "cardsLabel": "البطاقات",
+      "copyCanvasAria": "نسخ لون اللوحة",
       "copyCardAria": "نسخ لون البطاقة",
-      "backgroundColorCopyLabel": "لون الخلفية",
+      "canvasColorCopyLabel": "لون اللوحة",
       "cardColorCopyLabel": "لون البطاقة",
       "copiedToast": "تم نسخ {label}",
       "copyErrorToast": "تعذّر نسخ اللون",
       "switchToDarkHint": "انتقل إلى الوضع الداكن لرؤية تحديث اللوحة فوراً عبر لوحة التحكم الحقيقية.",
       "liveOnDashboard": "مفعّل على لوحة التحكم",
-      "backgroundColorsTitle": "ألوان الخلفية",
-      "backgroundColorsDesc": "اختر اللوحة خلف محتوى لوحة التحكم والشريط الجانبي.",
-      "cardColorsTitle": "ألوان البطاقات",
-      "cardColorsDesc": "خصّص أسطح البطاقات في الوضع الداكن. الافتراضي يستخدم القيمة الاحتياطية من globals.css.",
+      "themeColorsTitle": "ألوان السمة",
+      "themeColorsDesc": "اختر جواً واحداً. كل قالب يرفع البطاقات بما يكفي لتبقى مقروءة على اللوحة.",
       "presetsCountTemplate": "{count} قالب",
-      "useBackgroundAria": "استخدام خلفية داكنة: {label}",
-      "useCardAria": "استخدام لون بطاقة داكن: {label}"
+      "useThemeAria": "استخدام سمة داكنة: {label}"
     }
   },
   "User": {

@@ -103,8 +103,8 @@
         "highlights": ["Column sorting", "Row actions", "Loading states"]
       },
       "settings": {
-        "description": "Customize dashboard appearance, including curated dark theme backgrounds.",
-        "highlights": ["Dark theme presets", "Shell & sidebar colors"]
+        "description": "Customize dashboard appearance with curated dark themes.",
+        "highlights": ["Matched canvas and cards", "Shell & sidebar colors"]
       }
     }
   },
@@ -582,7 +582,7 @@
     "cards": {
       "darkTheme": {
         "title": "Dark Theme Colors",
-        "description": "Pick a dark mode background for the dashboard shell and sidebar from curated presets."
+        "description": "Pick a dark theme. Canvas and card colors are paired for you."
       }
     },
     "moreSettings": {
@@ -592,11 +592,11 @@
     "pages": {
       "darkTheme": {
         "title": "Dark Theme Colors",
-        "description": "Choose dark mode background and card colors for the dashboard shell and sidebar."
+        "description": "Pick one dark theme. Each preset pairs a canvas color with a matching card surface."
       }
     },
     "presets": {
-      "background": {
+      "theme": {
         "charcoal": "Charcoal",
         "nearBlack": "Near black",
         "slateBlue": "Slate blue",
@@ -619,35 +619,10 @@
         "wine": "Wine",
         "slate": "Slate",
         "obsidian": "Obsidian"
-      },
-      "card": {
-        "default": "Default",
-        "zinc": "Zinc",
-        "graphite": "Graphite",
-        "charcoal": "Charcoal",
-        "darkGray": "Dark gray",
-        "carbon": "Carbon",
-        "nearBlack": "Near black",
-        "github": "GitHub dark",
-        "obsidian": "Obsidian",
-        "slate": "Slate",
-        "slateBlue": "Slate blue",
-        "storm": "Storm",
-        "blueGray": "Blue gray",
-        "navy": "Navy",
-        "deepBlue": "Deep blue",
-        "midnight": "Midnight",
-        "indigoNight": "Indigo night",
-        "purpleHaze": "Purple haze",
-        "tealDark": "Teal dark",
-        "forest": "Forest",
-        "olive": "Olive",
-        "espresso": "Espresso",
-        "wine": "Wine"
       }
     },
     "groups": {
-      "background": {
+      "theme": {
         "neutrals": {
           "title": "Neutrals",
           "description": "Clean, minimal foundations"
@@ -660,44 +635,28 @@
           "title": "Nature & warmth",
           "description": "Organic and cozy tones"
         }
-      },
-      "card": {
-        "foundations": {
-          "title": "Foundations",
-          "description": "Neutral card surfaces"
-        },
-        "coolTones": {
-          "title": "Cool tones",
-          "description": "Blue and slate card surfaces"
-        },
-        "warmTones": {
-          "title": "Warm tones",
-          "description": "Organic card surfaces"
-        }
       }
     },
     "picker": {
       "canvasPreview": "Canvas preview",
       "livePreview": "Live preview",
       "activeAtmosphere": "Active atmosphere",
-      "activeAtmosphereDesc": "Your selections paint the page shell, sidebar, and card surfaces in dark mode.",
-      "backgroundLabel": "Background",
-      "cardLabel": "Card",
-      "copyBackgroundAria": "Copy background hex color",
+      "activeAtmosphereDesc": "One theme paints the page shell, sidebar, and card surfaces as a matched pair.",
+      "pairedSubtitle": "Canvas and cards, paired",
+      "canvasLabel": "Canvas",
+      "cardsLabel": "Cards",
+      "copyCanvasAria": "Copy canvas hex color",
       "copyCardAria": "Copy card hex color",
-      "backgroundColorCopyLabel": "Background color",
+      "canvasColorCopyLabel": "Canvas color",
       "cardColorCopyLabel": "Card color",
       "copiedToast": "{label} copied",
       "copyErrorToast": "Could not copy color",
       "switchToDarkHint": "Switch to dark mode to see your canvas update across the real dashboard instantly.",
       "liveOnDashboard": "Live on dashboard",
-      "backgroundColorsTitle": "Background colors",
-      "backgroundColorsDesc": "Choose the canvas behind your dashboard content and sidebar.",
-      "cardColorsTitle": "Card colors",
-      "cardColorsDesc": "Customize card surfaces in dark mode. Default uses the theme fallback from globals.css.",
+      "themeColorsTitle": "Theme colors",
+      "themeColorsDesc": "Choose one atmosphere. Each preset lifts cards just enough to stay readable on the canvas.",
       "presetsCountTemplate": "{count} presets",
-      "useBackgroundAria": "Use {label} dark background",
-      "useCardAria": "Use {label} dark card color"
+      "useThemeAria": "Use {label} dark theme"
     }
   },
   "User": {

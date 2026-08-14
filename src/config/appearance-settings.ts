@@ -25,6 +25,22 @@ export const darkThemePresets = [
   { id: "wine", value: "#2A1A1F", card: "#35252B" },
   { id: "slate", value: "#1E293B", card: "#334155" },
   { id: "obsidian", value: "#0B0F14", card: "#151A20" },
+  { id: "oled", value: "#050505", card: "#141414" },
+  { id: "taupe", value: "#1C1917", card: "#2A2623" },
+  { id: "azure", value: "#0B1C2C", card: "#163044" },
+  { id: "ocean", value: "#0A2226", card: "#163840" },
+  { id: "ice", value: "#171E2B", card: "#252E3E" },
+  { id: "emerald", value: "#0E221C", card: "#1A352C" },
+  { id: "moss", value: "#181F16", card: "#283224" },
+  { id: "pine", value: "#10201C", card: "#1C322C" },
+  { id: "rust", value: "#291512", card: "#3C221C" },
+  { id: "bronze", value: "#221C14", card: "#342C20" },
+  { id: "terracotta", value: "#2A1713", card: "#3D2520" },
+  { id: "amber", value: "#221C0F", card: "#342B18" },
+  { id: "plum", value: "#1B1322", card: "#2C1E34" },
+  { id: "violet", value: "#151328", card: "#24203C" },
+  { id: "rose", value: "#231418", card: "#352228" },
+  { id: "berry", value: "#1E1020", card: "#301A32" },
 ] as const
 
 export type DarkThemePresetId = (typeof darkThemePresets)[number]["id"]

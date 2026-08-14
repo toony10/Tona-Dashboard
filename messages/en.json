@@ -58,7 +58,7 @@
     "chartsAnalytics": "Dashboard Charts",
     "table": "Table",
     "settings": "Settings",
-    "settingsDarkTheme": "Dark Theme Colors"
+    "settingsDarkTheme": "Dark mode colors"
   },
   "Auth": {
     "pageTitle": "Sign in | Starter Dash",
@@ -103,8 +103,8 @@
         "highlights": ["Column sorting", "Row actions", "Loading states"]
       },
       "settings": {
-        "description": "Customize dashboard appearance with curated dark themes.",
-        "highlights": ["Matched canvas and cards", "Shell & sidebar colors"]
+        "description": "Customize dashboard appearance with curated dark colors.",
+        "highlights": ["Matched background and cards", "Shell & sidebar colors"]
       }
     }
   },
@@ -581,8 +581,8 @@
     },
     "cards": {
       "darkTheme": {
-        "title": "Dark Theme Colors",
-        "description": "Pick a dark theme. Canvas and card colors are paired for you."
+        "title": "Dark mode colors",
+        "description": "Choose how the dashboard looks in dark mode."
       }
     },
     "moreSettings": {
@@ -591,8 +591,8 @@
     },
     "pages": {
       "darkTheme": {
-        "title": "Dark Theme Colors",
-        "description": "Pick one dark theme. Each preset pairs a canvas color with a matching card surface."
+        "title": "Dark mode colors",
+        "description": "Pick one color for dark mode. The page background and cards update together so they always match."
       }
     },
     "presets": {
@@ -618,45 +618,69 @@
         "espresso": "Espresso",
         "wine": "Wine",
         "slate": "Slate",
-        "obsidian": "Obsidian"
+        "obsidian": "Obsidian",
+        "oled": "OLED black",
+        "taupe": "Taupe",
+        "azure": "Azure",
+        "ocean": "Ocean",
+        "ice": "Ice",
+        "emerald": "Emerald",
+        "moss": "Moss",
+        "pine": "Pine",
+        "rust": "Rust",
+        "bronze": "Bronze",
+        "terracotta": "Terracotta",
+        "amber": "Amber",
+        "plum": "Plum",
+        "violet": "Violet",
+        "rose": "Rose",
+        "berry": "Berry"
       }
     },
     "groups": {
       "theme": {
         "neutrals": {
-          "title": "Neutrals",
-          "description": "Clean, minimal foundations"
+          "title": "Gray and black",
+          "description": "Simple looks without extra color"
         },
-        "bluesSlate": {
-          "title": "Blues & slate",
-          "description": "Cool, focused atmospheres"
+        "blues": {
+          "title": "Blues",
+          "description": "Cool blue and gray looks"
         },
-        "natureWarmth": {
-          "title": "Nature & warmth",
-          "description": "Organic and cozy tones"
+        "greens": {
+          "title": "Greens",
+          "description": "Forest and teal looks"
+        },
+        "warmTones": {
+          "title": "Warm tones",
+          "description": "Brown, rust, and gold looks"
+        },
+        "purplesRose": {
+          "title": "Purples and rose",
+          "description": "Violet and pink looks"
         }
       }
     },
     "picker": {
-      "canvasPreview": "Canvas preview",
+      "canvasPreview": "Preview",
       "livePreview": "Live preview",
-      "activeAtmosphere": "Active atmosphere",
-      "activeAtmosphereDesc": "One theme paints the page shell, sidebar, and card surfaces as a matched pair.",
-      "pairedSubtitle": "Canvas and cards, paired",
-      "canvasLabel": "Canvas",
+      "activeAtmosphere": "Currently selected",
+      "activeAtmosphereDesc": "This color is applied to the background, sidebar, and cards.",
+      "pairedSubtitle": "Background and cards match automatically",
+      "canvasLabel": "Background",
       "cardsLabel": "Cards",
-      "copyCanvasAria": "Copy canvas hex color",
+      "copyCanvasAria": "Copy background hex color",
       "copyCardAria": "Copy card hex color",
-      "canvasColorCopyLabel": "Canvas color",
+      "canvasColorCopyLabel": "Background color",
       "cardColorCopyLabel": "Card color",
       "copiedToast": "{label} copied",
       "copyErrorToast": "Could not copy color",
-      "switchToDarkHint": "Switch to dark mode to see your canvas update across the real dashboard instantly.",
+      "switchToDarkHint": "Switch to dark mode to see your color update across the real dashboard instantly.",
       "liveOnDashboard": "Live on dashboard",
-      "themeColorsTitle": "Theme colors",
-      "themeColorsDesc": "Choose one atmosphere. Each preset lifts cards just enough to stay readable on the canvas.",
-      "presetsCountTemplate": "{count} presets",
-      "useThemeAria": "Use {label} dark theme"
+      "themeColorsTitle": "Available colors",
+      "themeColorsDesc": "Click a color to apply it. Cards stay a little lighter than the background so they are easier to see.",
+      "presetsCountTemplate": "{count} colors",
+      "useThemeAria": "Use {label} dark color"
     }
   },
   "User": {

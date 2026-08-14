@@ -103,8 +103,8 @@
         "highlights": ["فرز الأعمدة", "إجراءات الصف", "حالات التحميل"]
       },
       "settings": {
-        "description": "تخصيص مظهر لوحة التحكم بقوالب الوضع الداكن المتناسقة.",
-        "highlights": ["لوحة وبطاقات متناسقة", "ألوان الشريط الجانبي"]
+        "description": "تخصيص مظهر لوحة التحكم بألوان الوضع الداكن المتناسقة.",
+        "highlights": ["خلفية وبطاقات متناسقة", "ألوان الشريط الجانبي"]
       }
     }
   },
@@ -582,7 +582,7 @@
     "cards": {
       "darkTheme": {
         "title": "ألوان الوضع الداكن",
-        "description": "اختر سمة داكنة. ألوان اللوحة والبطاقات مقترنة تلقائياً."
+        "description": "اختر كيف تبدو لوحة التحكم في الوضع الداكن."
       }
     },
     "moreSettings": {
@@ -592,7 +592,7 @@
     "pages": {
       "darkTheme": {
         "title": "ألوان الوضع الداكن",
-        "description": "اختر سمة داكنة واحدة. كل قالب يقرن لون اللوحة بلون بطاقة مناسب."
+        "description": "اختر لوناً واحداً للوضع الداكن. خلفية الصفحة والبطاقات تتحدث معاً لتبقى متناسقة."
       }
     },
     "presets": {
@@ -618,45 +618,69 @@
         "espresso": "إسبريسو",
         "wine": "نبيذي",
         "slate": "أردوازي",
-        "obsidian": "سبج"
+        "obsidian": "سبج",
+        "oled": "أسود خالص",
+        "taupe": "رمادي دافئ",
+        "azure": "أزرق سماوي",
+        "ocean": "محيطي",
+        "ice": "جليدي",
+        "emerald": "زمردي",
+        "moss": "طحلب",
+        "pine": "صنوبر",
+        "rust": "صدئ",
+        "bronze": "برونزي",
+        "terracotta": "تيراكوتا",
+        "amber": "عنبري",
+        "plum": "برقوقي",
+        "violet": "بنفسجي",
+        "rose": "وردي",
+        "berry": "توتي"
       }
     },
     "groups": {
       "theme": {
         "neutrals": {
-          "title": "محايدة",
-          "description": "أساسيات نظيفة وبسيطة"
+          "title": "رمادي وأسود",
+          "description": "مظهر بسيط بدون ألوان إضافية"
         },
-        "bluesSlate": {
-          "title": "زرقاء ورمادية",
-          "description": "أجواء باردة ومركّزة"
+        "blues": {
+          "title": "أزرق",
+          "description": "درجات زرقاء ورمادية باردة"
         },
-        "natureWarmth": {
-          "title": "طبيعية ودافئة",
-          "description": "ألوان عضوية ومريحة"
+        "greens": {
+          "title": "أخضر",
+          "description": "درجات غابة وتركواز"
+        },
+        "warmTones": {
+          "title": "ألوان دافئة",
+          "description": "بني وصدأ وذهبي"
+        },
+        "purplesRose": {
+          "title": "بنفسجي ووردي",
+          "description": "درجات بنفسجية ووردية"
         }
       }
     },
     "picker": {
-      "canvasPreview": "معاينة اللوحة",
+      "canvasPreview": "معاينة",
       "livePreview": "معاينة مباشرة",
-      "activeAtmosphere": "الجو النشط",
-      "activeAtmosphereDesc": "سمة واحدة تلوّن واجهة الصفحة والشريط الجانبي وأسطح البطاقات كزوج متناسق.",
-      "pairedSubtitle": "اللوحة والبطاقات، متناسقان",
-      "canvasLabel": "اللوحة",
+      "activeAtmosphere": "اللون الحالي",
+      "activeAtmosphereDesc": "يُطبَّق هذا اللون على الخلفية والشريط الجانبي والبطاقات.",
+      "pairedSubtitle": "الخلفية والبطاقات متناسقتان تلقائياً",
+      "canvasLabel": "الخلفية",
       "cardsLabel": "البطاقات",
-      "copyCanvasAria": "نسخ لون اللوحة",
+      "copyCanvasAria": "نسخ لون الخلفية",
       "copyCardAria": "نسخ لون البطاقة",
-      "canvasColorCopyLabel": "لون اللوحة",
+      "canvasColorCopyLabel": "لون الخلفية",
       "cardColorCopyLabel": "لون البطاقة",
       "copiedToast": "تم نسخ {label}",
       "copyErrorToast": "تعذّر نسخ اللون",
-      "switchToDarkHint": "انتقل إلى الوضع الداكن لرؤية تحديث اللوحة فوراً عبر لوحة التحكم الحقيقية.",
+      "switchToDarkHint": "انتقل إلى الوضع الداكن لرؤية اللون يتحدث فوراً عبر لوحة التحكم الحقيقية.",
       "liveOnDashboard": "مفعّل على لوحة التحكم",
-      "themeColorsTitle": "ألوان السمة",
-      "themeColorsDesc": "اختر جواً واحداً. كل قالب يرفع البطاقات بما يكفي لتبقى مقروءة على اللوحة.",
-      "presetsCountTemplate": "{count} قالب",
-      "useThemeAria": "استخدام سمة داكنة: {label}"
+      "themeColorsTitle": "الألوان المتاحة",
+      "themeColorsDesc": "انقر لوناً لتطبيقه. البطاقات أفتح قليلاً من الخلفية حتى تظهر بوضوح.",
+      "presetsCountTemplate": "{count} ألوان",
+      "useThemeAria": "استخدام اللون الداكن: {label}"
     }
   },
   "User": {

@@ -31,10 +31,12 @@ const presetGroups = [
       "carbon",
       "github",
       "obsidian",
+      "oled",
+      "taupe",
     ],
   },
   {
-    key: "bluesSlate",
+    key: "blues",
     ids: [
       "slate-blue",
       "navy",
@@ -44,17 +46,41 @@ const presetGroups = [
       "slate",
       "midnight",
       "indigo-night",
+      "azure",
+      "ocean",
+      "ice",
     ],
   },
   {
-    key: "natureWarmth",
+    key: "greens",
     ids: [
       "teal-dark",
       "forest",
       "olive",
+      "emerald",
+      "moss",
+      "pine",
+    ],
+  },
+  {
+    key: "warmTones",
+    ids: [
       "espresso",
       "wine",
+      "rust",
+      "bronze",
+      "terracotta",
+      "amber",
+    ],
+  },
+  {
+    key: "purplesRose",
+    ids: [
       "purple-haze",
+      "plum",
+      "violet",
+      "rose",
+      "berry",
     ],
   },
 ] as const satisfies ReadonlyArray<{

@@ -16,9 +16,9 @@ The root layout composes global providers and scripts for:
 
 ## Route structure
 
-- `src/app/layout.tsx`: global HTML/body, providers, and app-wide setup.
-- `src/app/(auth)/layout.tsx`: visual shell for auth screens.
-- `src/app/(main)/layout.tsx`: authenticated dashboard shell with sidebar/header.
+- `src/app/[locale]/layout.tsx`: locale HTML/body, providers, and app-wide setup.
+- `src/app/[locale]/(auth)/layout.tsx`: visual shell for auth screens.
+- `src/app/[locale]/(main)/layout.tsx`: authenticated dashboard shell with sidebar/header.
 
 ## UI composition
 
@@ -38,8 +38,9 @@ The root layout composes global providers and scripts for:
 Backend communication goes through a server-only API client in `src/lib/api/`, with auth isolated in `src/lib/auth/`:
 
 - All backend requests are made server-side (server components, server actions, route handlers) — client components never call the backend directly.
-- Auth route handlers (`/api/auth/login|refresh|logout`) own cookie storage; the API client only reads tokens, refreshes via `refreshSession()`, and retries once on 401.
+- `apiClient` returns `ApiResponse` and never throws for HTTP/JSON errors. Callers check `response.success`.
+- `src/proxy.ts` composes next-intl locale routing with silent refresh: it writes cookies on the response and forwards `x-access-token` for the current request. Redirects keep the current locale (`/en/settings` → `/en/login`).
+- Auth cookies (`accessToken` / `refreshToken`) are httpOnly. Login/logout/refresh route handlers persist them via `setAuthCookies` / `clearAuthCookies`.
 - Dashboard fetches default to `cache: "no-store"` so authenticated data is never cached.
-- All failures are normalized into a single `ApiError` type consumed by server actions and error boundaries.
 
 Full reference: `docs/api-reference/api-client.md`.

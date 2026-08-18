@@ -1,7 +1,9 @@
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-import { getApiBaseUrl } from "@/lib/api/config";
-import { isAuthTokens, persistAuthTokens } from "@/lib/auth";
+import { apiClient } from "@/lib/api";
+import { setAuthCookies } from "@/lib/auth";
+import type { AuthTokens } from "@/lib/api/types";
 import type { LoginBody } from "@/types/auth";
 
 /**
@@ -24,44 +26,23 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Email and password are required" }, { status: 400 });
   }
 
-  let response: Response;
-  try {
-    response = await fetch(`${getApiBaseUrl()}/auth/login`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-      cache: "no-store",
-    });
-  } catch {
-    return NextResponse.json({ message: "Unable to reach authentication service" }, { status: 502 });
+  const response = await apiClient<AuthTokens, LoginBody>("auth/login", {
+    method: "POST",
+    body: { email, password },
+  });
+
+  const accessToken = response.data?.accessToken;
+  const refreshToken = response.data?.refreshToken;
+
+  if (!response.success || !accessToken || !refreshToken) {
+    return NextResponse.json(
+      { message: response.message || "Invalid credentials" },
+      { status: response.statusCode || 401 },
+    );
   }
 
-  let payload: unknown;
-  try {
-    payload = await response.json();
-  } catch {
-    payload = undefined;
-  }
-
-  if (!response.ok) {
-    const message =
-      payload &&
-      typeof payload === "object" &&
-      typeof (payload as { message?: unknown }).message === "string"
-        ? (payload as { message: string }).message
-        : "Invalid credentials";
-
-    return NextResponse.json({ message }, { status: response.status });
-  }
-
-  if (!isAuthTokens(payload)) {
-    return NextResponse.json({ message: "Unexpected authentication response" }, { status: 502 });
-  }
-
-  await persistAuthTokens(payload);
+  const cookieStore = await cookies();
+  setAuthCookies(cookieStore, accessToken, refreshToken);
 
   return NextResponse.json({ success: true });
 }

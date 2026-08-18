@@ -1,17 +1,27 @@
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-import { refreshSession } from "@/lib/auth";
+import { REFRESH_TOKEN_COOKIE, clearAuthCookies, refreshTokens, setAuthCookies } from "@/lib/auth";
 
 /**
  * Rotates the session cookies via the backend refresh endpoint.
- * Cookie writes happen inside `refreshSession` → `cookies.ts` helpers.
  */
 export async function POST() {
-  const refreshed = await refreshSession();
+  const cookieStore = await cookies();
+  const refreshToken = cookieStore.get(REFRESH_TOKEN_COOKIE)?.value;
 
-  if (!refreshed) {
+  if (!refreshToken) {
     return NextResponse.json({ message: "Session expired" }, { status: 401 });
   }
+
+  const tokens = await refreshTokens(refreshToken);
+
+  if (!tokens) {
+    clearAuthCookies(cookieStore);
+    return NextResponse.json({ message: "Session expired" }, { status: 401 });
+  }
+
+  setAuthCookies(cookieStore, tokens.accessToken, tokens.refreshToken);
 
   return NextResponse.json({ success: true });
 }

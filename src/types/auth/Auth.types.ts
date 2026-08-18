@@ -1,12 +1,4 @@
-/** Tokens returned by the backend auth endpoints (login / refresh). */
-export type AuthTokens = {
-  accessToken: string;
-  refreshToken: string;
-  /** Access-token lifetime in seconds (optional; JWT `exp` used as fallback). */
-  expiresIn?: number;
-  /** Refresh-token lifetime in seconds (optional; JWT `exp` used as fallback). */
-  refreshExpiresIn?: number;
-};
+export type { AuthTokens } from "@/lib/api/types";
 
 /** Body accepted by `POST /api/auth/login`. */
 export type LoginBody = {

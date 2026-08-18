@@ -1,6 +1,1 @@
-export type {
-  ApiClientOptions,
-  ApiRequestOptions,
-  HttpMethod,
-  SearchParams,
-} from "./Client.types";
+export type { ApiResponse, HttpMethod, RequestOptions } from "./Client.types";

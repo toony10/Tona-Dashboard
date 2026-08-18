@@ -1,280 +1,293 @@
-# API Reference: API Client
+# API Reference: API Client and Auth
 
-Server-only HTTP client for communicating with the backend API. It centralizes base URL resolution, authentication headers, automatic session refresh, caching semantics, body serialization (JSON and `FormData`), and error normalization — so pages, server actions, and route handlers never call `fetch` directly against the backend (except the dedicated auth routes).
+Server-only HTTP client and session layer for the dashboard. It centralizes base URL resolution, Bearer auth, silent token refresh, and a consistent `ApiResponse` shape — so pages, server actions, and route handlers never call `fetch` against the backend except `refreshTokens` (plain `fetch` on purpose).
+
+`apiClient` **never throws** for HTTP or JSON errors. Callers check `response.success`.
 
 ## Files
 
 | File | Responsibility |
 |------|----------------|
-| `src/lib/api/client.ts` | Core `apiClient()` function, `api` verb helpers, request execution, 401 retry orchestration |
-| `src/lib/api/errors.ts` | `ApiError` class, backend error normalization, `getErrorMessage()` helper |
-| `src/lib/api/config.ts` | Base URL resolution (`getApiBaseUrl()`) |
-| `src/lib/api/index.ts` | Barrel export — always import from `@/lib/api` |
-| `src/lib/auth/cookies.ts` | httpOnly cookie helpers (`set` / `get` / `clear` / `persistAuthTokens`) |
-| `src/lib/auth/jwt.ts` | JWT `exp` / `expiresIn` → cookie `maxAge` helpers |
-| `src/lib/auth/refresh.ts` | `refreshSession()`, concurrent-refresh deduplication |
-| `src/types/api/` | API client option types (`Client.types.ts`) |
-| `src/types/auth/` | Auth / JWT types (`Auth.types.ts`, `Jwt.types.ts`) |
-| `src/app/api/auth/*/route.ts` | Login / refresh / logout route handlers (own cookie storage) |
+| `src/lib/api/client.ts` | `apiClient()` — attach token, fetch, return `ApiResponse` |
+| `src/lib/api/config.ts` | `getApiBaseUrl()`, `getRefreshPath()` |
+| `src/lib/api/types.ts` | `ApiResponse`, `RequestOptions`, `AuthTokens` |
+| `src/lib/api/index.ts` | Server barrel — import this from Server Components, actions, and route handlers |
+| `src/lib/auth/index.ts` | **Edge-safe** barrel for `proxy.ts` (no `server-only`, no `cookies()` from `next/headers`) |
+| `src/lib/auth/get-auth-token.ts` | Server-only: resolve access token (header → cookie → refresh) |
+| `src/lib/auth/refresh-tokens.ts` | `POST` refresh endpoint only; does not read or write cookies |
+| `src/lib/auth/set-auth-cookies.ts` / `clear-auth-cookies.ts` | Write/delete on a store you pass in |
+| `src/lib/auth/clear-auth-cookies-from-store.ts` | Server-only shortcut: `cookies()` then delete |
+| `src/proxy.ts` | Silent refresh + `x-access-token` forwarding on navigations |
+| `src/app/api/auth/*/route.ts` | Login / refresh / logout route handlers |
+
+`proxy.ts` **must** import from `@/lib/auth`. Importing `@/lib/api` loads `getAuthToken` (`server-only` + `next/headers`), which Edge middleware cannot use.
 
 ## Server-only guarantee
 
-`client.ts` and the auth module begin with `import "server-only"`. Importing them (directly or transitively) from a client component fails **at build time** with a clear error. This is intentional:
-
-- The access token lives in an **httpOnly cookie** and must never reach the browser bundle.
-- `API_URL` is a server-side environment variable (no `NEXT_PUBLIC_` prefix), so the backend origin is never exposed to the client.
+`get-auth-token.ts` and `clear-auth-cookies-from-store.ts` begin with `import "server-only"`. Importing `@/lib/api` (directly or transitively) from a client component fails **at build time**. This is intentional: the access token lives in an httpOnly cookie and must never reach the browser bundle.
 
 Client components never fetch the backend directly. They call **server actions** or the Next.js auth route handlers (`/api/auth/*`).
 
 ---
 
-## Environment setup
+## Environment
 
-The client reads the backend origin from `API_URL`:
+Set these in `.env.local` (see `.env.example`):
+
+| Variable | Required | Default | Purpose |
+|---|---|---|---|
+| `NEXT_PUBLIC_API_BASE_URL` | yes* | — | Backend origin, no trailing slash |
+| `API_URL` | fallback | — | Used if `NEXT_PUBLIC_API_BASE_URL` is missing |
+| `API_REFRESH_PATH` | no | `auth/refresh` | Path under the base URL (no leading slash) |
+
+\* One of `NEXT_PUBLIC_API_BASE_URL` or `API_URL` must be set. `getApiBaseUrl()` throws if both are missing.
+
+Trailing slashes on the base URL and leading/trailing slashes on the refresh path are stripped automatically.
 
 ```bash
-# .env.local (see .env.example)
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api
 API_URL=http://localhost:8000/api
+# API_REFRESH_PATH=auth/refresh
 ```
-
-- Include the path prefix (e.g. `/api`) if the backend uses one.
-- Trailing slashes are stripped automatically.
-- If `API_URL` is missing, the first request throws with a descriptive message. The check happens at request time (not import time) so builds don't fail on machines without an env file.
-
-## Configuration (`config.ts`)
-
-| Export | Purpose |
-|--------|---------|
-| `getApiBaseUrl()` | Returns `API_URL` with trailing slashes stripped; throws if unset |
-
-Cookie names and JWT helpers live in `@/lib/auth`, not in the API client config.
 
 ---
 
-## Public API
+## Backend response contract
 
-### Verb helpers (preferred)
+Every call, including refresh, is expected to look like:
 
 ```ts
-import { api } from "@/lib/api";
-
-api.get<T>(endpoint, options?)
-api.post<T>(endpoint, body?, options?)
-api.put<T>(endpoint, body?, options?)
-api.patch<T>(endpoint, body?, options?)
-api.delete<T>(endpoint, options?)
-```
-
-All helpers delegate to `apiClient<T>()` and share the same options and behavior. `T` is the type of the parsed response body.
-
-### `apiClient<T>(endpoint, options?)`
-
-The core function. Use it directly only when you need to set `method` dynamically; otherwise prefer the verb helpers.
-
-### Options (`ApiClientOptions`)
-
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `requiresAuth` | `boolean` | `true` | Attach `Authorization: Bearer <access_token>` from the session cookie. Set to `false` for public endpoints (login, register, forgot-password). |
-| `cache` | `RequestCache` | `"no-store"` | Next.js fetch cache mode. The dashboard default is `no-store` — authenticated data must never be cached. Ignored when `tags` or `revalidate` are set. |
-| `tags` | `string[]` | — | Cache tags for on-demand invalidation via `revalidateTag()`. Only for public/cacheable data (website apps) — never combine with authenticated fetches. |
-| `revalidate` | `number \| false` | — | ISR fallback window in seconds. Same restriction as `tags`. |
-| `searchParams` | `Record<string, string \| number \| boolean \| null \| undefined>` | — | Appended to the URL as a query string. Entries that are `null`, `undefined`, or `""` are skipped — pass raw filter values without cleaning them first. |
-| `headers` | `HeadersInit` | — | Extra request headers. Merged before the defaults, so you can override `Accept` or `Content-Type` if needed. |
-| `signal` | `AbortSignal` | — | Standard abort/timeout support, passed straight to `fetch`. |
-| `method` | `"GET" \| "POST" \| "PUT" \| "PATCH" \| "DELETE"` | `"GET"` | Set automatically by the verb helpers. |
-| `body` | `FormData \| unknown` | — | See [Body serialization](#body-serialization). |
-
-### Endpoint format
-
-Pass paths relative to `API_URL`, with or without a leading slash — both `"products"` and `"/products"` resolve to `<API_URL>/products`.
-
----
-
-## Body serialization
-
-The `body` option accepts two kinds of values:
-
-1. **`FormData`** — sent as-is (`multipart/form-data`). The client deliberately does **not** set a `Content-Type` header: `fetch` generates the multipart boundary automatically, and setting the header manually would break the upload. Use this for anything containing files.
-2. **Anything else (non-null)** — `JSON.stringify`-ed and sent with `Content-Type: application/json`.
-
-`undefined`/`null` bodies send no payload.
-
-```ts
-// JSON
-await api.post<Product>("products", { name: "Desk", price: 199 });
-
-// Multipart with files — pass the FormData from a server action straight through
-await api.post<Product>("products", formData);
-```
-
-`FormData` bodies are re-serializable, which is what makes the automatic 401 retry safe: the same body can be sent twice without being "consumed".
-
----
-
-## Caching behavior
-
-Next.js rejects conflicting cache options (e.g. `revalidate` together with `cache: "no-store"`), so the client applies **exactly one strategy** per request:
-
-1. If `tags` or `revalidate` is provided → cached fetch: `{ next: { tags, revalidate } }`.
-2. Otherwise → `{ cache }`, defaulting to `"no-store"`.
-
-Rules of thumb (see the project caching conventions):
-
-- **Dashboard data (authenticated)** → always the default `no-store`. Don't pass `tags` or `revalidate`.
-- **Public/cacheable data** (only relevant if this client is reused in a public website app) → `tags` for on-demand invalidation, `revalidate` as a fallback window.
-- **Never** combine `requiresAuth: true` with cached fetches — cached authenticated responses can leak one user's data to another.
-
----
-
-## Response parsing
-
-| Response | Result |
-|----------|--------|
-| `204 No Content` | `undefined` (type it as `api.delete<void>(...)`) |
-| `Content-Type: application/json` | Parsed JSON, typed as `T` |
-| Anything else | Raw text |
-| Non-2xx status | Throws `ApiError` (see below) |
-| Network/DNS failure, abort | Throws `ApiError` with `status: 0` |
-
----
-
-## Error handling (`errors.ts`)
-
-Every failure surfaces as a single normalized type: **`ApiError`**.
-
-### `ApiError`
-
-| Property | Type | Meaning |
-|----------|------|---------|
-| `status` | `number` | HTTP status code. `0` means the request never reached the server (network failure, DNS error, abort). |
-| `message` | `string` | Human-readable message extracted from the response body, falling back to the status text. |
-| `fieldErrors` | `Record<string, string[]> \| undefined` | Per-field validation errors, e.g. `{ email: ["Already taken"] }`. |
-| `payload` | `unknown` | The raw response body, for anything the normalized fields don't cover. |
-
-Convenience getters: `isUnauthorized` (401), `isForbidden` (403), `isNotFound` (404), `isValidationError` (422 or `fieldErrors` present).
-
-### Backend error shape tolerance
-
-`apiErrorFromResponse()` extracts a message from any of the common backend conventions, in order of precedence:
-
-```json
-{ "message": "Product not found" }
-{ "error": "Product not found" }
-{ "errors": { "name": ["Required"], "price": ["Must be positive"] } }
-```
-
-Non-JSON error bodies (HTML error pages, empty bodies) are tolerated — the status text is used instead.
-
-### `getErrorMessage(error, fallback?)`
-
-Returns a safe, user-facing string from **any** thrown value. Use it in `catch` blocks for toast messages and `MutationResult.message`:
-
-```ts
-catch (error) {
-  return { success: false, message: getErrorMessage(error) };
+interface ApiResponse<TData = null> {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data?: TData;
+  errors?: string[];
 }
 ```
 
-### Where errors go
+Network failure (fetch threw):
 
-- **Server actions** — catch `ApiError` and map it to the `MutationResult` shape (`message` + field `errors`) that dialogs and forms consume.
-- **Server components** — usually let the error bubble to the route's `error.tsx` boundary. Catch selectively (e.g. `isNotFound` → call `notFound()`).
+```ts
+{ success: false, statusCode: 0, message: "Network error", errors: ["Failed to connect to the server"] }
+```
+
+Non-JSON error body:
+
+```ts
+{ success: false, statusCode: <http>, message: <statusText>, errors: [] }
+```
+
+Refresh tokens are read from **`data`**, not the top level:
+
+```ts
+type AuthTokens = {
+  accessToken: string;
+  refreshToken: string;
+};
+
+// POST {API}/auth/refresh
+// body: { refreshToken: string }
+// 200: { success, statusCode, message, data: { accessToken, refreshToken } }
+```
+
+If `success` is true but `data.accessToken` / `data.refreshToken` are missing, refresh is treated as failure (`null`).
 
 ---
 
-## Authentication architecture
+## `apiClient`
 
-Responsibilities are split so the API client never writes cookies:
+```ts
+import { apiClient } from "@/lib/api";
+import type { ApiResponse } from "@/lib/api";
 
-| Layer | Owns |
-|-------|------|
-| `src/app/api/auth/*/route.ts` | Browser-facing auth entry points; call the backend and persist tokens |
-| `src/lib/auth/cookies.ts` | Cookie names, options, `maxAge` resolution, read/write helpers |
-| `src/lib/auth/jwt.ts` | Decode JWT `exp` / prefer `expiresIn` for `maxAge` |
-| `src/lib/auth/refresh.ts` | Backend refresh call + concurrency dedupe (`refreshSession`) |
-| `src/lib/api/client.ts` | Headers, fetch, parse, 401 → refresh → retry once |
+const res = await apiClient<School[]>("schools");
+if (!res.success) {
+  // res.message, res.errors, res.statusCode
+  return;
+}
+const schools = res.data;
+```
 
-### Cookie model
+Signature:
 
-| Cookie | Lifetime | Purpose |
-|--------|----------|---------|
-| `access_token` | From JWT `exp` or `expiresIn` | Sent as `Authorization: Bearer <token>` on every authenticated request |
-| `refresh_token` | From JWT `exp` or `refreshExpiresIn` | Used only against `POST auth/refresh` to obtain new tokens |
+```ts
+apiClient<TData, TBody = unknown>(
+  endpoint: string,
+  options?: RequestOptions<TBody>,
+): Promise<ApiResponse<TData>>
+```
 
-Both are **httpOnly**, `sameSite=lax`, and `secure` in production. `maxAge` is derived automatically — never hardcoded.
+`RequestOptions`:
 
-### Auth route handlers
+| Option | Default | Notes |
+|---|---|---|
+| `method` | `"GET"` | `GET` \| `POST` \| `PUT` \| `PATCH` \| `DELETE` |
+| `body` | — | `FormData` is sent as-is (no `Content-Type`; fetch sets the multipart boundary). Anything else is `JSON.stringify`'d |
+| `cache` | `"no-store"` | Correct for authenticated dashboards. Do not cache authed data |
+| `tags` | — | Next.js cache tags (only if you opt into caching) |
+| `revalidate` | — | ISR window in seconds |
+
+Leading slashes on `endpoint` are stripped. The request URL is `{getApiBaseUrl()}/{endpoint}`.
+
+### What the client does on every call
+
+1. Call `getAuthToken()`.
+2. If a token is returned, set `Authorization: Bearer <token>`.
+3. If not, still send the request (login and other public endpoints work this way).
+4. Parse JSON into `ApiResponse<TData>` and return it.
+
+Dashboard fetches must stay `cache: "no-store"` (the default). Do not pass `tags` or `revalidate` on authenticated data.
+
+---
+
+## Cookies
+
+| Cookie | Constant | Typical lifetime |
+|---|---|---|
+| `accessToken` | `ACCESS_TOKEN_COOKIE` | JWT `exp` (fallback **15 minutes**) |
+| `refreshToken` | `REFRESH_TOKEN_COOKIE` | JWT `exp` (fallback **7 days**) |
+
+Options (`getAuthCookieOptions`):
+
+- `httpOnly: true` — JS in the browser cannot read them
+- `secure: true` in production
+- `sameSite: "lax"`
+- `path: "/"`
+- `maxAge` = seconds until JWT `exp`
+
+`getJwtMaxAgeSeconds` **decodes** the payload (no signature verify). It returns `undefined` if the token is malformed or already expired. The cookie then uses the fallback maxAge.
+
+`setAuthCookies(store, accessToken, refreshToken)` writes both.  
+`clearAuthCookies(store)` deletes both.
+
+The `store` is anything with `set` / `delete`:
+
+- Proxy: `response.cookies`
+- Server Action / Route Handler: `await cookies()` from `next/headers`
+
+`clearAuthCookiesFromStore()` is the server-only shortcut. Use it in logout. **Do not use it in `proxy.ts`.**
+
+---
+
+## Resolving the access token (`getAuthToken`)
+
+Server-only. Used by `apiClient`. Order:
+
+1. **`x-access-token` request header** (`ACCESS_TOKEN_HEADER`) — set by proxy after a silent refresh so *this* page load can use the new token (Set-Cookie on the response is only visible on the *next* request).
+2. **`accessToken` cookie**, if `isValidAccessToken` (JWT `exp` still in the future).
+3. Else if **`refreshToken` cookie** exists → `refreshTokens(refreshToken)`.
+   - Success → `setAuthCookies` (throws during Server Component render; the new access token is still returned for this call).
+   - Failure → `clearAuthCookies`, return `null`.
+4. Else return `null`.
+
+---
+
+## Refresh helper (`refreshTokens`)
+
+Plain `fetch`. **Never** goes through `apiClient` (that would recurse).
+
+- `POST {base}/{API_REFRESH_PATH}`
+- Body: `{ refreshToken }`
+- `cache: "no-store"`
+- Returns `{ accessToken, refreshToken }` or `null`
+
+It does **not** read or write cookies. Proxy and `getAuthToken` persist the result.
+
+---
+
+## Proxy (`src/proxy.ts`)
+
+Runs on every document request (matcher skips `api`, `trpc`, `_next`, `_vercel`, and files with an extension). It composes **next-intl** locale routing with session checks.
+
+Public auth paths (locale stripped first, so `/en/login` and `/ar/login` both count):
+
+- `/login`
+- `/forget-password`
+- `/reset-password`
+
+Everything else is treated as protected.
+
+Redirects keep the current locale (`/en/settings` → `/en/login`).
+
+### Decision tree
+
+1. **Valid `accessToken`**
+   - Auth route → redirect `/{locale}`
+   - Else → continue (intl middleware)
+2. **No valid access, but `refreshToken` present**
+   - `refreshTokens()`
+   - **Success:** write both cookies on the **response**; set `x-access-token` for this request; if they were on an auth route, redirect home
+   - **Failure:** delete both cookies; protected routes redirect to `/{locale}/login`; auth routes stay (now logged out)
+3. **No tokens**
+   - Protected route → should redirect to login (**currently commented** — see below)
+   - Auth route → continue so they can sign in
+
+### Temporary: unauthenticated access
+
+Until the backend is ready, this block is **commented** in `proxy.ts`:
+
+```ts
+// TODO: uncomment when backend auth is ready
+// if (isProtectedRoute(pathname)) {
+//   return NextResponse.redirect(localizedPath(request, "/login"));
+// }
+```
+
+Without an access token you can still open dashboard pages. A leftover `refreshToken` can still force a refresh; if that fails, cookies are cleared and protected pages go to login.
+
+---
+
+## Why proxy refresh and `getAuthToken` both exist
+
+| Layer | When | Can set cookies? |
+|---|---|---|
+| `proxy.ts` | Every navigation | Yes — `response.cookies` |
+| Server Action / Route Handler | Login / logout / mutations | Yes — `cookies().set` |
+| Server Component + `apiClient` | Page data fetch | **No** — `cookies().set` throws |
+
+If the user opens a new page with an expired access cookie but a live refresh cookie:
+
+1. Proxy refreshes, sets new cookies on the **response**, and forwards `x-access-token`.
+2. `apiClient` → `getAuthToken` reads the header and uses the new token **without a second refresh**.
+
+That second point matters if the backend **rotates** refresh tokens: a second refresh with the old token would fail and log the user out.
+
+If proxy did not run (or the header is missing), `getAuthToken` can still refresh during a Server Action. During RSC render it can refresh and return the token for that fetch, but it cannot persist cookies (caught internally).
+
+---
+
+## Auth route handlers
 
 | Route | Backend call | Cookie effect |
-|-------|--------------|---------------|
-| `POST /api/auth/login` | `POST <API_URL>/auth/login` | Sets `access_token` + `refresh_token` |
-| `POST /api/auth/refresh` | via `refreshSession()` | Rotates both cookies |
-| `POST /api/auth/logout` | `POST <API_URL>/auth/logout` (best-effort) | Clears both cookies |
+|---|---|---|
+| `POST /api/auth/login` | `apiClient("auth/login", { method: "POST", body })` | `setAuthCookies` from `response.data` |
+| `POST /api/auth/refresh` | `refreshTokens(refreshToken)` | Rotates both cookies |
+| `POST /api/auth/logout` | `apiClient("auth/logout", { method: "POST" })` (best-effort) | `clearAuthCookiesFromStore()` |
 
-Backend token response shape:
+Login expects tokens on **`data`**:
 
 ```json
 {
-  "accessToken": "...",
-  "refreshToken": "...",
-  "expiresIn": 900,
-  "refreshExpiresIn": 604800
+  "success": true,
+  "statusCode": 200,
+  "message": "OK",
+  "data": {
+    "accessToken": "...",
+    "refreshToken": "..."
+  }
 }
 ```
 
-`expiresIn` / `refreshExpiresIn` are optional. When omitted, cookie `maxAge` is taken from each token's JWT `exp` claim.
-
-### Request lifecycle with refresh
-
-```text
-apiClient(endpoint, { requiresAuth: true })
-  │
-  ├─ getAccessToken()
-  │    └─ missing? → refreshSession() → still nothing? → clear cookies → throw ApiError(401)
-  │
-  ├─ execute request with Bearer token
-  │
-  ├─ status ≠ 401 → parse response / throw ApiError   (403, 404, 422, 500 NEVER refresh)
-  │
-  └─ status = 401
-       ├─ refreshSession()
-       │    ├─ fails → clear cookies → throw ApiError(401)
-       │    └─ succeeds → getAccessToken() → retry the request ONCE
-       └─ retry result is final: 2xx → parsed data, anything else → ApiError
-```
-
-Guarantees:
-
-- **Only 401 triggers a refresh.** Every other status throws immediately.
-- **At most one retry per request.** The retry's response is handled terminally — a second 401 throws. Infinite loops are structurally impossible.
-- **Unauthenticated requests (`requiresAuth: false`) never refresh.** A 401 from the login endpoint is a wrong-credentials error, not an expired session.
-- **The refresh endpoint itself is called with plain `fetch`** inside `refresh.ts`, not through `apiClient`, so it can never recurse.
-- **The API client never writes cookies.** Persistence goes through `cookies.ts` (used by auth routes and `refreshSession`).
-
-### Concurrency: one refresh for many callers
-
-When a page fires several authenticated requests in parallel and the access token has just expired, all of them receive 401 at roughly the same time.
-
-`refreshSession()` deduplicates: in-flight refreshes are stored in a module-level `Map` keyed by the **refresh token value**. The first caller starts the actual HTTP call; every concurrent caller with the same session awaits the same promise. When it settles, the entry is removed and all callers retry with the same new access token.
-
-The map is keyed by token — not a single global promise — because on the server, module state is shared across **all users'** requests. A global would let one user's refresh resolve another user's session.
-
-### Cookie writes and Server Component rendering
-
-Next.js only allows writing cookies in **Server Actions and Route Handlers**. During Server Component *rendering*, `cookies().set()` throws. Cookie helpers best-effort persist and also keep an in-request access-token override so the same-request retry still has a bearer token. The next mutation/navigation that can write cookies will persist them.
-
-**Operational consequence:** if the backend uses strictly one-time-use rotating refresh tokens, a refresh that happens during component rendering "spends" the old token without saving the new one, killing the session on the next request. The backend should allow refresh-token reuse within a small grace window (30–60 seconds). Alternatively, move refresh into `middleware.ts`, which can write cookies on every request.
-
-### `refreshSession()` as a standalone export
+### Browser login
 
 ```ts
-import { refreshSession } from "@/lib/auth";
-
-const ok = await refreshSession(); // Promise<boolean>
+const response = await fetch("/api/auth/login", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ email, password }),
+});
 ```
-
-Returns `true` on success, `false` if the session cannot be refreshed (no refresh token, backend rejection, or network failure). It never throws. On auth failure from the backend it clears cookies.
 
 ---
 
@@ -283,18 +296,17 @@ Returns `true` on success, `false` if the session cannot be refreshed (no refres
 ### Fetching in a server component
 
 ```tsx
-import { api } from "@/lib/api";
+import { apiClient } from "@/lib/api";
 
-type Paginated<T> = { data: T[]; total: number; page: number };
+type Product = { id: string; name: string };
 
-export default async function ProductsPage({ searchParams }: PageProps<"/products">) {
-  const { page, search } = await searchParams;
+export default async function ProductsPage() {
+  const res = await apiClient<Product[]>("products");
+  if (!res.success) {
+    return <p>{res.message}</p>;
+  }
 
-  const products = await api.get<Paginated<Product>>("products", {
-    searchParams: { page, search, limit: 10 }, // undefined entries are skipped
-  });
-
-  return <ProductsTable data={products.data} total={products.total} />;
+  return <ProductsTable data={res.data ?? []} />;
 }
 ```
 
@@ -304,7 +316,7 @@ export default async function ProductsPage({ searchParams }: PageProps<"/product
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { api, ApiError, getErrorMessage } from "@/lib/api";
+import { apiClient } from "@/lib/api";
 
 export async function updateProductAction(
   _prev: MutationResult | null,
@@ -313,21 +325,20 @@ export async function updateProductAction(
   const id = String(formData.get("productId") ?? "").trim();
   if (!id) return { success: false, message: "Product is required" };
 
-  try {
-    const product = await api.patch<Product>(`products/${id}`, {
+  const res = await apiClient<Product>(`products/${id}`, {
+    method: "PATCH",
+    body: {
       name: formData.get("name"),
       price: Number(formData.get("price")),
-    });
+    },
+  });
 
-    revalidatePath("/products");
-    return { success: true, data: product };
-  } catch (error) {
-    return {
-      success: false,
-      message: getErrorMessage(error),
-      errors: error instanceof ApiError ? error.fieldErrors : undefined,
-    };
+  if (!res.success) {
+    return { success: false, message: res.message, errors: res.errors };
   }
+
+  revalidatePath("/products");
+  return { success: true, data: res.data };
 }
 ```
 
@@ -338,84 +349,26 @@ export async function updateProductAction(
 
 export async function createProductAction(
   _prev: MutationResult | null,
-  formData: FormData, // includes <input type="file" name="image" />
+  formData: FormData,
 ): Promise<MutationResult> {
-  try {
-    // Sent as multipart/form-data; files included, boundary handled by fetch
-    const product = await api.post<Product>("products", formData);
-
-    revalidatePath("/products");
-    return { success: true, data: product };
-  } catch (error) {
-    return { success: false, message: getErrorMessage(error) };
+  const res = await apiClient<Product>("products", { method: "POST", body: formData });
+  if (!res.success) {
+    return { success: false, message: res.message };
   }
+
+  revalidatePath("/products");
+  return { success: true, data: res.data };
 }
-```
-
-### Browser login via route handler
-
-```ts
-const response = await fetch("/api/auth/login", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ email, password }),
-});
-```
-
-### Public backend endpoint (no auth)
-
-```ts
-const result = await api.post<SomePublicResponse>("public/ping", null, {
-  requiresAuth: false,
-});
-```
-
-### Delete with no response body
-
-```ts
-await api.delete<void>(`products/${id}`); // 204 → resolves to undefined
-```
-
-### Handling not-found in a detail page
-
-```ts
-import { notFound } from "next/navigation";
-import { api, ApiError } from "@/lib/api";
-
-async function getProduct(id: string) {
-  try {
-    return await api.get<Product>(`products/${id}`);
-  } catch (error) {
-    if (error instanceof ApiError && error.isNotFound) notFound();
-    throw error; // everything else bubbles to error.tsx
-  }
-}
-```
-
-### Abort / timeout
-
-```ts
-const data = await api.get<Report>("reports/heavy", {
-  signal: AbortSignal.timeout(15_000),
-});
 ```
 
 ---
-
-## Design decisions
-
-- **Native `fetch`, not Axios.** Next.js extends the native `fetch` with its Data Cache (`tags`, `revalidate`, `cache`); requests through Axios are invisible to that machinery, and Axios adds bundle weight with no benefit on the server.
-- **`requiresAuth` defaults to `true`.** In a dashboard, nearly every call is authenticated. Public endpoints opt out explicitly, which is safer than the reverse.
-- **Errors are thrown, not returned.** Server components want throw-to-boundary semantics; server actions convert to `MutationResult` at the edge. A single throwing convention keeps call sites clean.
-- **Auth is modular.** Cookie storage, JWT maxAge, refresh, and HTTP retry each live in their own file. The API client never knows how cookies are stored — it only calls `getAccessToken()` / `refreshSession()` / `clearAuthCookies()`.
 
 ## Troubleshooting
 
 | Symptom | Likely cause |
 |---------|--------------|
-| `Missing API_URL environment variable` | No `.env.local` — copy `.env.example` and set the backend URL |
-| Build error: `server-only cannot be imported from a Client Component` | A `"use client"` file imports `@/lib/api` or `@/lib/auth` — move the call into a server action / route handler |
-| `ApiError` with `status: 0` | Network-level failure: backend down, wrong `API_URL`, DNS, or aborted request |
-| `ApiError(401, "Not authenticated")` | No access **and** no usable refresh token — user must log in |
-| Session dies right after a refresh | Backend uses one-time-use refresh tokens and the refresh happened during component rendering (cookies not writable there) — add a reuse grace window on the backend or move refresh to middleware |
+| `Missing NEXT_PUBLIC_API_BASE_URL (or API_URL)` | No `.env.local` — copy `.env.example` and set the backend URL |
+| Build error: `server-only cannot be imported from a Client Component` | A `"use client"` file imports `@/lib/api` — move the call into a server action / route handler |
+| `statusCode: 0`, `message: "Network error"` | Backend down, wrong base URL, or DNS |
+| Session dies right after a refresh during RSC render | Backend uses one-time-use refresh tokens and cookies were not writable — proxy refresh + `x-access-token` is the intended path; add a reuse grace window on the backend |
 | Stale data on a dashboard page | A `cache`/`tags`/`revalidate` option was passed on authenticated data — remove it; dashboard fetches must stay `no-store` |

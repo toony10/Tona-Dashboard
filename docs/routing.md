@@ -2,18 +2,22 @@
 
 ## Route groups
 
-- `src/app/(auth)`: authentication routes.
-- `src/app/(main)`: dashboard and feature routes.
+- `src/app/[locale]/(auth)`: authentication routes.
+- `src/app/[locale]/(main)`: dashboard and feature routes.
+
+Locales are `en` and `ar` (`localePrefix: "always"`). `src/proxy.ts` composes next-intl with session refresh and redirects authenticated users away from `/{locale}/login`. See `docs/api-reference/api-client.md`.
 
 ## Core routes
 
-- `/` dashboard overview
-- `/login` sign-in page
-- `/forms` forms module index
-- `/filters` filters module index
-- `/charts` charts module index
-- `/table` table demo
-- `/settings` settings module index
+- `/{locale}` dashboard overview
+- `/{locale}/login` sign-in page
+- `/{locale}/forms` forms module index
+- `/{locale}/filters` filters module index
+- `/{locale}/charts` charts module index
+- `/{locale}/table` table demo
+- `/{locale}/settings` settings module index
+
+Feature sub-routes below are relative to `/{locale}`.
 
 ## Feature sub-routes
 

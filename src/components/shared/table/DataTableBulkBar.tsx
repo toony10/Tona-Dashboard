@@ -1,0 +1,48 @@
+"use client"
+
+import { type ReactNode } from "react"
+import { AnimatePresence, motion } from "framer-motion"
+import { useTranslations } from "next-intl"
+
+import { Button } from "@/components/ui/button"
+import { Separator } from "@/components/ui/separator"
+
+export interface DataTableBulkBarProps {
+  count: number
+  onClear: () => void
+  children: ReactNode
+}
+
+export function DataTableBulkBar({
+  count,
+  onClear,
+  children,
+}: DataTableBulkBarProps) {
+  const t = useTranslations("Table")
+
+  return (
+    <AnimatePresence>
+      { count > 0 ? (
+        <motion.div
+          initial={ { opacity: 0, y: 16 } }
+          animate={ { opacity: 1, y: 0 } }
+          exit={ { opacity: 0, y: 16 } }
+          transition={ { duration: 0.2 } }
+          className="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-3 rounded-lg border bg-background px-4 py-2 shadow-lg"
+        >
+          <span className="text-sm font-medium">
+            { t("selection.selected", { count }) }
+          </span>
+          <Separator
+            orientation="vertical"
+            className="data-vertical:h-5"
+          />
+          { children }
+          <Button type="button" variant="ghost" size="sm" onClick={ onClear }>
+            { t("selection.clear") }
+          </Button>
+        </motion.div>
+      ) : null }
+    </AnimatePresence>
+  )
+}

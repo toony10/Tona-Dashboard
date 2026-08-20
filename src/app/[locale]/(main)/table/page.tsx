@@ -76,7 +76,7 @@ export default async function TablePage({ params }: TablePageProps) {
   return (
     <div className="flex flex-col gap-6">
       <MainH title={ t("title") } description={ t("description") } />
-      <ProductsTable data={ products } />
+      <ProductsTable data={ products } enableRowSelection />
       <Pagination pages={ 10 } />
     </div>
   )

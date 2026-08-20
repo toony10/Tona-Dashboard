@@ -3,6 +3,7 @@
 import { useMemo } from "react"
 import { type ColumnDef } from "@tanstack/react-table"
 import { useTranslations } from "next-intl"
+import { toast } from "sonner"
 
 import { DataTable } from "@/components/shared/table/DataTable"
 import { Button } from "@/components/ui/button"
@@ -24,9 +25,14 @@ function toProductKey(id: string): string {
 interface ProductsTableProps {
   data: Product[]
   isLoading?: boolean
+  enableRowSelection?: boolean
 }
 
-export function ProductsTable({ data, isLoading }: ProductsTableProps) {
+export function ProductsTable({
+  data,
+  isLoading,
+  enableRowSelection = false,
+}: ProductsTableProps) {
   const t = useTranslations("Table")
 
   const columns = useMemo<ColumnDef<Product>[]>(
@@ -98,5 +104,26 @@ export function ProductsTable({ data, isLoading }: ProductsTableProps) {
     [t],
   )
 
-  return <DataTable columns={ columns } data={ data } isLoading={ isLoading } />
+  return (
+    <DataTable
+      columns={ columns }
+      data={ data }
+      isLoading={ isLoading }
+      enableRowSelection={ enableRowSelection }
+      getRowId={ (product) => product.id }
+      renderBulkActions={ ({ count, clear }) => (
+        <Button
+          type="button"
+          variant="destructive"
+          size="sm"
+          onClick={ () => {
+            toast.success(t("bulk.deletedToast", { count }))
+            clear()
+          } }
+        >
+          { t("bulk.deleteSelected") }
+        </Button>
+      ) }
+    />
+  )
 }

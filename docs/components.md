@@ -13,7 +13,7 @@
 - Charts: KPI cards and Recharts-based visualizations.
 - Filters: URL-synced controls (search, select, date, tabs, reset).
 - Forms: rich text, image/file uploaders, date inputs.
-- Table: reusable data table and product table examples.
+- Table: reusable data table with optional bulk row selection, plus a product table example.
 - Text helpers: consistent page and section headings.
 
 ## Best practices

@@ -44,6 +44,10 @@ transition is pending. Search inputs remain interactive, and their URL updates u
 server. Other filters use `FILTER_URL_UPDATE_DELAY_MS` (`100ms`) for a shorter delay
 on discrete controls.
 
+When row selection is enabled, `DataTable` also clears the current selection
+whenever the URL search string changes, so bulk ids never leak across pages or
+filter states.
+
 `DataTable` combines the navigation state with its explicit `isLoading` prop.
 This means callers can still request a loading state independently:
 

@@ -548,7 +548,7 @@
   "Table": {
     "page": {
       "title": "Table",
-      "description": "A reusable DataTable component powered by TanStack Table and shadcn/ui."
+      "description": "A reusable DataTable component powered by TanStack Table and shadcn/ui. Select rows to try bulk actions."
     },
     "columns": {
       "id": "ID",
@@ -563,6 +563,16 @@
       "archived": "archived"
     },
     "empty": "No results.",
+    "selection": {
+      "selectAllRows": "Select all rows on this page",
+      "selectRow": "Select row",
+      "selected": "{count} selected",
+      "clear": "Clear"
+    },
+    "bulk": {
+      "deleteSelected": "Delete selected",
+      "deletedToast": "{count, plural, one {Deleted # product} other {Deleted # products}}"
+    },
     "products": {
       "prd001": { "name": "Wireless Headphones", "category": "Electronics" },
       "prd002": { "name": "Ergonomic Office Chair", "category": "Furniture" },

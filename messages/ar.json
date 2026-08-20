@@ -548,7 +548,7 @@
   "Table": {
     "page": {
       "title": "الجدول",
-      "description": "مكوّن DataTable قابل لإعادة الاستخدام باستخدام TanStack Table و shadcn/ui."
+      "description": "مكوّن DataTable قابل لإعادة الاستخدام باستخدام TanStack Table و shadcn/ui. حدّد الصفوف لتجربة الإجراءات الجماعية."
     },
     "columns": {
       "id": "المعرف",
@@ -563,6 +563,16 @@
       "archived": "مؤرشف"
     },
     "empty": "لا توجد نتائج.",
+    "selection": {
+      "selectAllRows": "تحديد كل الصفوف في هذه الصفحة",
+      "selectRow": "تحديد الصف",
+      "selected": "تم تحديد {count}",
+      "clear": "مسح"
+    },
+    "bulk": {
+      "deleteSelected": "حذف المحدد",
+      "deletedToast": "{count, plural, one {تم حذف منتج واحد} two {تم حذف منتجين} few {تم حذف # منتجات} other {تم حذف # منتج}}"
+    },
     "products": {
       "prd001": { "name": "سماعات لاسلكية", "category": "إلكترونيات" },
       "prd002": { "name": "كرسي مكتب مريح", "category": "أثاث" },

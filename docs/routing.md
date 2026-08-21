@@ -5,12 +5,13 @@
 - `src/app/[locale]/(auth)`: authentication routes.
 - `src/app/[locale]/(main)`: dashboard and feature routes.
 
-Locales are `en` and `ar` (`localePrefix: "always"`). `src/proxy.ts` composes next-intl with session refresh and redirects authenticated users away from `/{locale}/login`. See `docs/api-reference/api-client.md`.
+Locales are `en` and `ar` (`localePrefix: "always"`). `src/proxy.ts` composes next-intl with session refresh: it strips client `x-access-token`, clears cookies on `/{locale}/logout`, and redirects authenticated users away from `/{locale}/login`. See `docs/api-reference/api-client.md`.
 
 ## Core routes
 
 - `/{locale}` dashboard overview
 - `/{locale}/login` sign-in page
+- `/{locale}/logout` session-end (proxy clears cookies, redirects to `/{locale}/login`; no page)
 - `/{locale}/forms` forms module index
 - `/{locale}/filters` filters module index
 - `/{locale}/charts` charts module index

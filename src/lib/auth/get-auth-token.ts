@@ -9,7 +9,8 @@ import { refreshTokens } from "./refresh-tokens";
 import { setAuthCookies } from "./set-auth-cookies";
 
 export async function getAuthToken(): Promise<string | null> {
-  const headerToken = (await headers()).get(ACCESS_TOKEN_HEADER) ?? undefined;
+  const headerList = await headers();
+  const headerToken = headerList.get(ACCESS_TOKEN_HEADER) ?? undefined;
   if (isValidAccessToken(headerToken)) return headerToken!;
 
   const cookieStore = await cookies();
@@ -17,8 +18,14 @@ export async function getAuthToken(): Promise<string | null> {
   const refreshToken = cookieStore.get(REFRESH_TOKEN_COOKIE)?.value;
 
   if (isValidAccessToken(accessToken)) return accessToken!;
-
   if (!refreshToken) return null;
+
+  // Document requests: proxy already refreshed or redirected. Refreshing here
+  // during RSC render cannot persist cookies (`cookies().set` throws).
+  // Server Actions (`next-action`) may still refresh as a fallback.
+  if (!headerList.has("next-action")) {
+    return null;
+  }
 
   const tokens = await refreshTokens(refreshToken);
 
@@ -27,12 +34,6 @@ export async function getAuthToken(): Promise<string | null> {
     return null;
   }
 
-  try {
-    setAuthCookies(cookieStore, tokens.accessToken, tokens.refreshToken);
-  } catch {
-    // `cookies().set()` is not allowed during Server Component render.
-    // The new access token is still returned for this request.
-  }
-
+  setAuthCookies(cookieStore, tokens.accessToken, tokens.refreshToken);
   return tokens.accessToken;
 }

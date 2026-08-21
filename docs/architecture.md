@@ -39,7 +39,8 @@ Backend communication goes through a server-only API client in `src/lib/api/`, w
 
 - All backend requests are made server-side (server components, server actions, route handlers) — client components never call the backend directly.
 - `apiClient` returns `ApiResponse` and never throws for HTTP/JSON errors. Callers check `response.success`.
-- `src/proxy.ts` composes next-intl locale routing with silent refresh: it writes cookies on the response and forwards `x-access-token` for the current request. Redirects keep the current locale (`/en/settings` → `/en/login`).
+- `src/proxy.ts` composes next-intl locale routing with silent refresh: it strips client `x-access-token`, handles `/{locale}/logout`, writes cookies on the response, and forwards `x-access-token` for the current request. Redirects keep the current locale (`/en/settings` → `/en/login`).
+- `apiClient` retries once on HTTP 401 (force-refresh), then redirects to `/{locale}/logout` if the session is dead.
 - Auth cookies (`accessToken` / `refreshToken`) are httpOnly. Login/logout/refresh route handlers persist them via `setAuthCookies` / `clearAuthCookies`.
 - Dashboard fetches default to `cache: "no-store"` so authenticated data is never cached.
 

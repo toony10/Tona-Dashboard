@@ -4,9 +4,15 @@ export {
   ACCESS_TOKEN_COOKIE,
   ACCESS_TOKEN_FALLBACK_MAX_AGE,
   ACCESS_TOKEN_HEADER,
+  LOGOUT_PATH,
   REFRESH_TOKEN_COOKIE,
   REFRESH_TOKEN_FALLBACK_MAX_AGE,
+  isLogoutPath,
 } from "./constants";
+export {
+  withoutClientAccessTokenHeader,
+  withAccessTokenHeader,
+} from "./forward-access-token";
 export { getJwtMaxAgeSeconds } from "./get-jwt-max-age";
 export { isValidAccessToken } from "./is-valid-access-token";
 export { refreshTokens } from "./refresh-tokens";

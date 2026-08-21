@@ -5,12 +5,14 @@ import { isAppLocale } from "@/i18n/config";
 import { routing } from "@/i18n/routing";
 import {
   ACCESS_TOKEN_COOKIE,
-  ACCESS_TOKEN_HEADER,
   REFRESH_TOKEN_COOKIE,
   clearAuthCookies,
+  isLogoutPath,
   isValidAccessToken,
   refreshTokens,
   setAuthCookies,
+  withAccessTokenHeader,
+  withoutClientAccessTokenHeader,
 } from "@/lib/auth";
 
 const intlMiddleware = createMiddleware(routing);
@@ -52,19 +54,20 @@ function continueRequest(request: NextRequest, accessToken?: string) {
     return intlMiddleware(request);
   }
 
-  const requestHeaders = new Headers(request.headers);
-  requestHeaders.set(ACCESS_TOKEN_HEADER, accessToken);
-
-  return intlMiddleware(
-    new NextRequest(request.url, {
-      headers: requestHeaders,
-      method: request.method,
-    }),
-  );
+  return intlMiddleware(withAccessTokenHeader(request, accessToken));
 }
 
 export default async function proxy(request: NextRequest) {
+  request = withoutClientAccessTokenHeader(request);
+
   const { pathname } = request.nextUrl;
+
+  if (isLogoutPath(stripLocale(pathname))) {
+    const response = NextResponse.redirect(localizedPath(request, "/login"));
+    clearAuthCookies(response.cookies);
+    return response;
+  }
+
   const accessToken = request.cookies.get(ACCESS_TOKEN_COOKIE)?.value;
   const refreshToken = request.cookies.get(REFRESH_TOKEN_COOKIE)?.value;
   const isAuthenticated = isValidAccessToken(accessToken);

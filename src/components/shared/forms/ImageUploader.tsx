@@ -9,9 +9,7 @@ import {
   UploadCloudIcon,
   XIcon,
   CheckCircle2Icon,
-  ZoomInIcon,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 /* ─────────────────────────── Types ─────────────────────────── */
 
@@ -58,7 +56,7 @@ export interface ImageUploaderProps {
   /** CSS aspect-ratio for each thumbnail (e.g. "1/1", "16/9") */
   aspectRatio?: string;
   /** Number of thumbnail columns (default: 3) */
-  columns?: 2 | 3 | 4 | 5;
+  columns?: 1 | 2 | 3 | 4 | 5;
   /** Show a toast for rejected files (default: true) */
   showRejectToasts?: boolean;
 }
@@ -66,6 +64,7 @@ export interface ImageUploaderProps {
 /* ───────────────────────── Helpers ─────────────────────────── */
 
 const COLUMNS_CLASS: Record<number, string> = {
+  1: "grid-cols-1",
   2: "grid-cols-2",
   3: "grid-cols-2 sm:grid-cols-3",
   4: "grid-cols-2 sm:grid-cols-4",
@@ -142,7 +141,6 @@ export function ImageUploader({
   const t = useTranslations("Forms.imageUploader");
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = React.useState(false);
-  const [lightboxId, setLightboxId] = React.useState<string | null>(null);
   const [images, setImages] = React.useState<ImageFile[]>(() =>
     toImageFiles(defaultFiles ?? [])
   );
@@ -279,8 +277,6 @@ export function ImageUploader({
       imagesRef.current = next;
       setImages(next);
       onChange?.(next.map((i) => i.file));
-      // Close the lightbox if the image being previewed was removed.
-      setLightboxId((current) => (current === id ? null : current));
     },
     [onChange]
   );
@@ -314,11 +310,9 @@ export function ImageUploader({
 
   const isFull = images.length >= maxImages;
   const canAdd = !disabled && !isFull;
-  const lightboxImg = images.find((i) => i.id === lightboxId) ?? null;
 
   /* ────────────────────────── Render ────────────────────────── */
   return (
-    <>
       <div className={cn("space-y-3", className)}>
         {/* ── Drop Zone ── */}
         {canAdd && (
@@ -423,7 +417,6 @@ export function ImageUploader({
                 aspectRatio={aspectRatio}
                 showFileName={showFileNames}
                 onRemove={() => remove(img.id)}
-                onZoom={() => setLightboxId(img.id)}
                 disabled={disabled}
               />
             ))}
@@ -460,16 +453,6 @@ export function ImageUploader({
           </div>
         )}
       </div>
-
-      {/* ── Lightbox ── */}
-      {lightboxImg && (
-        <Lightbox
-          src={lightboxImg.preview}
-          alt={lightboxImg.file.name}
-          onClose={() => setLightboxId(null)}
-        />
-      )}
-    </>
   );
 }
 
@@ -480,7 +463,6 @@ interface ThumbnailProps {
   aspectRatio: string;
   showFileName: boolean;
   onRemove: () => void;
-  onZoom: () => void;
   disabled: boolean;
 }
 
@@ -489,7 +471,6 @@ function Thumbnail({
   aspectRatio,
   showFileName,
   onRemove,
-  onZoom,
   disabled,
 }: ThumbnailProps) {
   const t = useTranslations("Forms.imageUploader");
@@ -509,14 +490,6 @@ function Thumbnail({
 
         {/* hover overlay */}
         <div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/0 opacity-0 transition-all duration-200 group-hover/thumb:bg-black/40 group-hover/thumb:opacity-100">
-          <ActionButton
-            onClick={(e) => { e.stopPropagation(); onZoom(); }}
-            aria-label={t("previewImage")}
-            className="bg-white/90 text-foreground hover:bg-white"
-          >
-            <ZoomInIcon className="size-3.5" />
-          </ActionButton>
-
           {!disabled && (
             <ActionButton
               onClick={(e) => { e.stopPropagation(); onRemove(); }}
@@ -570,64 +543,5 @@ function ActionButton({
     >
       {children}
     </button>
-  );
-}
-
-/* ───────────────────────────── Lightbox ───────────────────────────── */
-
-function Lightbox({
-  src,
-  alt,
-  onClose,
-}: {
-  src: string;
-  alt: string;
-  onClose: () => void;
-}) {
-  const t = useTranslations("Forms.imageUploader");
-  const closeRef = React.useRef<HTMLButtonElement>(null);
-
-  React.useEffect(() => {
-    const previouslyFocused = document.activeElement as HTMLElement | null;
-    closeRef.current?.focus();
-
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", handler);
-
-    return () => {
-      window.removeEventListener("keydown", handler);
-      previouslyFocused?.focus?.();
-    };
-  }, [onClose]);
-
-  return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-label={t("imagePreviewAria")}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm animate-in fade-in duration-200"
-      onClick={onClose}
-    >
-      <Button
-        ref={closeRef}
-        variant="ghost"
-        size="icon"
-        className="absolute top-4 end-4 text-white hover:bg-white/10"
-        onClick={onClose}
-        aria-label={t("closePreview")}
-      >
-        <XIcon className="size-5" />
-      </Button>
-
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={src}
-        alt={alt}
-        className="max-h-[90vh] max-w-[90vw] rounded-xl object-contain shadow-2xl animate-in zoom-in-95 duration-200"
-        onClick={(e) => e.stopPropagation()}
-      />
-    </div>
   );
 }

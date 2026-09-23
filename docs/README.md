@@ -14,11 +14,12 @@ This folder contains product and technical documentation for the Starter Dashboa
 - `architecture.md`
 - `tech-stack.md`
 - `routing.md`
+- `i18n.md`
 - `styling-and-theming.md`
 - `components.md`
-- `features/`
-- `guides/`
-- `api-reference/`
+- `features/` (auth, forms CRUD kit, table, filters, charts, dashboard, settings)
+- `guides/` (CRUD setup, add page/component, URL filters, dark theme)
+- `api-reference/` (api-client, utilities, navigation-config, constants)
 
 ## Audience
 

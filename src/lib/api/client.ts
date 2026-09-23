@@ -4,6 +4,7 @@ import { endInvalidSession } from "@/lib/auth/end-invalid-session";
 import { getAuthToken } from "@/lib/auth/get-auth-token";
 import { refreshAndPersist } from "@/lib/auth/refresh-and-persist";
 import { getApiBaseUrl } from "./config";
+import { getRequestLocale } from "./get-request-locale";
 import type { ApiResponse, RequestOptions } from "./types";
 
 function isFormData(value: unknown): boolean {
@@ -40,7 +41,9 @@ async function send<TData, TBody>(
   const { method = "GET", body, tags, revalidate, cache } = options;
   const useFormData = body != null && isFormData(body);
 
-  const headers: HeadersInit = {};
+  const headers: HeadersInit = {
+    "Accept-Language": await getRequestLocale(),
+  };
   if (!useFormData) {
     headers["Content-Type"] = "application/json";
   }

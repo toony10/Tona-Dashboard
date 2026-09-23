@@ -4,6 +4,7 @@ import {
   type ColumnDef,
   flexRender,
   getCoreRowModel,
+  type Row,
   type RowSelectionState,
   useReactTable,
 } from "@tanstack/react-table"
@@ -27,9 +28,9 @@ import { DataTableBulkBar } from "./DataTableBulkBar"
 
 const SKELETON_ROW_COUNT = 10
 
-/** Visible against `TableHeader` `bg-primary` in both light and dark themes. */
+/** Keeps the selection control legible against the branded table header. */
 const HEADER_CHECKBOX_CLASSNAME =
-  "border-primary-foreground/80 bg-transparent dark:bg-transparent data-checked:border-primary-foreground data-checked:bg-primary-foreground data-checked:text-primary dark:data-checked:bg-primary-foreground data-[state=indeterminate]:border-primary-foreground data-[state=indeterminate]:bg-primary-foreground data-[state=indeterminate]:text-primary"
+  "border-primary-foreground/70 bg-transparent shadow-none data-[state=checked]:border-primary-foreground data-[state=checked]:bg-primary-foreground data-[state=checked]:text-primary data-[state=indeterminate]:border-primary-foreground data-[state=indeterminate]:bg-primary-foreground data-[state=indeterminate]:text-primary"
 
 export interface DataTableBulkSelection<TData> {
   rows: TData[]
@@ -42,7 +43,7 @@ export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   isLoading?: boolean
-  enableRowSelection?: boolean
+  enableRowSelection?: boolean | ((row: Row<TData>) => boolean)
   getRowId?: (row: TData, index: number) => string
   renderBulkActions?: (selection: DataTableBulkSelection<TData>) => ReactNode
 }
@@ -52,7 +53,7 @@ function defaultGetRowId<TData>(row: TData): string {
 }
 
 function createSelectColumn<TData>(
-  t: ReturnType<typeof useTranslations>,
+  t: ReturnType<typeof useTranslations<"Table">>,
 ): ColumnDef<TData> {
   return {
     id: "select",
@@ -73,6 +74,7 @@ function createSelectColumn<TData>(
     cell: ({ row }) => (
       <Checkbox
         checked={ row.getIsSelected() }
+        disabled={ !row.getCanSelect() }
         onCheckedChange={ (value) => row.toggleSelected(!!value) }
         aria-label={ t("selection.selectRow") }
       />
@@ -96,6 +98,8 @@ export function DataTable<TData, TValue>({
   const paramsKey = searchParams.toString()
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
 
+  const selectionEnabled = Boolean(enableRowSelection)
+
   const resolvedGetRowId = useCallback(
     (row: TData, index: number) =>
       getRowId ? getRowId(row, index) : defaultGetRowId(row),
@@ -103,12 +107,12 @@ export function DataTable<TData, TValue>({
   )
 
   const tableColumns = useMemo(() => {
-    if (!enableRowSelection) {
+    if (!selectionEnabled) {
       return columns
     }
 
     return [createSelectColumn<TData>(t), ...columns]
-  }, [columns, enableRowSelection, t])
+  }, [columns, selectionEnabled, t])
 
   const table = useReactTable({
     data,
@@ -128,10 +132,10 @@ export function DataTable<TData, TValue>({
   }, [])
 
   useEffect(() => {
-    if (enableRowSelection) {
+    if (selectionEnabled) {
       setRowSelection({})
     }
-  }, [paramsKey, enableRowSelection])
+  }, [paramsKey, selectionEnabled])
 
   const columnCount = table.getAllLeafColumns().length
   const showLoading = isLoading || isPending
@@ -146,18 +150,27 @@ export function DataTable<TData, TValue>({
 
   return (
     <>
-      <div className="overflow-hidden rounded-sm border">
-        <Table>
+      <div
+        aria-busy={ showLoading }
+        className="overflow-hidden rounded-lg border bg-card"
+      >
+        <Table className="min-w-full">
           <TableHeader className="bg-primary">
             { table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={ headerGroup.id } className="border-primary/20 hover:bg-transparent">
+              <TableRow
+                key={ headerGroup.id }
+                className="border-primary-foreground/20 hover:bg-transparent"
+              >
                 { headerGroup.headers.map((header) => (
-                  <TableHead key={ header.id } className="text-base font-bold text-primary-foreground">
+                  <TableHead
+                    key={ header.id }
+                    className="h-12 px-4 text-sm font-semibold text-primary-foreground first:ps-5 last:pe-5"
+                  >
                     { header.isPlaceholder
                       ? null
                       : flexRender(
                         header.column.columnDef.header,
-                        header.getContext()
+                        header.getContext(),
                       ) }
                   </TableHead>
                 )) }
@@ -167,18 +180,27 @@ export function DataTable<TData, TValue>({
           <TableBody>
             { showLoading ? (
               Array.from({ length: SKELETON_ROW_COUNT }).map((_, rowIndex) => (
-                <TableRow key={ `skeleton-${ rowIndex }` }>
+                <TableRow
+                  key={ `skeleton-${ rowIndex }` }
+                  className="border-border/70 hover:bg-transparent"
+                >
                   { Array.from({ length: columnCount }).map((_, colIndex) => (
-                    <TableCell key={ `skeleton-${ rowIndex }-${ colIndex }` }>
-                      <Skeleton className="h-4 w-full bg-primary/10" />
+                    <TableCell
+                      key={ `skeleton-${ rowIndex }-${ colIndex }` }
+                      className="h-14 px-4 first:ps-5 last:pe-5"
+                    >
+                      <Skeleton className="h-4 w-full max-w-40 bg-primary/10" />
                     </TableCell>
                   )) }
                 </TableRow>
               ))
             ) : data.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={ columnCount } className="h-24 text-center">
-                  <span className="text-muted-foreground">{ t("empty") }</span>
+                <TableCell
+                  colSpan={ columnCount }
+                  className="h-32 text-center text-sm text-muted-foreground"
+                >
+                  { t("empty") }
                 </TableCell>
               </TableRow>
             ) : (
@@ -186,9 +208,13 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={ row.id }
                   data-state={ row.getIsSelected() ? "selected" : undefined }
+                  className="border-border/70 hover:bg-primary/[0.035] data-[state=selected]:bg-primary/8 data-[state=selected]:hover:bg-primary/10"
                 >
                   { row.getVisibleCells().map((cell) => (
-                    <TableCell key={ cell.id }>
+                    <TableCell
+                      key={ cell.id }
+                      className="h-14 px-4 text-sm first:ps-5 last:pe-5"
+                    >
                       { flexRender(cell.column.columnDef.cell, cell.getContext()) }
                     </TableCell>
                   )) }
@@ -198,7 +224,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      { enableRowSelection && renderBulkActions ? (
+      { selectionEnabled && renderBulkActions ? (
         <DataTableBulkBar count={ selectedCount } onClear={ clearSelection }>
           { renderBulkActions(bulkSelection) }
         </DataTableBulkBar>

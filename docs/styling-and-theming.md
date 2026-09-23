@@ -10,13 +10,13 @@
 
 - `next-themes` controls light/dark mode state.
 - Theme toggles are exposed in layout/auth UI.
-- `ThemeProvider` wraps the app in `src/app/layout.tsx`.
+- `ThemeProvider` wraps the app in `src/app/[locale]/layout.tsx`.
 
 ## Dark appearance presets
 
 The app extends dark mode with configurable background and card presets:
 
-- Presets are defined in `src/lib/appearance-settings.ts`.
+- Presets are defined in `src/config/appearance-settings.ts`.
 - User choices are persisted in `localStorage`.
 - CSS variables `--background` and `--card` are updated dynamically.
 

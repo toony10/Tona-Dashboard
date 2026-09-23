@@ -1,5 +1,6 @@
 export { apiClient } from "./client";
 export { getApiBaseUrl, getRefreshPath } from "./config";
+export { getRequestLocale, type ApiLocale } from "./get-request-locale";
 export { clearAuthCookiesFromStore } from "@/lib/auth/clear-auth-cookies-from-store";
 export { getAuthToken } from "@/lib/auth/get-auth-token";
 export {

@@ -11,14 +11,15 @@ The charts module provides dashboard-grade visualization components for common a
 
 ## Included capabilities
 
-- KPI summary cards.
+- KPI summary cards (`MetricCard`; `KpiCard` is a demo wrapper).
 - Line and area trend charts.
 - Bar, pie, and radial charts.
 - Reusable chart containers consistent with the dashboard theme.
 
 ## Primary building blocks
 
-- `AnalyticsKpiCards`
+- `MetricCard`
+- `KpiCard` / `AnalyticsKpiCards`
 - `RevenueLineChart`
 - `VisitorAreaChart`
 - `SalesBarChart`

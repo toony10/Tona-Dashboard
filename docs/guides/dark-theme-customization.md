@@ -2,7 +2,7 @@
 
 ## Overview
 
-Dark appearance customization is implemented through predefined preset IDs mapped to colors in `src/lib/appearance-settings.ts`.
+Dark appearance customization is implemented through predefined preset IDs mapped to colors in `src/config/appearance-settings.ts`.
 
 ## How it works
 

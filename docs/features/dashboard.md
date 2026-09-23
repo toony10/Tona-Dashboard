@@ -2,11 +2,11 @@
 
 ## Purpose
 
-The dashboard homepage (`/`) provides a guided entry point into all feature modules with a quick analytics snapshot and sample data views.
+The dashboard homepage (`/en`, `/ar`) provides a guided entry point into all feature modules with a quick analytics snapshot and sample data views.
 
 ## Included capabilities
 
-- KPI summary cards.
+- KPI summary cards (`MetricCard`; `KpiCard` is a demo wrapper).
 - Analytics preview charts.
 - Feature module navigation cards.
 - Recent products table snippet.
@@ -14,7 +14,8 @@ The dashboard homepage (`/`) provides a guided entry point into all feature modu
 
 ## Primary building blocks
 
-- `AnalyticsKpiCards`
+- `MetricCard` (`src/components/shared/cards/MetricCard.tsx`)
+- `KpiCard` / `AnalyticsKpiCards` (demo wrappers)
 - `RevenueLineChart`
 - `VisitorAreaChart`
 - `ProductsTable`

@@ -2,7 +2,8 @@ import { getApiBaseUrl, getRefreshPath } from "@/lib/api/config";
 import type { ApiResponse, AuthTokens } from "@/lib/api/types";
 
 /**
- * Calls the backend refresh endpoint. Does not read or write cookies —
+ * Calls `auth/token/refresh` with no body. The refresh token is sent only as
+ * `Authorization: Bearer {refreshToken}`. Does not read or write cookies —
  * the caller persists the returned tokens.
  *
  * Uses plain `fetch`, never `apiClient`, so it cannot recurse.
@@ -10,9 +11,8 @@ import type { ApiResponse, AuthTokens } from "@/lib/api/types";
 export async function refreshTokens(refreshToken: string): Promise<AuthTokens | null> {
   const response = await fetch(`${getApiBaseUrl()}/${getRefreshPath()}`, {
     method: "POST",
-    body: JSON.stringify({ refreshToken }),
     headers: {
-      "Content-Type": "application/json",
+      Authorization: `Bearer ${refreshToken}`,
     },
     cache: "no-store",
   });

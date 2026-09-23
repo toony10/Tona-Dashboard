@@ -8,8 +8,9 @@ Server-only HTTP client and session layer for the dashboard. It centralizes base
 
 | File | Responsibility |
 |------|----------------|
-| `src/lib/api/client.ts` | `apiClient()` — attach token, fetch, 401 retry, return `ApiResponse` |
-| `src/lib/api/config.ts` | `getApiBaseUrl()`, `getRefreshPath()` |
+| `src/lib/api/client.ts` | `apiClient()` — attach token + `Accept-Language`, fetch, 401 retry, return `ApiResponse` |
+| `src/lib/api/config.ts` | `getApiBaseUrl()`, `getRefreshPath()` (`auth/token/refresh`) |
+| `src/lib/api/get-request-locale.ts` | `getRequestLocale()` — RSC + server-action safe locale (`ar` \| `en`) |
 | `src/lib/api/types.ts` | `ApiResponse`, `RequestOptions`, `AuthTokens` |
 | `src/lib/api/index.ts` | Server barrel — import this from Server Components, actions, and route handlers |
 | `src/lib/auth/index.ts` | **Edge-safe** barrel for `proxy.ts` (no `server-only`, no `cookies()` from `next/headers`) |
@@ -22,7 +23,8 @@ Server-only HTTP client and session layer for the dashboard. It centralizes base
 | `src/lib/auth/set-auth-cookies.ts` / `clear-auth-cookies.ts` | Write/delete on a store you pass in |
 | `src/lib/auth/clear-auth-cookies-from-store.ts` | Server-only shortcut: `cookies()` then delete |
 | `src/proxy.ts` | Locale + session gate; silent refresh + `x-access-token`; `/{locale}/logout` cookie clear |
-| `src/app/api/auth/*/route.ts` | Login / refresh / logout route handlers |
+| `src/actions/auth/login.actions.ts` | Login server action (`runAction` + `setAuthCookies`) |
+| `src/app/api/auth/{refresh,logout}/route.ts` | Refresh / logout route handlers |
 
 `proxy.ts` **must** import from `@/lib/auth`. Importing `@/lib/api` loads `getAuthToken` (`server-only` + `next/headers`), which Edge middleware cannot use.
 
@@ -30,7 +32,7 @@ Server-only HTTP client and session layer for the dashboard. It centralizes base
 
 `client.ts`, `get-auth-token.ts`, `refresh-and-persist.ts`, `end-invalid-session.ts`, and `clear-auth-cookies-from-store.ts` begin with `import "server-only"`. Importing `@/lib/api` (directly or transitively) from a client component fails **at build time**. This is intentional: the access token lives in an httpOnly cookie and must never reach the browser bundle.
 
-Client components never fetch the backend directly. They call **server actions** or the Next.js auth route handlers (`/api/auth/*`).
+Client components never fetch the backend directly. They call **server actions** (`useCrudForm` / `ConfirmDialog`). Refresh and logout may still use `/api/auth/refresh` and `/api/auth/logout`. There is no `/api/auth/login` route.
 
 ---
 
@@ -42,16 +44,14 @@ Set these in `.env.local` (see `.env.example`):
 |---|---|---|---|
 | `NEXT_PUBLIC_API_BASE_URL` | yes* | — | Backend origin, no trailing slash |
 | `API_URL` | fallback | — | Used if `NEXT_PUBLIC_API_BASE_URL` is missing |
-| `API_REFRESH_PATH` | no | `auth/refresh` | Path under the base URL (no leading slash) |
 
 \* One of `NEXT_PUBLIC_API_BASE_URL` or `API_URL` must be set. `getApiBaseUrl()` throws if both are missing.
 
-Trailing slashes on the base URL and leading/trailing slashes on the refresh path are stripped automatically.
+Trailing slashes on the base URL are stripped automatically. The refresh path is fixed to `auth/token/refresh`.
 
 ```bash
 NEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api
 API_URL=http://localhost:8000/api
-# API_REFRESH_PATH=auth/refresh
 ```
 
 ---
@@ -90,8 +90,9 @@ type AuthTokens = {
   refreshToken: string;
 };
 
-// POST {API}/auth/refresh
-// body: { refreshToken: string }
+// POST {API}/auth/token/refresh
+// header: Authorization: Bearer {refreshToken}
+// no body
 // 200: { success, statusCode, message, data: { accessToken, refreshToken } }
 ```
 
@@ -139,18 +140,19 @@ Dashboard fetches must stay `cache: "no-store"` (the default). Do not pass `tags
 ### What the client does on every call
 
 1. Call `getAuthToken()`.
-2. If a token is returned, set `Authorization: Bearer <token>`.
-3. If not, still send the request (login and other public endpoints work this way).
-4. Parse JSON into `ApiResponse<TData>` and return it.
-5. **HTTP 401 and a Bearer token was sent** (not login-with-bad-password):
+2. Set `Accept-Language` from `getRequestLocale()` (`x-next-intl-locale` → `NEXT_LOCALE` → path hints).
+3. If a token is returned, set `Authorization: Bearer <token>`.
+4. If not, still send the request (login and other public endpoints work this way).
+5. Parse JSON into `ApiResponse<TData>` and return it.
+6. **HTTP 401 and a Bearer token was sent** (not login-with-bad-password):
    1. Force-refresh once via `refreshAndPersist()` (uses the refresh cookie even if the access cookie still looks unexpired).
    2. Retry the original request with the new access token.
    3. If refresh fails or the retry is also 401 → `endInvalidSession()`: try to clear cookies, then `redirect('/{locale}/logout')`. The proxy deletes cookies on that response and sends the user to login.
-6. **HTTP 401 with no Bearer token** is returned as a normal `ApiResponse` (wrong password on login, etc.). It does **not** redirect.
+7. **HTTP 401 with no Bearer token** is returned as a normal `ApiResponse` (wrong password on login, etc.). It does **not** redirect.
 
 `redirect()` throws a Next.js control-flow error. `apiClient` rethrows `NEXT_REDIRECT` / `NEXT_NOT_FOUND` so they are not turned into `"Network error"`.
 
-`apiClient` is **server-only** — not for Client Components. Keep domain CRUD behind server actions / services. Auth login/logout route handlers may call `apiClient` directly and then `setAuthCookies` / `clearAuthCookiesFromStore`.
+`apiClient` is **server-only** — not for Client Components. Keep domain CRUD behind services (`*.api.ts`) and server actions (`runAction`). Login uses `loginAction`; logout may call `apiClient` from the logout route handler and then `clearAuthCookiesFromStore`.
 
 ---
 
@@ -217,8 +219,9 @@ flowchart TD
 
 Plain `fetch`. **Never** goes through `apiClient` (that would recurse).
 
-- `POST {base}/{API_REFRESH_PATH}`
-- Body: `{ refreshToken }`
+- `POST {base}/auth/token/refresh`
+- Header: `Authorization: Bearer {refreshToken}`
+- No body
 - `cache: "no-store"`
 - Returns `{ accessToken, refreshToken }` or `null`
 
@@ -234,7 +237,11 @@ Runs on every document request (matcher skips `api`, `trpc`, `_next`, `_vercel`,
 
 First thing on every request: **delete any client-supplied `x-access-token` header**. Only the proxy sets that header, after a successful server-side refresh. Cloning uses `new NextRequest(request, { headers })` so Server Action bodies are preserved.
 
-Public auth paths (locale stripped first, so `/en/login` and `/ar/login` both count):
+`AUTH_ROUTES` (logged-in users are redirected home):
+
+- `/login`
+
+`PUBLIC_ROUTES` (not treated as protected):
 
 - `/login`
 - `/forget-password`
@@ -283,16 +290,16 @@ flowchart TD
   Prot -->|yes| Login[Redirect /{locale}/login]
   Prot -->|no| OK
   RT -->|no| Prot2{protected?}
-  Prot2 -->|yes| Login
+  Prot2 -->|yes| Allow[Continue — TODO uncomment login redirect]
   Prot2 -->|no| OK
 ```
 
 ### Temporary: unauthenticated access
 
-Until the backend is ready, this block is **commented** in `proxy.ts`:
+Until the auth system / backend is ready, this block is **commented** in `proxy.ts`:
 
 ```ts
-// TODO: uncomment when backend auth is ready
+// TODO: uncomment when the auth system / backend is ready
 // if (isProtectedRoute(pathname)) {
 //   return NextResponse.redirect(localizedPath(request, "/login"));
 // }
@@ -322,15 +329,15 @@ That second point matters if the backend **rotates** refresh tokens: a second re
 
 ### Matcher vs `apiClient` (RSC)
 
-The proxy matcher covers document routes. **Do not** call `apiClient` / `getAuthToken` from routes the matcher skips (`/api/*`, `/trpc/*`, `_next`, static files) unless that handler authenticates itself. The `/api/auth/*` handlers either call `apiClient` without needing a session (login) or use `refreshTokens` / cookie helpers directly.
+The proxy matcher covers document routes. **Do not** call `apiClient` / `getAuthToken` from routes the matcher skips (`/api/*`, `/trpc/*`, `_next`, static files) unless that handler authenticates itself. The `/api/auth/refresh` and `/api/auth/logout` handlers use `refreshTokens` / cookie helpers (and logout may call `apiClient`). Login is a server action, not a route handler.
 
 ---
 
-## Auth route handlers
+## Auth mutations
 
-| Route | Backend call | Cookie effect |
+| Entry | Backend call | Cookie effect |
 |---|---|---|
-| `POST /api/auth/login` | `apiClient("auth/login", { method: "POST", body })` | `setAuthCookies` from `response.data` |
+| `loginAction` | `apiClient("auth/login", { method: "POST", body })` via `runAction` | `setAuthCookies` from `response.data` |
 | `POST /api/auth/refresh` | `refreshTokens(refreshToken)` | Rotates both cookies |
 | `POST /api/auth/logout` | `apiClient("auth/logout", { method: "POST" })` (best-effort) | `clearAuthCookiesFromStore()` |
 
@@ -352,11 +359,18 @@ Explicit logout (button) can `POST /api/auth/logout` **or** `redirect('/{locale}
 
 ### Browser login
 
+Use `LoginForm` + `useCrudForm` → `loginAction`. Do not `fetch("/api/auth/login")`.
+
 ```ts
-const response = await fetch("/api/auth/login", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ email, password }),
+const { form, onSubmit } = useCrudForm({
+  schema: createLoginSchema(t),
+  defaultValues: { email: "", password: "" },
+  action: (values) => loginAction(values, locale),
+  resetOnSuccess: false,
+  onSuccess: (result) => {
+    if (result.data) setAuthUser(result.data);
+    router.replace("/");
+  },
 });
 ```
 
@@ -384,7 +398,7 @@ These cannot be verified from this frontend repo. Record the backend/DevOps answ
 |---|---|---|
 | **Revocation** | Does every API request check a blocklist/invalidation (logout, password change, admin ban), or is it **stateless JWT** (signature + `exp` only)? | Proxy only checks `exp`. If access is revoked while `exp` is still in the future, `apiClient` gets HTTP 401 → refresh once → retry → `/{locale}/logout` if still 401. A leaked access token remains usable **against the API** until `exp` if the API is stateless. |
 | **Refresh rotation vs multiple tabs** | Two tabs can POST the same refresh token at once. Prefer a **5–30s reuse/grace window** for the previous token, **or** family-id reuse that returns the already-issued pair instead of rejecting. | Frontend has no cross-tab lock. Without a grace window, tab B can be logged out after tab A rotates. |
-| **Login / logout / refresh endpoints** | Paths, body shape, and `ApiResponse.data` tokens as documented above. | Route protection for unauthenticated users is still **commented** until the backend is ready. |
+| **Login / logout / refresh endpoints** | Login is a server action. Refresh is `POST auth/token/refresh` with `Authorization: Bearer {refreshToken}` and no body. | Route protection for unauthenticated users is still **commented** until the auth system / backend is ready. |
 
 ---
 
@@ -407,56 +421,31 @@ export default async function ProductsPage() {
 }
 ```
 
-### Server action — JSON mutation
+### Server action — JSON mutation (`runAction`)
 
 ```ts
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { apiClient } from "@/lib/api";
+import { runAction } from "@/lib/forms/server";
+import { updateProductSchema } from "@/validations/products";
+import { updateProduct } from "@/services/products";
 
-export async function updateProductAction(
-  _prev: MutationResult | null,
-  formData: FormData,
-): Promise<MutationResult> {
-  const id = String(formData.get("productId") ?? "").trim();
-  if (!id) return { success: false, message: "Product is required" };
-
-  const res = await apiClient<Product>(`products/${id}`, {
-    method: "PATCH",
-    body: {
-      name: formData.get("name"),
-      price: Number(formData.get("price")),
-    },
+export async function updateProductAction(input: unknown) {
+  return runAction({
+    schema: updateProductSchema,
+    input,
+    handler: (data) => updateProduct(data),
+    revalidatePaths: ["/products"],
   });
-
-  if (!res.success) {
-    return { success: false, message: res.message, errors: res.errors };
-  }
-
-  revalidatePath("/products");
-  return { success: true, data: res.data };
 }
 ```
 
-### Server action — file upload (FormData passthrough)
+Keep `apiClient` in the service (`*.api.ts`), not in the action. The form submits a typed object through `useCrudForm` — not FormData, not `MutationResult`.
 
-```ts
-"use server";
+### Server action — image upload
 
-export async function createProductAction(
-  _prev: MutationResult | null,
-  formData: FormData,
-): Promise<MutationResult> {
-  const res = await apiClient<Product>("products", { method: "POST", body: formData });
-  if (!res.success) {
-    return { success: false, message: res.message };
-  }
-
-  revalidatePath("/products");
-  return { success: true, data: res.data };
-}
-```
+Optimize files with `optimizeImageFile` / `optimizeImageFiles` from `@/lib/images` and a preset from `src/config/image-optimize.ts` **before** the service sends them to the API. See `docs/features/forms.md`.
 
 ---
 

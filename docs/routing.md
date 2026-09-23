@@ -17,6 +17,8 @@ Locales are `en` and `ar` (`localePrefix: "always"`). `src/proxy.ts` composes ne
 - `/{locale}/charts` charts module index
 - `/{locale}/table` table demo
 - `/{locale}/settings` settings module index
+- `src/app/[locale]/error.tsx` unexpected render errors (`ErrorPage`)
+- `src/app/[locale]/not-found.tsx` unknown routes (`NotFoundPage`)
 
 Feature sub-routes below are relative to `/{locale}`.
 

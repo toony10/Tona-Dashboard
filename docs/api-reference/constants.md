@@ -19,5 +19,6 @@
 
 ## Usage guidance
 
+- `SearchFilter` defaults to the `search` query param (`paramKey` overrides it).
 - Use `SEARCH_FILTER_URL_UPDATE_DELAY_MS` for text/search filters so typing stays responsive without flooding the server.
 - Use `FILTER_URL_UPDATE_DELAY_MS` for discrete filter controls that typically change once per user action.

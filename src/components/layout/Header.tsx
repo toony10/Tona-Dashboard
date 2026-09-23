@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 import { ThemeSwitcher } from "./ThemeSwitcher";
-import { GlobalSearch } from "./GlobalSearch";
 import { LocaleSwitcher } from "./LocaleSwitcher";
 
 export function Header() {
@@ -26,9 +25,7 @@ export function Header() {
       )}
     >
       <SidebarTrigger className="-ms-1 cursor-pointer" />
-      <div className="w-full flex-1">
-        <GlobalSearch />
-      </div>
+      <div className="w-full flex-1" />
       <div className="flex items-center gap-2">
         <LocaleSwitcher />
         <ThemeSwitcher />

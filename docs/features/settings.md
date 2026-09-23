@@ -19,7 +19,7 @@ The settings module allows users to personalize dashboard appearance, with curre
 ## Primary building blocks
 
 - `DarkBackgroundPicker`
-- Appearance utility functions in `src/lib/appearance-settings.ts`
+- Appearance utility functions in `src/config/appearance-settings.ts`
 
 ## Notes
 

@@ -2,26 +2,42 @@
 
 ## 1) Create the route file
 
-Add a `page.tsx` in the correct route group under `src/app`.
+Add a `page.tsx` under the locale segment.
 
 Example:
 
-- `src/app/(main)/reports/page.tsx`
+- `src/app/[locale]/(main)/reports/page.tsx`
+
+Keep `page.tsx` a Server Component. Put dialogs and tables in `_components/` or `src/components`.
 
 ## 2) Compose with shared building blocks
 
-- Use `MainH` for page heading consistency.
-- Use existing `Card`, `Button`, and shared domain components first.
+- Use `BreadCrumb` + `MainH` for page chrome.
+- Use `ListPage_SK` / `DetailsPage_SK` / `HubPage_SK` in colocated `loading.tsx`.
+- On API failure, render `<ErrorHandler statusCode={…} message={…} />` (403 → forbidden page).
+- Use existing `Card`, `Button`, filters, and `DataTable` first.
 
-## 3) Register in sidebar navigation
+## 3) i18n
+
+Add keys to **both** `messages/en.json` and `messages/ar.json`. Use `getTranslations` on the server page.
+
+## 4) Register in sidebar navigation
 
 Update `src/config/navigation.ts`:
 
-- Add a new top-level item or sub-item.
-- Keep URL and label aligned with the route.
+- Add a new top-level item or sub-item with `titleKey` (no hardcoded titles).
+- Add matching `Nav.*` keys in both catalogs.
 
-## 4) Validate in UI
+## 5) Mutations (if the page writes data)
 
-- Confirm route works directly in browser.
-- Confirm sidebar link appears and navigates.
-- Confirm dark/light themes render as expected.
+Follow the forms kit. Full recipes: [CRUD setup](./crud-setup.md).
+
+- Types → Zod schema → `src/services/{domain}/*.api.ts` (`apiClient` only here)
+- `src/actions/{domain}/*.actions.ts` with `runAction` (no `apiClient`)
+- `{Entity}_FR` + `FormDialog` / `ConfirmDialog`
+
+## 6) Validate in UI
+
+- Confirm `/en/…` and `/ar/…` both work.
+- Confirm sidebar link appears and navigates (top loader should show).
+- Confirm dark/light themes and RTL layout.

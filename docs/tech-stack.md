@@ -22,10 +22,18 @@
 
 - TipTap rich text editor
 - React Day Picker for date inputs
+- React Hook Form + Zod + `@hookform/resolvers`
+- `src/lib/forms` CRUD kit (`useCrudForm`, `FormDialog`, `runAction`)
+
+## i18n
+
+- `next-intl` (`en` / `ar`, always-prefixed locales)
 
 ## UX and utilities
 
 - `next-themes` for light/dark mode
+- `nextjs-toploader` for navigation progress
 - `nuqs` for URL query state management
 - `sonner` for toast notifications
+- `sharp` for server-side image optimization
 - `clsx` + `tailwind-merge` (`cn()` helper)

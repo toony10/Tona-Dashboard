@@ -14,7 +14,7 @@ export async function generateMetadata({
   params,
 }: LoginPageProps): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "Auth" });
+  const t = await getTranslations({ locale, namespace: "Auth.loginForm" });
 
   return {
     title: t("pageTitle"),

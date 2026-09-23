@@ -17,7 +17,8 @@ import {
 
 const intlMiddleware = createMiddleware(routing);
 
-const AUTH_ROUTES = ["/login", "/forget-password", "/reset-password"] as const;
+const AUTH_ROUTES = ["/login"] as const;
+const PUBLIC_ROUTES = ["/login", "/forget-password", "/reset-password"] as const;
 
 function getLocale(pathname: string) {
   const maybeLocale = pathname.split("/")[1];
@@ -34,13 +35,17 @@ function stripLocale(pathname: string) {
   return pathname;
 }
 
-function isAuthRoute(pathname: string) {
+function matchesRoute(pathname: string, routes: readonly string[]) {
   const path = stripLocale(pathname);
-  return AUTH_ROUTES.some((route) => path === route || path.startsWith(`${route}/`));
+  return routes.some((route) => path === route || path.startsWith(`${route}/`));
+}
+
+function isAuthRoute(pathname: string) {
+  return matchesRoute(pathname, AUTH_ROUTES);
 }
 
 function isProtectedRoute(pathname: string) {
-  return !isAuthRoute(pathname);
+  return !matchesRoute(pathname, PUBLIC_ROUTES);
 }
 
 function localizedPath(request: NextRequest, path: string) {
@@ -100,7 +105,7 @@ export default async function proxy(request: NextRequest) {
     return response;
   }
 
-  // TODO: uncomment when backend auth is ready
+  // TODO: uncomment when the auth system / backend is ready
   // if (isProtectedRoute(pathname)) {
   //   return NextResponse.redirect(localizedPath(request, "/login"));
   // }

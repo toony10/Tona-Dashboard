@@ -241,6 +241,8 @@ export function FileUploader({
     );
     const [typeRejection, setTypeRejection] = React.useState<string | null>(null);
     const dragCounter = React.useRef(0);
+    const filesRef = React.useRef(files);
+    filesRef.current = files;
 
     const isMultiple = multiple ?? maxFiles > 1;
 
@@ -255,23 +257,16 @@ export function FileUploader({
 
     const processFiles = React.useCallback(
         (incoming: FileList | File[]) => {
-            let result = {
-                next: [] as UploadedFile[],
-                typeRejected: false,
-                added: false,
-            };
+            const result = mergeIncomingFiles(
+                filesRef.current,
+                incoming,
+                accept,
+                maxFiles,
+                maxSize,
+                t("exceedsSize", { maxSize: formatBytes(maxSize) })
+            );
 
-            setFiles((prev) => {
-                result = mergeIncomingFiles(
-                    prev,
-                    incoming,
-                    accept,
-                    maxFiles,
-                    maxSize,
-                    t("exceedsSize", { maxSize: formatBytes(maxSize) })
-                );
-                return result.next;
-            });
+            setFiles(result.next);
 
             if (result.typeRejected) {
                 setTypeRejection(t("typeNotAllowed"));
@@ -288,11 +283,9 @@ export function FileUploader({
 
     const remove = React.useCallback(
         (id: string) => {
-            setFiles((prev) => {
-                const next = prev.filter((f) => f.id !== id);
-                emitChange(next);
-                return next;
-            });
+            const next = filesRef.current.filter((f) => f.id !== id);
+            setFiles(next);
+            emitChange(next);
         },
         [emitChange]
     );

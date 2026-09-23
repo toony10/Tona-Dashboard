@@ -14,7 +14,7 @@ export function getApiBaseUrl(): string {
   return baseUrl.replace(/\/+$/, "");
 }
 
-/** Refresh path relative to the API base. Override per app via `API_REFRESH_PATH`. */
+/** Refresh path relative to the API base. */
 export function getRefreshPath(): string {
-  return (process.env.API_REFRESH_PATH ?? "auth/refresh").replace(/^\/+|\/+$/g, "");
+  return "auth/token/refresh";
 }

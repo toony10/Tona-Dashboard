@@ -39,7 +39,7 @@ The filters module demonstrates composable controls that synchronize state with 
 
 ## Technical notes
 
-Filter updates are debounced and URL-driven to support refresh-safe state and deep-linking behavior. Search uses a `500ms` debounce (`SEARCH_FILTER_URL_UPDATE_DELAY_MS`); other filters use `100ms` (`FILTER_URL_UPDATE_DELAY_MS`).
+Filter updates are debounced and URL-driven to support refresh-safe state and deep-linking behavior. Search uses a `500ms` debounce (`SEARCH_FILTER_URL_UPDATE_DELAY_MS`) and defaults to the `search` query param (`paramKey` overrides it). Other filters use `100ms` (`FILTER_URL_UPDATE_DELAY_MS`).
 
 Dashboard filters pass a shared React transition to `nuqs`. While a
 non-shallow query update is waiting for its Server Component response,

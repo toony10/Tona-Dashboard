@@ -45,7 +45,7 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   isLoading?: boolean              // default false
-  enableRowSelection?: boolean     // default false
+  enableRowSelection?: boolean | ((row: Row<TData>) => boolean)
   getRowId?: (row: TData, index: number) => string
   renderBulkActions?: (selection: DataTableBulkSelection<TData>) => React.ReactNode
 }
@@ -63,7 +63,7 @@ interface DataTableBulkSelection<TData> {
 | `columns` | yes | Standard TanStack `ColumnDef[]`. Do **not** add a `select` column — `DataTable` prepends it when `enableRowSelection` is true. |
 | `data` | yes | Pre-fetched slice for the current page/filter state. |
 | `isLoading` | no | Shows skeleton rows. Also reacts to `useQueryNavigation().isPending` while URL filters update. |
-| `enableRowSelection` | no | When `false` (default), the table is a plain renderer with no checkboxes. |
+| `enableRowSelection` | no | `false` (default) = no checkboxes. `true` = all rows selectable. A function disables the checkbox on rows that return `false`. |
 | `getRowId` | no | Defaults to `(row) => String(row.id)`. Required when your entity uses a different id field. |
 | `renderBulkActions` | no | Render prop for action buttons/dialogs in the floating bulk bar. Ignored unless `enableRowSelection` is true. |
 
@@ -193,7 +193,8 @@ The `/table` demo wires this with a toast so you can try the bar without a backe
 ### Behavior
 
 - **Checkbox column** — prepended automatically with header (select all on page) and row checkboxes (including indeterminate state).
-- **Floating bar** — fixed at the bottom of the viewport when `count > 0`. Shows selected count, your actions, and a Clear button.
+- **Floating bar** — fixed at the bottom of the viewport when `count > 0`. Shows selected count, a `ListX` clear action (before the separator), then your bulk actions.
+- **Busy state** — the table wrapper sets `aria-busy` while loading or a query-navigation transition is pending.
 - **Page-scoped selection** — "select all" means all rows on the **current page** only.
 - **Auto-clear on navigation** — selection resets when URL search params change (page/filter changes via `nuqs`).
 - **Selected row styling** — selected rows get `data-state="selected"` (muted background via shadcn `TableRow`).

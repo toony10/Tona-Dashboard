@@ -1,5 +1,6 @@
 {
   "Metadata": {
+    "appName": "لوحة التحكم",
     "title": "لوحة التحكم",
     "description": "لوحة تحكم جاهزة باستخدام Shadcn و Next.js."
   },
@@ -36,7 +37,25 @@
     "fromLastMonth": "عن الشهر الماضي",
     "language": "اللغة",
     "english": "الإنجليزية",
-    "arabic": "العربية"
+    "arabic": "العربية",
+    "breadcrumb": "مسار التنقل",
+    "notFound": {
+      "title": "الصفحة غير موجودة",
+      "description": "هذا الرابط لا يطابق صفحة في لوحة التحكم. تحقق من العنوان أو عد إلى الصفحة الرئيسية.",
+      "backHome": "العودة للرئيسية"
+    },
+    "error": {
+      "title": "حدث خطأ ما",
+      "description": "تعذر تحميل هذه الصفحة. حاول مرة أخرى أو عد إلى الصفحة الرئيسية.",
+      "retry": "إعادة المحاولة",
+      "backHome": "العودة للرئيسية"
+    },
+    "forbidden": {
+      "code": "403",
+      "title": "غير مسموح",
+      "description": "ليس لديك صلاحية لعرض هذا المورد. عد إلى الصفحة الرئيسية أو تواصل مع المسؤول إذا كنت تعتقد أن هذا خطأ.",
+      "backHome": "العودة للرئيسية"
+    }
   },
   "Nav": {
     "dashboard": "لوحة التحكم",
@@ -53,7 +72,7 @@
     "filtersDate": "فلتر التاريخ",
     "filtersSearch": "فلتر البحث",
     "filtersLimit": "فلتر الحد",
-    "filtersReset": "إعادة تعيين الفلاتر",
+    "filtersReset": "مسح الفلاتر",
     "charts": "الرسوم البيانية",
     "chartsAnalytics": "رسوم التحليلات",
     "table": "الجدول",
@@ -70,7 +89,38 @@
     "passwordPlaceholder": "أدخل كلمة المرور",
     "showPassword": "إظهار كلمة المرور",
     "hidePassword": "إخفاء كلمة المرور",
-    "submit": "تسجيل الدخول"
+    "submit": "تسجيل الدخول",
+    "loginForm": {
+      "pageTitle": "تسجيل الدخول",
+      "pageDescription": "سجّل الدخول إلى حسابك في لوحة التحكم",
+      "welcomeTitle": "مرحباً بعودتك",
+      "fields": {
+        "email": "البريد الإلكتروني",
+        "password": "كلمة المرور"
+      },
+      "placeholders": {
+        "email": "name@example.com",
+        "password": "أدخل كلمة المرور"
+      },
+      "validation": {
+        "emailRequired": "البريد الإلكتروني مطلوب",
+        "emailInvalid": "أدخل بريداً إلكترونياً صالحاً",
+        "passwordRequired": "كلمة المرور مطلوبة"
+      },
+      "forgotPassword": "نسيت كلمة المرور؟",
+      "showPassword": "إظهار كلمة المرور",
+      "hidePassword": "إخفاء كلمة المرور",
+      "submit": "تسجيل الدخول",
+      "submitting": "جارٍ تسجيل الدخول..."
+    }
+  },
+  "Crud": {
+    "confirm": "تأكيد",
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "saving": "جارٍ الحفظ...",
+    "errorsTitle": "يرجى تصحيح التالي",
+    "unexpectedError": "حدث خطأ ما"
   },
   "Dashboard": {
     "title": "لوحة التحكم",
@@ -115,7 +165,7 @@
     "selectPlaceholder": "اختر خياراً",
     "multiSelectPlaceholder": "اختر الخيارات",
     "nSelected": "{count} محدد",
-    "resetLabel": "إعادة تعيين الفلاتر",
+    "resetLabel": "مسح الفلاتر",
     "searchProducts": "البحث في المنتجات...",
     "filterByStatus": "تصفية حسب الحالة",
     "filterByCategory": "تصفية حسب الفئة",
@@ -178,7 +228,7 @@
         "description": "فلتر اختيار يزامن حد حجم الصفحة مع معاملات البحث في الرابط."
       },
       "reset": {
-        "title": "إعادة تعيين الفلاتر",
+        "title": "مسح الفلاتر",
         "description": "زر يمسح معاملات البحث المحددة من الرابط."
       }
     },
@@ -263,7 +313,7 @@
         "noParamsHint": "لم يتم تعيين معاملات بحث بعد. اختر حداً أعلاه لتحديث الرابط."
       },
       "reset": {
-        "title": "إعادة تعيين الفلاتر",
+        "title": "مسح الفلاتر",
         "description": "امسح معاملات البحث المحددة من الرابط بإجراء واحد.",
         "toolbarTitle": "شريط الفلاتر",
         "toolbarDesc": "إعادة التعيين تزيل \"q\" و \"status\" و \"limit\" و \"page\" من الرابط.",

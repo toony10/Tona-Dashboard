@@ -1,5 +1,6 @@
 {
   "Metadata": {
+    "appName": "Starter Dashboard",
     "title": "Starter Dashboard",
     "description": "Starter Dashboard using Shadcn and Next.js."
   },
@@ -36,7 +37,25 @@
     "fromLastMonth": "from last month",
     "language": "Language",
     "english": "English",
-    "arabic": "Arabic"
+    "arabic": "Arabic",
+    "breadcrumb": "Breadcrumb",
+    "notFound": {
+      "title": "Page not found",
+      "description": "This URL does not match a page in this dashboard. Check the address or go back home.",
+      "backHome": "Back to home"
+    },
+    "error": {
+      "title": "Something went wrong",
+      "description": "This page failed to load. Try again, or go back home.",
+      "retry": "Try again",
+      "backHome": "Back to home"
+    },
+    "forbidden": {
+      "code": "403",
+      "title": "Not allowed",
+      "description": "You do not have permission to view this resource. Go back home or contact an administrator if you think this is a mistake.",
+      "backHome": "Back to home"
+    }
   },
   "Nav": {
     "dashboard": "Dashboard",
@@ -70,7 +89,38 @@
     "passwordPlaceholder": "Enter your password",
     "showPassword": "Show password",
     "hidePassword": "Hide password",
-    "submit": "Sign in"
+    "submit": "Sign in",
+    "loginForm": {
+      "pageTitle": "Sign in",
+      "pageDescription": "Sign in to your Starter Dash account",
+      "welcomeTitle": "Welcome back",
+      "fields": {
+        "email": "Email",
+        "password": "Password"
+      },
+      "placeholders": {
+        "email": "you@company.com",
+        "password": "Enter your password"
+      },
+      "validation": {
+        "emailRequired": "Email is required",
+        "emailInvalid": "Enter a valid email address",
+        "passwordRequired": "Password is required"
+      },
+      "forgotPassword": "Forgot password?",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "submit": "Sign in",
+      "submitting": "Signing in..."
+    }
+  },
+  "Crud": {
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving...",
+    "errorsTitle": "Please fix the following",
+    "unexpectedError": "Something went wrong"
   },
   "Dashboard": {
     "title": "Starter Dashboard",

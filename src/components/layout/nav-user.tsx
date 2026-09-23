@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { User, ChevronsUpDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -19,6 +20,12 @@ import {
 } from "@/components/ui/sidebar";
 import { user } from "@/config/navigation";
 import { useIsRtl } from "@/hooks/use-translated-navigation";
+import {
+  AUTH_USER_UPDATED_EVENT,
+  getAuthUser,
+} from "@/lib/auth/user-storage";
+import { getImg } from "@/lib/http";
+import type { AuthUser } from "@/types/auth";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
@@ -26,8 +33,18 @@ export function NavUser() {
   const tUser = useTranslations("User");
   const tNav = useTranslations("Nav");
   const rtl = useIsRtl();
-  const name = tUser("name");
-  const email = tUser("email");
+  const [authUser, setAuthUserState] = useState<AuthUser | null>(null);
+
+  useEffect(() => {
+    const sync = () => setAuthUserState(getAuthUser());
+    sync();
+    window.addEventListener(AUTH_USER_UPDATED_EVENT, sync);
+    return () => window.removeEventListener(AUTH_USER_UPDATED_EVENT, sync);
+  }, []);
+
+  const name = authUser?.fullName?.trim() || tUser("name");
+  const email = authUser?.email || tUser("email");
+  const avatarSrc = authUser?.avatar ? getImg(authUser.avatar) : user.avatar;
 
   return (
     <SidebarMenu>
@@ -39,7 +56,7 @@ export function NavUser() {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-full">
-                <AvatarImage src={user.avatar} alt={name} />
+                <AvatarImage src={avatarSrc} alt={name} />
                 <AvatarFallback className="rounded-full bg-primary/10">
                   <User className="h-4 w-4" />
                 </AvatarFallback>

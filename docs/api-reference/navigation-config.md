@@ -6,16 +6,19 @@
 
 ## Exported types
 
+- `NavTitleKey`
+  - Message key under the `Nav` namespace (e.g. `dashboard` → `Nav.dashboard`).
 - `NavSubItem`
-  - `title: string`
+  - `titleKey: NavTitleKey`
   - `url: string`
 - `NavItem`
-  - `title: string`
+  - `id: string` — stable module id (never translate)
+  - `titleKey: NavTitleKey`
   - `url: string`
   - `icon: LucideIcon`
   - `items?: NavSubItem[]`
 - `NavGroup`
-  - `label?: string`
+  - `labelKey?: string`
   - `items: NavItem[]`
 
 ## Exported values
@@ -27,6 +30,7 @@
 
 ## Usage guidelines
 
-- Keep URLs aligned with App Router routes.
+- Keep URLs aligned with App Router routes (`src/app/[locale]/…`).
 - Prefer adding feature sub-pages under `items` for grouped modules.
-- Use concise, user-facing labels for `title`.
+- Store `id` + `titleKey` only — never hardcoded titles. Resolve copy with `useTranslatedNavigation()`.
+- Add matching `Nav.*` keys to **both** `messages/en.json` and `messages/ar.json`.

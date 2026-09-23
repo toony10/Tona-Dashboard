@@ -15,7 +15,9 @@
 ## Integration checklist
 
 - Import into one page first for validation.
-- Test in both light and dark themes.
+- Test in both light and dark themes, and in `/en` (LTR) and `/ar` (RTL).
+- Prefer logical Tailwind (`ms` / `me` / `ps` / `pe` / `start` / `end`).
+- If the component shows copy, add keys to **both** `messages/en.json` and `messages/ar.json`.
 - Ensure responsive behavior at common breakpoints.
 
 ## Documentation checklist

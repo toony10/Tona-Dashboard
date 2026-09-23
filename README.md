@@ -8,13 +8,13 @@ Replaces the separate `en` / `ar` apps with a single locale-routed project (`/en
 
 - **Bilingual UI** — English (`en`) and Arabic (`ar`) via [next-intl](https://next-intl.dev), with a header locale switcher
 - **RTL / LTR** — `lang` + `dir` on `<html>`, locale fonts, sidebar side flip, logical Tailwind classes
-- **Dashboard** — KPI cards, analytics previews, and module navigation
-- **Forms** — Rich text editor, image/file uploaders, and date inputs
-- **Filters** — URL-synced search, select, tabs, date, pagination, and reset controls
+- **Dashboard** — Metric cards, analytics previews, and module navigation
+- **Forms** — Rich text editor, image/file uploaders, date inputs, and a CRUD dialog kit
+- **Filters** — URL-synced search (`search` param), select, tabs, date, pagination, and reset controls
 - **Charts** — Recharts-based line, area, bar, pie, and radial visualizations
-- **Table** — Sortable data tables powered by TanStack Table
+- **Table** — TanStack Table with optional per-row selection and bulk bar
 - **Settings** — Dark theme customization with persistent presets
-- **Auth** — Login screen with theme + language switching
+- **Auth** — Login via server action + httpOnly cookies (theme + language on the auth screen)
 
 ## Tech stack
 
@@ -24,6 +24,7 @@ Replaces the separate `en` / `ar` apps with a single locale-routed project (`/en
 | i18n | next-intl · `messages/en.json` + `messages/ar.json` |
 | UI | Tailwind CSS 4 · shadcn/ui · Lucide |
 | Data UI | Recharts · TanStack Table · TipTap · nuqs · next-themes |
+| Forms | React Hook Form · Zod · `src/lib/forms` |
 
 ## Getting started
 
@@ -58,19 +59,26 @@ src/
     [locale]/             # All UI routes — /en/… and /ar/…
       (auth)/login
       (main)/…            # Dashboard, forms, filters, charts, table, settings
-    api/                  # Auth API routes (locale-agnostic)
+    api/auth/             # Refresh + logout routes (login is a server action)
+  actions/                # Server actions (`runAction`)
+  services/               # HTTP only (`apiClient`)
   components/
     layout/               # Sidebar, header, LocaleSwitcher, theme switcher
-    shared/               # Filters, forms, charts, table, AppLink
+    shared/               # Filters, forms, charts, table, error/forbidden, skeletons
     ui/                   # shadcn primitives
   config/
     navigation.ts         # Nav urls + titleKeys (no hardcoded titles)
+  lib/
+    api/                  # Server-only HTTP client
+    auth/                 # Cookies, refresh, user-storage
+    forms/                # CRUD dialogs + useCrudForm + runAction
+    http/ date/ images/   # Shared helpers
   i18n/
     routing.ts            # Locales + default locale
-    navigation.ts         # Locale-aware Link / useRouter / usePathname
+    navigation.ts         # Locale-aware Link / useRouter (top loader) / usePathname
     request.ts            # Loads messages per request
-    config.ts             # getDirection / isRtl helpers
-  proxy.ts                # next-intl locale middleware (Next.js 16)
+    config.ts             # Re-exports getDirection / isRtl
+  proxy.ts                # next-intl + session refresh (Next.js 16)
 docs/
   i18n.md                 # i18n & RTL patterns (start here for localization)
   …                       # Feature guides, architecture, API reference
@@ -95,10 +103,11 @@ Full patterns (server/client translations, adding pages, RTL checklist): **[docs
 
 ## Documentation
 
-See [`docs/`](./docs/) for feature guides, architecture, routing, and contributor how-tos. For multi-lang specifics, start with [`docs/i18n.md`](./docs/i18n.md).
+See [`docs/`](./docs/) for feature guides, architecture, routing, and contributor how-tos. For multi-lang specifics, start with [`docs/i18n.md`](./docs/i18n.md). To add an entity (forms, dialogs, Zod, server actions), see [`docs/guides/crud-setup.md`](./docs/guides/crud-setup.md).
 
 ## Environment
 
 | Variable | Description |
 |---|---|
-| `API_URL` | Backend API base URL (server-only). See `.env.example`. |
+| `NEXT_PUBLIC_API_BASE_URL` | Backend API origin (preferred). See `.env.example`. |
+| `API_URL` | Fallback if `NEXT_PUBLIC_API_BASE_URL` is unset. |

@@ -16,7 +16,7 @@ export function DashboardIntroFilters() {
         className="sm:min-w-56"
       />
       <LimitFilter className="sm:w-40" />
-      <ResetFilters keys={ ["q", "limit"] } />
+      <ResetFilters keys={ ["search", "limit"] } />
     </div>
   )
 }

@@ -8,6 +8,7 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import { AppearanceProvider } from "@/components/providers/appearance-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { TopLoader } from "@/components/providers/top-loader";
 import { Toaster } from "@/components/ui/sonner";
 import { getAppearanceInitScript } from "@/config/appearance-settings";
 import { getDirection, isAppLocale } from "@/i18n/config";
@@ -49,9 +50,13 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Metadata" });
+  const appName = t("appName");
 
   return {
-    title: t("title"),
+    title: {
+      default: appName,
+      template: `${appName} - %s`,
+    },
     description: t("description"),
   };
 }
@@ -94,6 +99,7 @@ export default async function LocaleLayout({
               disableTransitionOnChange
             >
               <AppearanceProvider>
+                <TopLoader />
                 {children}
                 <Toaster position="top-center" duration={3000} />
               </AppearanceProvider>

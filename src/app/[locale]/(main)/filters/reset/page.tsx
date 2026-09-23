@@ -10,7 +10,7 @@ import { SearchFilter } from "@/components/shared/filters/SearchFilter"
 import { SelectFilter } from "@/components/shared/filters/SelectFilter"
 import { MainH, SectionH } from "@/components/shared/text/Headings"
 
-const FILTER_KEYS = ["q", "status", "limit", "page"]
+const FILTER_KEYS = ["search", "status", "limit", "page"]
 
 function SearchParamsPreview() {
   const t = useTranslations("Filters.pages.reset")

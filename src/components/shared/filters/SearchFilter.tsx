@@ -19,7 +19,7 @@ export interface SearchFilterProps {
 }
 
 export function SearchFilter({
-  paramKey = "q",
+  paramKey = "search",
   placeholder,
   className,
 }: SearchFilterProps) {
@@ -35,7 +35,7 @@ export function SearchFilter({
 
   return (
     <InputGroup className={ cn("min-w-40", className) }>
-      <InputGroupAddon>
+      <InputGroupAddon className="ms-2">
         <Search />
       </InputGroupAddon>
       <InputGroupInput

@@ -2,6 +2,7 @@
 
 import { type ReactNode } from "react"
 import { AnimatePresence, motion } from "framer-motion"
+import { ListX } from "lucide-react"
 import { useTranslations } from "next-intl"
 
 import { Button } from "@/components/ui/button"
@@ -33,14 +34,15 @@ export function DataTableBulkBar({
           <span className="text-sm font-medium">
             { t("selection.selected", { count }) }
           </span>
+          <Button type="button" variant="ghost" size="sm" onClick={ onClear }>
+            <ListX data-icon="inline-start" className="size-4" />
+            { t("selection.clear") }
+          </Button>
           <Separator
             orientation="vertical"
             className="data-vertical:h-5"
           />
           { children }
-          <Button type="button" variant="ghost" size="sm" onClick={ onClear }>
-            { t("selection.clear") }
-          </Button>
         </motion.div>
       ) : null }
     </AnimatePresence>

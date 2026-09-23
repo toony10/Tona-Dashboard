@@ -74,7 +74,7 @@ routes.
 
 ## Practical recommendations
 
-- Use stable query key names per module.
+- Use stable query key names per module. Shared search defaults to `search` (not `q`).
 - Debounce search with `SEARCH_FILTER_URL_UPDATE_DELAY_MS` and other filters with
   `FILTER_URL_UPDATE_DELAY_MS`.
 - Keep defaults explicit and documented.
@@ -88,5 +88,5 @@ routes.
 - `src/components/providers/query-navigation-provider.tsx`
 - `src/components/shared/table/DataTable.tsx`
 - `src/components/layout/DashboardLayout.tsx`
-- `src/app/layout.tsx`
+- `src/app/[locale]/layout.tsx`
 - `src/config/constants.ts`

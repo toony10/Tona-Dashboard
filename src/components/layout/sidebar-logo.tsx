@@ -1,30 +1,15 @@
-import {
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-} from "@/components/ui/sidebar";
 import { Logo } from "@/components/shared/logo/Logo";
-import { LogoMin } from "@/components/shared/logo/LogoMin";
 
+/**
+ * Full-width logo that shrinks to the mark when the sidebar collapses. Collapsed, the lockup is
+ * 7.5rem wide so its mark is 2rem, the size of the icon buttons; the wordmark fades and is clipped.
+ */
 export function SidebarLogo() {
   return (
-    <SidebarMenu>
-      <SidebarMenuItem className="flex items-center">
-        <SidebarMenuButton
-          size="lg"
-          asChild
-          className="h-auto justify-start overflow-hidden px-2 py-1.5 hover:bg-transparent group-data-[collapsible=icon]:hidden"
-        >
-          <Logo width={ 132 } height={ 40 } />
-        </SidebarMenuButton>
-        <SidebarMenuButton
-          size="lg"
-          asChild
-          className="hidden size-8! justify-center p-1 hover:bg-transparent group-data-[collapsible=icon]:inline-flex"
-        >
-          <LogoMin size={ 28 } />
-        </SidebarMenuButton>
-      </SidebarMenuItem>
-    </SidebarMenu>
+    <Logo
+      fill
+      className="transition-[width] duration-200 ease-linear group-data-[collapsible=icon]:w-[7.5rem] motion-reduce:transition-none"
+      wordmarkClassName="sidebar-label"
+    />
   );
 }

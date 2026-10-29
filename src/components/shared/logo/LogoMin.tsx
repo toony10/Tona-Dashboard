@@ -1,10 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import { useTranslations } from "next-intl";
 
 import { AppLink } from "@/components/shared/navigation/AppLink";
 import { cn } from "@/lib/utils";
+
+import { LogoMark } from "./LogoMark";
 
 type LogoMinProps = {
     size?: number;
@@ -19,23 +20,10 @@ export function LogoMin({ size = 28, className, alt }: LogoMinProps) {
 
     return (
         <AppLink href="/"
-            className={ cn("relative shrink-0", className) }
-            style={ { width: size, height: size } }
+            aria-label={ altText }
+            className={ cn("relative inline-flex shrink-0", className) }
         >
-            <Image
-                src="/assets/images/logo-min-light.webp"
-                alt={ altText }
-                width={ size }
-                height={ size }
-                className="object-contain dark:hidden"
-            />
-            <Image
-                src="/assets/images/logo-min-dark.webp"
-                alt={ altText }
-                width={ size }
-                height={ size }
-                className="absolute inset-0 hidden object-contain dark:block"
-            />
+            <LogoMark style={ { width: size, height: size } } />
         </AppLink>
     );
 }

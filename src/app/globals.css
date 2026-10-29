@@ -305,6 +305,45 @@
   box-shadow: inset 0 1px 0 var(--icon-highlight);
 }
 
+/*
+ * Sidebar content that only shows when the sidebar is expanded. It fades out quickly on collapse
+ * and fades back in once the width has mostly grown, so the moving edge never cuts it.
+ * The sidebar width animates for 200ms (src/components/ui/sidebar.tsx).
+ */
+@utility sidebar-label {
+  transition:
+    opacity 0.18s ease 0.14s,
+    rotate 0.2s ease,
+    translate 0.2s ease;
+
+  [data-collapsible="icon"] & {
+    opacity: 0;
+    transition:
+      opacity 0.08s ease,
+      rotate 0.2s ease,
+      translate 0.2s ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+/* Same entrance for sidebar parts that are display:none while collapsed (open sub-menus). */
+@utility sidebar-reveal {
+  animation: sidebar-reveal 0.18s ease 0.14s backwards;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+@keyframes sidebar-reveal {
+  from {
+    opacity: 0;
+  }
+}
+
 @utility no-scrollbar {
   scrollbar-width: none;
   scrollbar-color: transparent transparent;

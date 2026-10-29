@@ -22,7 +22,7 @@ export function AppSidebar({
 
   return (
     <Sidebar collapsible="icon" side={rtl ? "right" : "left"} {...props}>
-      <SidebarHeader className="gap-4 px-3 pt-5">
+      <SidebarHeader className="gap-4 px-3 pt-5 transition-[padding] duration-200 ease-linear group-data-[collapsible=icon]:px-2">
         <SidebarLogo />
         <GlobalSearch />
       </SidebarHeader>

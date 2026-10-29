@@ -68,7 +68,7 @@ export function NavMain({ items }: NavMainProps) {
                       >
                         <item.icon />
                         <span>{item.title}</span>
-                        <ChevronDown className="ms-auto h-4 w-4 shrink-0 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-180" />
+                        <ChevronDown className="sidebar-label ms-auto h-4 w-4 shrink-0 group-data-[state=open]/collapsible:rotate-180" />
                       </SidebarMenuButton>
                     </CollapsibleTrigger>
                     <CollapsibleContent>

@@ -44,7 +44,7 @@ export function NavUser() {
             <SidebarMenuButton
               size="lg"
               tooltip={name}
-              className="border border-sidebar-border bg-surface-low text-foreground group-data-[collapsible=icon]:border-0 group-data-[collapsible=icon]:bg-transparent data-[state=open]:bg-muted"
+              className="border border-sidebar-border bg-surface-low text-foreground transition-[width,height,padding,color,background-color,border-color] group-data-[collapsible=icon]:border-transparent group-data-[collapsible=icon]:bg-transparent data-[state=open]:bg-muted"
             >
               <Avatar className="size-8 overflow-hidden rounded-full after:rounded-full">
                 <AvatarImage className="rounded-full" src={avatarSrc} alt="" />
@@ -52,7 +52,7 @@ export function NavUser() {
                   <User className="size-4" />
                 </AvatarFallback>
               </Avatar>
-              <div className="grid flex-1 text-start text-sm leading-tight group-data-[collapsible=icon]:hidden">
+              <div className="sidebar-label grid min-w-0 flex-1 text-start text-sm leading-tight whitespace-nowrap">
                 <span className="truncate font-medium">{name}</span>
                 <span
                   className="truncate text-xs text-muted-foreground"
@@ -61,7 +61,7 @@ export function NavUser() {
                   {email}
                 </span>
               </div>
-              <ChevronsUpDown className="ms-auto size-4 group-data-[collapsible=icon]:hidden" />
+              <ChevronsUpDown className="sidebar-label ms-auto size-4 shrink-0" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent

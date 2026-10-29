@@ -86,15 +86,15 @@ export function GlobalSearch() {
             type="button"
             aria-label={t("searchGlobal")}
             onClick={() => setOpen(true)}
-            className="flex h-(--control-h) w-full min-w-0 items-center gap-2 rounded-lg border border-input bg-card px-3 text-start text-sm text-muted-foreground outline-none transition-colors hover:border-foreground/35 hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/35 group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0"
+            className="flex h-(--control-h) w-full min-w-0 items-center gap-2 rounded-lg border border-input bg-card px-3 text-start text-sm text-muted-foreground outline-none transition-colors hover:border-foreground/35 hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/35 overflow-hidden transition-[color,border-color,width,height,padding] duration-200 ease-linear group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:px-[7px]"
           >
             <Search className="size-4 shrink-0" />
-            <span className="truncate group-data-[collapsible=icon]:hidden">
+            <span className="sidebar-label truncate whitespace-nowrap">
               {t("searchGlobal")}
             </span>
             <kbd
               dir="ltr"
-              className="pointer-events-none ms-auto hidden h-5 shrink-0 select-none items-center gap-0.5 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium sm:flex group-data-[collapsible=icon]:hidden"
+              className="pointer-events-none ms-auto hidden h-5 shrink-0 select-none items-center gap-0.5 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium sidebar-label sm:flex"
             >
               <span className="text-xs">⌘</span>K
             </kbd>

@@ -17,7 +17,7 @@ import { routing, type AppLocale } from "@/i18n/routing";
  * Switches locale while preserving the current pathname (without locale prefix).
  * Reusable anywhere in the shell (header, settings, auth).
  */
-export function LocaleSwitcher() {
+export function LocaleSwitcher({ className }: { className?: string }) {
   const t = useTranslations("Common");
   const locale = useLocale();
   const router = useRouter();
@@ -31,7 +31,7 @@ export function LocaleSwitcher() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon" aria-label={t("language")}>
+        <Button variant="outline" size="icon" aria-label={t("language")} className={className}>
           <Languages className="h-[1.2rem] w-[1.2rem]" />
         </Button>
       </DropdownMenuTrigger>

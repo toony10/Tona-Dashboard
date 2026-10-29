@@ -5,6 +5,7 @@ import { LoginForm } from "@/components/forms/auth";
 import { LocaleSwitcher } from "@/components/layout/LocaleSwitcher";
 import { ThemeSwitcher } from "@/components/layout/ThemeSwitcher";
 import AnimationWrapper from "@/components/shared/animations/AnimationWrapper";
+import { AuthShell } from "@/components/shared/auth";
 
 type LoginPageProps = {
   params: Promise<{ locale: string }>;
@@ -26,16 +27,22 @@ export default async function LoginPage({ params }: LoginPageProps) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  return (
-    <div className="relative flex min-h-svh items-center justify-center px-6 py-12">
-      <div className="absolute top-6 end-6 flex items-center gap-2">
-        <LocaleSwitcher />
-        <ThemeSwitcher />
-      </div>
+  const t = await getTranslations({ locale, namespace: "Auth.loginForm" });
 
-      <AnimationWrapper className="w-full max-w-sm rounded-xl border p-8 shadow-lg ring-1 ring-foreground/5 backdrop-blur-md bg-card/20">
-        <LoginForm />
+  return (
+    <AuthShell
+      illustrationLabel={ t("illustrationAlt") }
+      context={ t("panelDescription") }
+      headerEnd={
+        <>
+          <LocaleSwitcher />
+          <ThemeSwitcher />
+        </>
+      }
+    >
+      <AnimationWrapper className="w-full">
+        <LoginForm layout="split" />
       </AnimationWrapper>
-    </div>
+    </AuthShell>
   );
 }

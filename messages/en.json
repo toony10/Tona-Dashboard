@@ -55,7 +55,12 @@
       "title": "Not allowed",
       "description": "You do not have permission to view this resource. Go back home or contact an administrator if you think this is a mistake.",
       "backHome": "Back to home"
-    }
+    },
+    "searchGlobal": "Search dashboard pages...",
+    "welcome": "Welcome back",
+    "welcomeWithName": "Welcome <b>{name}</b>",
+    "notifications": "Notifications",
+    "noNotifications": "No new notifications"
   },
   "Nav": {
     "dashboard": "Dashboard",
@@ -111,7 +116,9 @@
       "showPassword": "Show password",
       "hidePassword": "Hide password",
       "submit": "Sign in",
-      "submitting": "Signing in..."
+      "submitting": "Signing in...",
+      "illustrationAlt": "Dashboard preview",
+      "panelDescription": "Charts, tables, filters and forms in one place, in English and Arabic."
     }
   },
   "Crud": {
@@ -657,68 +664,16 @@
     },
     "presets": {
       "theme": {
-        "charcoal": "Charcoal",
-        "nearBlack": "Near black",
-        "slateBlue": "Slate blue",
-        "navy": "Navy",
-        "darkGray": "Dark gray",
-        "deepBlue": "Deep blue",
-        "blueGray": "Blue gray",
-        "graphite": "Graphite",
-        "zinc": "Zinc",
-        "carbon": "Carbon",
-        "github": "GitHub dark",
-        "midnight": "Midnight",
-        "indigoNight": "Indigo night",
-        "purpleHaze": "Purple haze",
-        "storm": "Storm",
-        "tealDark": "Teal dark",
-        "forest": "Forest",
-        "olive": "Olive",
-        "espresso": "Espresso",
-        "wine": "Wine",
-        "slate": "Slate",
-        "obsidian": "Obsidian",
+        "nightIndigo": "Night Indigo",
+        "material": "Material dark",
         "oled": "OLED black",
-        "taupe": "Taupe",
-        "azure": "Azure",
-        "ocean": "Ocean",
-        "ice": "Ice",
-        "emerald": "Emerald",
-        "moss": "Moss",
-        "pine": "Pine",
-        "rust": "Rust",
-        "bronze": "Bronze",
-        "terracotta": "Terracotta",
-        "amber": "Amber",
-        "plum": "Plum",
-        "violet": "Violet",
-        "rose": "Rose",
-        "berry": "Berry"
-      }
-    },
-    "groups": {
-      "theme": {
-        "neutrals": {
-          "title": "Gray and black",
-          "description": "Simple looks without extra color"
-        },
-        "blues": {
-          "title": "Blues",
-          "description": "Cool blue and gray looks"
-        },
-        "greens": {
-          "title": "Greens",
-          "description": "Forest and teal looks"
-        },
-        "warmTones": {
-          "title": "Warm tones",
-          "description": "Brown, rust, and gold looks"
-        },
-        "purplesRose": {
-          "title": "Purples and rose",
-          "description": "Violet and pink looks"
-        }
+        "zinc": "Zinc",
+        "charcoal": "Charcoal",
+        "github": "GitHub dark",
+        "slate": "Slate",
+        "midnight": "Midnight",
+        "nord": "Nord",
+        "dracula": "Dracula"
       }
     },
     "picker": {

@@ -11,6 +11,7 @@ import {
   SidebarGroupContent,
   SidebarMenu,
   SidebarMenuButton,
+  SidebarMenuIndicator,
   SidebarMenuItem,
   SidebarMenuSub,
   SidebarMenuSubButton,
@@ -46,6 +47,7 @@ export function NavMain({ items }: NavMainProps) {
     <SidebarGroup>
       <SidebarGroupContent>
         <SidebarMenu>
+          <SidebarMenuIndicator />
           {items.map((item) => {
             const isActive = checkIsActive(item);
             const hasSubItems = item.items && item.items.length > 0;
@@ -65,8 +67,8 @@ export function NavMain({ items }: NavMainProps) {
                         isActive={isActive}
                       >
                         <item.icon />
-                        <span className="text-sm font-medium">{item.title}</span>
-                        <ChevronDown className="ms-auto h-4 w-4 shrink-0 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-180" />
+                        <span>{item.title}</span>
+                        <ChevronDown className="sidebar-label ms-auto h-4 w-4 shrink-0 group-data-[state=open]/collapsible:rotate-180" />
                       </SidebarMenuButton>
                     </CollapsibleTrigger>
                     <CollapsibleContent>
@@ -106,7 +108,7 @@ export function NavMain({ items }: NavMainProps) {
                 >
                   <AppLink href={item.url}>
                     <item.icon />
-                    <span className="text-sm font-medium">{item.title}</span>
+                    <span>{item.title}</span>
                   </AppLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>

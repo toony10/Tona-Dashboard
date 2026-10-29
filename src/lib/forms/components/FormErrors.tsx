@@ -14,20 +14,18 @@ export function FormErrors({ errors, title, className }: FormErrorsProps) {
   }
 
   return (
-    <div
-      role="alert"
-      className={cn(
-        "rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive",
-        className,
-      )}
-    >
-      {title ? <p className="mb-1 font-medium">{title}</p> : null}
+    <div role="alert" className={ cn("text-sm text-destructive", className) }>
+      { title ? <p className="mb-1 font-bold underline">{ title }</p> : null }
       <ul>
-        {errors.map((error) => (
-          <li key={error} className="text-sm text-black">
-            {error}
+        { errors.map((error) => (
+          <li key={ error } className="flex items-center gap-2">
+            <span
+              aria-hidden
+              className="mt-1.5 size-1.5 shrink-0 rounded-full bg-current"
+            />
+            { error }
           </li>
-        ))}
+        )) }
       </ul>
     </div>
   );

@@ -3,8 +3,6 @@
 import * as React from "react";
 import { Search } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import {
   CommandDialog,
   CommandEmpty,
@@ -13,7 +11,16 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { useTranslatedNavigation } from "@/hooks/use-translated-navigation";
+import { useSidebar } from "@/components/ui/sidebar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  useIsRtl,
+  useTranslatedNavigation,
+} from "@/hooks/use-translated-navigation";
 import { useRouter } from "@/i18n/navigation";
 
 export function GlobalSearch() {
@@ -21,6 +28,8 @@ export function GlobalSearch() {
   const router = useRouter();
   const t = useTranslations("Common");
   const groups = useTranslatedNavigation();
+  const rtl = useIsRtl();
+  const { state, isMobile, setOpenMobile } = useSidebar();
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -33,10 +42,14 @@ export function GlobalSearch() {
     return () => document.removeEventListener("keydown", down);
   }, []);
 
-  const runCommand = React.useCallback((command: () => unknown) => {
-    setOpen(false);
-    command();
-  }, []);
+  const runCommand = React.useCallback(
+    (command: () => unknown) => {
+      setOpen(false);
+      setOpenMobile(false);
+      command();
+    },
+    [setOpenMobile],
+  );
 
   const searchableItems = React.useMemo(() => {
     const items: {
@@ -67,20 +80,34 @@ export function GlobalSearch() {
 
   return (
     <>
-      <Button
-        variant="outline"
-        className={cn(
-          "relative h-9 w-full justify-start rounded-[0.5rem] bg-background text-sm font-normal text-muted-foreground shadow-none sm:pe-12 md:w-2/3 lg:w-1/3",
-        )}
-        onClick={() => setOpen(true)}
-      >
-        <Search className="me-2 h-4 w-4 shrink-0" />
-        <span className="hidden lg:inline-flex">{t("searchPages")}</span>
-        <span className="inline-flex lg:hidden">{t("searchShort")}</span>
-        <kbd className="pointer-events-none absolute end-[0.3rem] top-[0.3rem] hidden h-6 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
-          <span className="text-xs">⌘</span>K
-        </kbd>
-      </Button>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            type="button"
+            aria-label={t("searchGlobal")}
+            onClick={() => setOpen(true)}
+            className="flex h-(--control-h) w-full min-w-0 items-center gap-2 rounded-lg border border-input bg-card px-3 text-start text-sm text-muted-foreground outline-none transition-colors hover:border-foreground/35 hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/35 overflow-hidden transition-[color,border-color,width,height,padding] duration-200 ease-linear group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:px-[7px]"
+          >
+            <Search className="size-4 shrink-0" />
+            <span className="sidebar-label truncate whitespace-nowrap">
+              {t("searchGlobal")}
+            </span>
+            <kbd
+              dir="ltr"
+              className="pointer-events-none ms-auto hidden h-5 shrink-0 select-none items-center gap-0.5 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium sidebar-label sm:flex"
+            >
+              <span className="text-xs">⌘</span>K
+            </kbd>
+          </button>
+        </TooltipTrigger>
+        <TooltipContent
+          side={rtl ? "left" : "right"}
+          align="center"
+          hidden={state !== "collapsed" || isMobile}
+        >
+          {t("searchGlobal")}
+        </TooltipContent>
+      </Tooltip>
       <CommandDialog
         open={open}
         onOpenChange={setOpen}

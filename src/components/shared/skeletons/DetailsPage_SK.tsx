@@ -14,7 +14,7 @@ export function DetailsPage_SK({
   return (
     <div className="page-stack">
       <Breadcrumb_SK count={crumbCount} />
-      <section className="flex w-full flex-col gap-6">
+      <section className="flex w-full min-w-0 max-w-full flex-col gap-6">
         <DetailHeader_SK actionCount={actionCount} />
         <FieldsGrid_SK fields={fields} />
       </section>

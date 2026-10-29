@@ -29,7 +29,11 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 
-export function LoginForm() {
+type LoginFormProps = {
+  layout?: "default" | "split";
+};
+
+export function LoginForm({ layout = "default" }: LoginFormProps) {
   const t = useTranslations("Auth.loginForm");
   const tCrud = useTranslations("Crud");
   const locale = useLocale();
@@ -55,13 +59,28 @@ export function LoginForm() {
 
   return (
     <Form {...form}>
-      <form className="space-y-8" onSubmit={onSubmit} noValidate>
-        <div className="flex flex-col items-center gap-2 pb-2">
-          <Logo width={200} height={44} />
-          <h1 className="text-center text-xl font-semibold text-foreground">
-            {t("welcomeTitle")}
-          </h1>
-        </div>
+      <form
+        className={layout === "split" ? "space-y-6" : "space-y-8"}
+        onSubmit={onSubmit}
+        noValidate
+      >
+        {layout === "split" ? (
+          <div className="space-y-2 pb-2">
+            <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+              {t("welcomeTitle")}
+            </h1>
+            <p className="text-sm text-muted-foreground sm:text-base">
+              {t("pageDescription")}
+            </p>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center gap-2 pb-2">
+            <Logo width={200} height={44} />
+            <h1 className="text-center text-xl font-semibold text-foreground">
+              {t("welcomeTitle")}
+            </h1>
+          </div>
+        )}
 
         <FormErrors errors={serverErrors} title={tCrud("errorsTitle")} />
 

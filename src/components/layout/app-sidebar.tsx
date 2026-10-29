@@ -6,10 +6,10 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
-  SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { useIsRtl } from "@/hooks/use-translated-navigation";
 import { SidebarLogo } from "./sidebar-logo";
+import { GlobalSearch } from "./GlobalSearch";
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
 import { useTranslatedNavigation } from "@/hooks/use-translated-navigation";
@@ -22,8 +22,9 @@ export function AppSidebar({
 
   return (
     <Sidebar collapsible="icon" side={rtl ? "right" : "left"} {...props}>
-      <SidebarHeader>
+      <SidebarHeader className="gap-4 px-3 pt-5 transition-[padding] duration-200 ease-linear group-data-[collapsible=icon]:px-2">
         <SidebarLogo />
+        <GlobalSearch />
       </SidebarHeader>
 
       <SidebarContent className="overflow-x-hidden">
@@ -32,9 +33,7 @@ export function AppSidebar({
         ))}
       </SidebarContent>
 
-      <SidebarSeparator />
-
-      <SidebarFooter>
+      <SidebarFooter className="p-3">
         <NavUser />
       </SidebarFooter>
 

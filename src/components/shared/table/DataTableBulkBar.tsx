@@ -29,7 +29,7 @@ export function DataTableBulkBar({
           animate={ { opacity: 1, y: 0 } }
           exit={ { opacity: 0, y: 16 } }
           transition={ { duration: 0.2 } }
-          className="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-3 rounded-lg border bg-background px-4 py-2 shadow-lg"
+          className="fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-3 rounded-xl border border-border bg-popover px-4 py-2 shadow-overlay"
         >
           <span className="text-sm font-medium">
             { t("selection.selected", { count }) }

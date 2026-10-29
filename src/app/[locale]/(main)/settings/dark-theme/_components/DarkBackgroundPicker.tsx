@@ -38,6 +38,7 @@ const presetGroups = [
   {
     key: "blues",
     ids: [
+      "night-indigo",
       "slate-blue",
       "navy",
       "deep-blue",

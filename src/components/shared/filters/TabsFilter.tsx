@@ -53,7 +53,7 @@ export function TabsFilter({
     <div
       role="tablist"
       className={ cn(
-        "inline-flex rounded-lg border bg-muted/50 p-1",
+        "inline-flex gap-0.5 rounded-[calc(var(--radius)+3px)] bg-muted p-[3px]",
         className,
       ) }
     >
@@ -68,7 +68,7 @@ export function TabsFilter({
             aria-selected={ isActive }
             onClick={ () => handleSelect(option.value) }
             className={ cn(
-              "relative z-10 rounded-md px-3 py-1.5 text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
+              "relative z-10 h-[calc(var(--control-h)-6px)] rounded-lg px-3 text-sm font-medium outline-none transition-colors focus-visible:ring-3 focus-visible:ring-ring/40",
               isActive
                 ? "text-foreground"
                 : "text-muted-foreground hover:text-foreground",
@@ -77,7 +77,7 @@ export function TabsFilter({
             { isActive ? (
               <motion.span
                 layoutId={ `tabs-filter-indicator-${paramKey}` }
-                className="absolute inset-0 rounded-md bg-background shadow-sm ring-1 ring-border/50"
+                className="absolute inset-0 rounded-lg bg-card shadow-card"
                 transition={ {
                   type: "spring",
                   stiffness: 500,

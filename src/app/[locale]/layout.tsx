@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
-import { IBM_Plex_Mono, IBM_Plex_Sans, IBM_Plex_Sans_Arabic } from "next/font/google";
+import { Cairo, IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import { notFound } from "next/navigation";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
@@ -22,9 +22,9 @@ const ibmPlexSans = IBM_Plex_Sans({
   weight: ["400", "500", "600", "700"],
 });
 
-const ibmPlexArabic = IBM_Plex_Sans_Arabic({
+const cairo = Cairo({
   variable: "--font-sans",
-  subsets: ["arabic"],
+  subsets: ["arabic", "latin"],
   weight: ["400", "500", "600", "700"],
 });
 
@@ -75,7 +75,7 @@ export default async function LocaleLayout({
 
   const messages = await getMessages();
   const direction = getDirection(locale);
-  const sansFont = locale === "ar" ? ibmPlexArabic : ibmPlexSans;
+  const sansFont = locale === "ar" ? cairo : ibmPlexSans;
 
   return (
     <html

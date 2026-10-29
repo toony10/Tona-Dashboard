@@ -5,6 +5,7 @@ import { type ColumnDef } from "@tanstack/react-table"
 import { useTranslations } from "next-intl"
 import { toast } from "sonner"
 
+import { StatusIndicator } from "@/components/shared/status"
 import { DataTable } from "@/components/shared/table/DataTable"
 import { Button } from "@/components/ui/button"
 import { EditIcon, EyeIcon, TrashIcon } from "lucide-react"
@@ -78,7 +79,7 @@ export function ProductsTable({
         header: t("columns.status"),
         cell: ({ row }) => {
           const status = row.getValue<Product["status"]>("status")
-          return <span className="capitalize">{ t(`status.${ status }`) }</span>
+          return <StatusIndicator status={ status } label={ t(`status.${ status }`) } className="capitalize" />
         },
       },
       {

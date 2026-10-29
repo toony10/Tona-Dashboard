@@ -15,9 +15,9 @@ export function DashboardLayout({
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
       <AppSidebar />
-      <SidebarInset>
+      <SidebarInset className="bg-transparent">
         <Header />
-        <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
+        <main className="mx-auto flex w-full max-w-[85rem] flex-1 flex-col gap-(--page-gap) p-4 pb-10 lg:px-8 lg:pt-7">
           <QueryNavigationProvider>{children}</QueryNavigationProvider>
         </main>
       </SidebarInset>

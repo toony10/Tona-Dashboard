@@ -8,6 +8,7 @@ import { MinusIcon } from "lucide-react"
 function InputOTP({
   className,
   containerClassName,
+  dir = "ltr",
   ...props
 }: React.ComponentProps<typeof OTPInput> & {
   containerClassName?: string
@@ -15,8 +16,9 @@ function InputOTP({
   return (
     <OTPInput
       data-slot="input-otp"
+      dir={dir}
       containerClassName={cn(
-        "cn-input-otp flex items-center has-disabled:opacity-50",
+        "cn-input-otp flex items-center [direction:ltr] [unicode-bidi:isolate] has-disabled:opacity-50",
         containerClassName
       )}
       spellCheck={false}

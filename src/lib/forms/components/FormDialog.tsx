@@ -9,6 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  formDialogContentClassName,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 
@@ -65,10 +66,7 @@ export function FormDialog({
     <Dialog open={dialogOpen} onOpenChange={handleOpenChange}>
       {trigger ? <DialogTrigger asChild>{trigger}</DialogTrigger> : null}
       <DialogContent
-        className={cn(
-          "flex max-h-[calc(100dvh-2rem)] max-w-lg flex-col overflow-x-hidden overflow-y-auto sm:max-w-lg",
-          className,
-        )}
+        className={cn(formDialogContentClassName, className)}
         showCloseButton={!isPending}
       >
         <DialogHeader>

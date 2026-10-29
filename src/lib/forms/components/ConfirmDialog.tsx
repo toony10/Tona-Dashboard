@@ -1,5 +1,6 @@
 "use client";
 
+import { TriangleAlert } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useCallback } from "react";
 
@@ -85,6 +86,14 @@ export function ConfirmDialog<TInput, TData = null>({
       {trigger ? <DialogTrigger asChild>{trigger}</DialogTrigger> : null}
       <DialogContent showCloseButton={!isPending}>
         <DialogHeader>
+          {variant === "destructive" ? (
+            <span
+              aria-hidden
+              className="mb-2 flex size-11 items-center justify-center rounded-full bg-destructive-container text-on-destructive-container"
+            >
+              <TriangleAlert className="size-5" />
+            </span>
+          ) : null}
           <DialogTitle>{title}</DialogTitle>
           {description ? (
             <DialogDescription>{description}</DialogDescription>

@@ -52,9 +52,12 @@ function PaginationLink({
   return (
     <Button
       asChild
-      variant={isActive ? "outline" : "ghost"}
+      variant="ghost"
       size={size}
-      className={cn(className)}
+      className={cn(
+        isActive && "bg-primary-container font-semibold text-on-primary-container hover:text-on-primary-container",
+        className
+      )}
     >
       <a
         aria-current={isActive ? "page" : undefined}

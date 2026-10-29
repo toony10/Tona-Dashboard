@@ -38,7 +38,7 @@ There is **no** `POST /api/auth/login` route. The login form calls `loginAction`
 - `src/lib/forms/` (`useCrudForm`, `runAction`, `FormErrors`, `SubmitButton`)
 - `src/lib/auth/user-storage.ts`
 - `LoginForm`
-- `AuroraBackground`
+- `AuthShell` (`src/components/shared/auth`)
 - `ThemeSwitcher`
 - `AnimationWrapper`
 

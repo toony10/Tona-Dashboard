@@ -17,7 +17,7 @@ export function BilingualName({ nameAr, nameEn, className }: BilingualNameProps)
 
   const primaryText = primary?.trim() || secondary?.trim() || "—";
   const secondaryText = secondary?.trim();
-  const showSecondary = Boolean(secondaryText && secondaryText !== primary?.trim());
+  const showSecondary = Boolean(secondaryText && secondaryText !== primaryText);
 
   return (
     <div className={cn("flex min-w-0 flex-col gap-0.5 text-start", className)}>

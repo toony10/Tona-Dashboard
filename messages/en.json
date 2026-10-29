@@ -55,7 +55,12 @@
       "title": "Not allowed",
       "description": "You do not have permission to view this resource. Go back home or contact an administrator if you think this is a mistake.",
       "backHome": "Back to home"
-    }
+    },
+    "searchGlobal": "Search dashboard pages...",
+    "welcome": "Welcome back",
+    "welcomeWithName": "Welcome <b>{name}</b>",
+    "notifications": "Notifications",
+    "noNotifications": "No new notifications"
   },
   "Nav": {
     "dashboard": "Dashboard",
@@ -111,7 +116,9 @@
       "showPassword": "Show password",
       "hidePassword": "Hide password",
       "submit": "Sign in",
-      "submitting": "Signing in..."
+      "submitting": "Signing in...",
+      "illustrationAlt": "Dashboard preview",
+      "panelDescription": "Charts, tables, filters and forms in one place, in English and Arabic."
     }
   },
   "Crud": {
@@ -657,6 +664,7 @@
     },
     "presets": {
       "theme": {
+        "nightIndigo": "Night Indigo",
         "charcoal": "Charcoal",
         "nearBlack": "Near black",
         "slateBlue": "Slate blue",

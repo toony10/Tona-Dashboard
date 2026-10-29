@@ -3,6 +3,7 @@ const LEGACY_DARK_CARD_STORAGE_KEY = "dashboard-dark-card"
 
 /** Ids are stable lookup keys — labels live in `Settings.presets.theme.*`. */
 export const darkThemePresets = [
+  { id: "night-indigo", value: "#0F1226", card: "#171B34" },
   { id: "charcoal", value: "#2C2C2C", card: "#363636" },
   { id: "near-black", value: "#0F0E0E", card: "#1A1A1A" },
   { id: "slate-blue", value: "#2C3947", card: "#354555" },
@@ -51,7 +52,7 @@ export type DarkThemePreset = {
   card: string
 }
 
-export const defaultDarkThemePresetId: DarkThemePresetId = "charcoal"
+export const defaultDarkThemePresetId: DarkThemePresetId = "night-indigo"
 
 const themePresetMap = Object.fromEntries(
   darkThemePresets.map((preset) => [

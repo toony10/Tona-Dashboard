@@ -4,20 +4,21 @@ import { cn } from "@/lib/utils";
 
 import { statusTone, type StatusTone } from "./status-tone";
 
+/** Pill chip: tonal container fill with its matching on-container text and a leading dot. */
 const statusIndicatorVariants = cva(
-  "inline-flex items-center gap-1.5 font-semibold",
+  "inline-flex w-fit items-center gap-1.5 rounded-full font-medium whitespace-nowrap",
   {
     variants: {
       tone: {
-        success: "text-status-success",
-        warning: "text-status-warning",
-        danger: "text-status-danger",
-        info: "text-status-info",
-        neutral: "text-status-neutral",
+        success: "bg-success-container text-on-success-container",
+        warning: "bg-warning-container text-on-warning-container",
+        danger: "bg-destructive-container text-on-destructive-container",
+        info: "bg-primary-container text-on-primary-container",
+        neutral: "bg-muted text-muted-foreground",
       },
       size: {
-        sm: "text-xs",
-        md: "text-sm",
+        sm: "h-5 px-2 text-[0.6875rem]",
+        md: "h-6 px-2.5 text-xs",
       },
     },
     defaultVariants: {
@@ -27,11 +28,11 @@ const statusIndicatorVariants = cva(
   },
 );
 
-const statusDotVariants = cva("shrink-0 rounded-full bg-current ring-2 ring-current/20", {
+const statusDotVariants = cva("shrink-0 rounded-full bg-current", {
   variants: {
     size: {
       sm: "size-1.5",
-      md: "size-2",
+      md: "size-1.5",
     },
   },
   defaultVariants: {
@@ -58,9 +59,9 @@ export function StatusIndicator({
   const resolvedTone = tone ?? statusTone(status);
 
   return (
-    <span className={cn(statusIndicatorVariants({ tone: resolvedTone, size }), className)}>
-      <span className={statusDotVariants({ size })} aria-hidden />
-      {label}
+    <span className={ cn(statusIndicatorVariants({ tone: resolvedTone, size }), className) }>
+      <span className={ statusDotVariants({ size }) } aria-hidden />
+      { label }
     </span>
   );
 }

@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { User, ChevronsUpDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -19,13 +18,10 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { user } from "@/config/navigation";
+import { useAuthUser } from "@/hooks/use-auth-user";
 import { useIsRtl } from "@/hooks/use-translated-navigation";
-import {
-  AUTH_USER_UPDATED_EVENT,
-  getAuthUser,
-} from "@/lib/auth/user-storage";
+import { useRouter } from "@/i18n/navigation";
 import { getImg } from "@/lib/http";
-import type { AuthUser } from "@/types/auth";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
@@ -33,14 +29,8 @@ export function NavUser() {
   const tUser = useTranslations("User");
   const tNav = useTranslations("Nav");
   const rtl = useIsRtl();
-  const [authUser, setAuthUserState] = useState<AuthUser | null>(null);
-
-  useEffect(() => {
-    const sync = () => setAuthUserState(getAuthUser());
-    sync();
-    window.addEventListener(AUTH_USER_UPDATED_EVENT, sync);
-    return () => window.removeEventListener(AUTH_USER_UPDATED_EVENT, sync);
-  }, []);
+  const router = useRouter();
+  const { authUser } = useAuthUser();
 
   const name = authUser?.fullName?.trim() || tUser("name");
   const email = authUser?.email || tUser("email");
@@ -53,16 +43,17 @@ export function NavUser() {
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              tooltip={name}
+              className="border border-sidebar-border bg-surface-low text-foreground group-data-[collapsible=icon]:border-0 group-data-[collapsible=icon]:bg-transparent data-[state=open]:bg-muted"
             >
-              <Avatar className="h-8 w-8 rounded-full">
-                <AvatarImage src={avatarSrc} alt={name} />
-                <AvatarFallback className="rounded-full bg-primary/10">
-                  <User className="h-4 w-4" />
+              <Avatar className="size-8 overflow-hidden rounded-full after:rounded-full">
+                <AvatarImage className="rounded-full" src={avatarSrc} alt="" />
+                <AvatarFallback className="rounded-full bg-secondary-container font-semibold text-on-secondary-container">
+                  <User className="size-4" />
                 </AvatarFallback>
               </Avatar>
-              <div className="grid flex-1 text-start text-sm leading-tight">
-                <span className="truncate font-semibold">{name}</span>
+              <div className="grid flex-1 text-start text-sm leading-tight group-data-[collapsible=icon]:hidden">
+                <span className="truncate font-medium">{name}</span>
                 <span
                   className="truncate text-xs text-muted-foreground"
                   dir="ltr"
@@ -70,21 +61,33 @@ export function NavUser() {
                   {email}
                 </span>
               </div>
-              <ChevronsUpDown className="ms-auto size-4" />
+              <ChevronsUpDown className="ms-auto size-4 group-data-[collapsible=icon]:hidden" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-            side={isMobile ? "bottom" : rtl ? "left" : "right"}
+            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-xl"
+            side={isMobile ? "top" : rtl ? "left" : "right"}
             align="end"
             sideOffset={4}
           >
-            <DropdownMenuLabel>{t("myAccount")}</DropdownMenuLabel>
+            <DropdownMenuLabel className="font-normal">
+              <span className="block truncate text-sm font-semibold">
+                {name}
+              </span>
+              <span
+                className="block truncate text-xs text-muted-foreground"
+                dir="ltr"
+              >
+                {email}
+              </span>
+            </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>{tNav("settings")}</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push("/settings")}>
+              {tNav("settings")}
+            </DropdownMenuItem>
             <DropdownMenuItem>{t("support")}</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>{t("logout")}</DropdownMenuItem>
+            <DropdownMenuItem variant="destructive">{t("logout")}</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

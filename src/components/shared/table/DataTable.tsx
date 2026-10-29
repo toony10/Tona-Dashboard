@@ -28,10 +28,6 @@ import { DataTableBulkBar } from "./DataTableBulkBar"
 
 const SKELETON_ROW_COUNT = 10
 
-/** Keeps the selection control legible against the branded table header. */
-const HEADER_CHECKBOX_CLASSNAME =
-  "border-primary-foreground/70 bg-transparent shadow-none data-[state=checked]:border-primary-foreground data-[state=checked]:bg-primary-foreground data-[state=checked]:text-primary data-[state=indeterminate]:border-primary-foreground data-[state=indeterminate]:bg-primary-foreground data-[state=indeterminate]:text-primary"
-
 export interface DataTableBulkSelection<TData> {
   rows: TData[]
   ids: string[]
@@ -68,7 +64,6 @@ function createSelectColumn<TData>(
         }
         onCheckedChange={ (value) => table.toggleAllPageRowsSelected(!!value) }
         aria-label={ t("selection.selectAllRows") }
-        className={ HEADER_CHECKBOX_CLASSNAME }
       />
     ),
     cell: ({ row }) => (
@@ -152,19 +147,19 @@ export function DataTable<TData, TValue>({
     <>
       <div
         aria-busy={ showLoading }
-        className="overflow-hidden rounded-lg border bg-card"
+        className="overflow-hidden rounded-xl border border-border bg-card shadow-card"
       >
         <Table className="min-w-full">
-          <TableHeader className="bg-primary">
+          <TableHeader className="bg-surface-low">
             { table.getHeaderGroups().map((headerGroup) => (
               <TableRow
                 key={ headerGroup.id }
-                className="border-primary-foreground/20 hover:bg-transparent"
+                className="border-border hover:bg-transparent"
               >
                 { headerGroup.headers.map((header) => (
                   <TableHead
                     key={ header.id }
-                    className="h-12 px-4 text-sm font-semibold text-primary-foreground first:ps-5 last:pe-5"
+                    className="h-10 px-4 text-[0.8125rem] font-semibold text-muted-foreground first:ps-5 last:pe-5"
                   >
                     { header.isPlaceholder
                       ? null
@@ -182,14 +177,14 @@ export function DataTable<TData, TValue>({
               Array.from({ length: SKELETON_ROW_COUNT }).map((_, rowIndex) => (
                 <TableRow
                   key={ `skeleton-${ rowIndex }` }
-                  className="border-border/70 hover:bg-transparent"
+                  className="border-border hover:bg-transparent"
                 >
                   { Array.from({ length: columnCount }).map((_, colIndex) => (
                     <TableCell
                       key={ `skeleton-${ rowIndex }-${ colIndex }` }
-                      className="h-14 px-4 first:ps-5 last:pe-5"
+                      className="h-(--row-h) px-4 first:ps-5 last:pe-5"
                     >
-                      <Skeleton className="h-4 w-full max-w-40 bg-primary/10" />
+                      <Skeleton className="h-4 w-full max-w-40" />
                     </TableCell>
                   )) }
                 </TableRow>
@@ -208,12 +203,12 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={ row.id }
                   data-state={ row.getIsSelected() ? "selected" : undefined }
-                  className="border-border/70 hover:bg-primary/[0.035] data-[state=selected]:bg-primary/8 data-[state=selected]:hover:bg-primary/10"
+                  className="border-border hover:bg-primary/4 data-[state=selected]:bg-accent data-[state=selected]:hover:bg-accent"
                 >
                   { row.getVisibleCells().map((cell) => (
                     <TableCell
                       key={ cell.id }
-                      className="h-14 px-4 text-sm first:ps-5 last:pe-5"
+                      className="h-(--row-h) px-4 text-sm first:ps-5 last:pe-5"
                     >
                       { flexRender(cell.column.columnDef.cell, cell.getContext()) }
                     </TableCell>

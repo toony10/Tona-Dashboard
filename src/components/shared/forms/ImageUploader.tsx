@@ -155,12 +155,30 @@ export function ImageUploader({
     imagesRef.current = images;
   }, [images]);
 
-  /* Revoke ALL preview URLs on unmount (reads the latest list via ref). */
+  /* Revoke ALL preview URLs on unmount (reads the latest list via ref).
+   * The revoke is deferred so Strict Mode's mount → unmount → mount check
+   * cancels it instead of breaking the previews that are still on screen. */
+  const revokeTimer = React.useRef<number | undefined>(undefined);
   React.useEffect(() => {
+    window.clearTimeout(revokeTimer.current);
     return () => {
-      imagesRef.current.forEach((img) => URL.revokeObjectURL(img.preview));
+      revokeTimer.current = window.setTimeout(() => {
+        imagesRef.current.forEach((img) => URL.revokeObjectURL(img.preview));
+      });
     };
   }, []);
+
+  /* Mirror the accepted files into the named input so a native form
+   * submission (or FormData) carries them. The picker input is cleared
+   * after every selection, so it can't hold them itself. */
+  const formInputRef = React.useRef<HTMLInputElement>(null);
+  React.useEffect(() => {
+    const input = formInputRef.current;
+    if (!input || typeof DataTransfer === "undefined") return;
+    const transfer = new DataTransfer();
+    images.forEach((img) => transfer.items.add(img.file));
+    input.files = transfer.files;
+  }, [images]);
 
   /* Notify the parent once about any pre-populated defaultFiles so a
    * controlled parent starts in sync. Runs a single time on mount. */
@@ -284,11 +302,13 @@ export function ImageUploader({
   /* ── drag events ── */
   const handleDragEnter = (e: React.DragEvent) => {
     e.preventDefault();
+    if (disabled) return;
     dragCounter.current++;
     if (e.dataTransfer.items.length) setIsDragging(true);
   };
   const handleDragLeave = (e: React.DragEvent) => {
     e.preventDefault();
+    if (disabled) return;
     dragCounter.current--;
     if (dragCounter.current === 0) setIsDragging(false);
   };
@@ -300,7 +320,9 @@ export function ImageUploader({
     if (!disabled) processFiles(e.dataTransfer.files);
   };
 
-  const openPicker = () => inputRef.current?.click();
+  const openPicker = () => {
+    if (!disabled) inputRef.current?.click();
+  };
   const handleZoneKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
       e.preventDefault();
@@ -314,11 +336,24 @@ export function ImageUploader({
   /* ────────────────────────── Render ────────────────────────── */
   return (
       <div className={cn("space-y-3", className)}>
-        {/* ── Drop Zone ── */}
-        {canAdd && (
+        {name && (
+          <input
+            ref={formInputRef}
+            type="file"
+            name={name}
+            multiple
+            hidden
+            tabIndex={-1}
+            aria-hidden
+          />
+        )}
+
+        {/* ── Drop Zone — stays visible (dimmed) while disabled ── */}
+        {!isFull && (
           <div
             role="button"
-            tabIndex={0}
+            tabIndex={disabled ? -1 : 0}
+            aria-disabled={disabled || undefined}
             aria-label={t("ariaUploadImages")}
             onDragEnter={handleDragEnter}
             onDragLeave={handleDragLeave}
@@ -393,7 +428,6 @@ export function ImageUploader({
 
             <input
               ref={inputRef}
-              name={name}
               type="file"
               accept={accept}
               multiple={maxImages > 1}
@@ -443,9 +477,9 @@ export function ImageUploader({
           </div>
         )}
 
-        {/* ── Status row — keeps the counter visible even when the drop zone
-            is hidden (e.g. when the max has been reached). ── */}
-        {images.length > 0 && !canAdd && (
+        {/* ── Status row — keeps the counter visible when the drop zone
+            is hidden because the max has been reached. ── */}
+        {isFull && (
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <ImageIcon className="size-3" />
             <span dir="ltr">{images.length} / {maxImages}</span>
@@ -488,8 +522,9 @@ function Thumbnail({
           className="size-full object-cover transition-transform duration-300 group-hover/thumb:scale-105"
         />
 
-        {/* hover overlay */}
-        <div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/0 opacity-0 transition-all duration-200 group-hover/thumb:bg-black/40 group-hover/thumb:opacity-100">
+        {/* hover overlay — also shown on keyboard focus; on touch screens the
+            actions sit in the corner, always visible */}
+        <div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/0 opacity-0 transition-all duration-200 group-hover/thumb:bg-black/40 group-hover/thumb:opacity-100 group-focus-within/thumb:bg-black/40 group-focus-within/thumb:opacity-100 pointer-coarse:items-start pointer-coarse:justify-end pointer-coarse:bg-transparent! pointer-coarse:p-1.5 pointer-coarse:opacity-100">
           {!disabled && (
             <ActionButton
               onClick={(e) => { e.stopPropagation(); onRemove(); }}

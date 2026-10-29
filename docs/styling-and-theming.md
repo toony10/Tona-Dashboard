@@ -33,7 +33,9 @@ Fonts: IBM Plex Sans for English and Cairo for Arabic, IBM Plex Mono for code.
 
 The app extends dark mode with configurable background and card presets:
 
-- Presets are defined in `src/config/appearance-settings.ts`. The default is `night-indigo`, which matches the palette's dark tokens.
+- Presets are defined in `src/config/appearance-settings.ts`: 10 common dark backgrounds, each paired with a slightly lighter card color (Night Indigo, Material, OLED black, Zinc, Charcoal, GitHub dark, Slate, Midnight, Nord, Dracula). The default is `night-indigo`, which matches the palette's dark tokens.
+- A stored id that is no longer in the list falls back to the default.
+- In `.dark`, surfaces built on the card (`muted`, `accent`, `surface-low`, `border`, `input`, `primary-container`, `secondary-container`) are `color-mix()`es of `--card` and the brand hue, so selected sidebar items, hovers and borders follow the active preset.
 - User choices are persisted in `localStorage`.
 - CSS variables `--background` and `--card` are updated dynamically.
 

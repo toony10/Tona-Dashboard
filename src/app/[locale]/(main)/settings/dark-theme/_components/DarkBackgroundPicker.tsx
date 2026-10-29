@@ -18,77 +18,6 @@ import {
 } from "@/config/appearance-settings"
 import { cn } from "@/lib/utils"
 
-/** `key` resolves to `Settings.groups.theme.{key}`. */
-const presetGroups = [
-  {
-    key: "neutrals",
-    ids: [
-      "charcoal",
-      "near-black",
-      "dark-gray",
-      "graphite",
-      "zinc",
-      "carbon",
-      "github",
-      "obsidian",
-      "oled",
-      "taupe",
-    ],
-  },
-  {
-    key: "blues",
-    ids: [
-      "night-indigo",
-      "slate-blue",
-      "navy",
-      "deep-blue",
-      "blue-gray",
-      "storm",
-      "slate",
-      "midnight",
-      "indigo-night",
-      "azure",
-      "ocean",
-      "ice",
-    ],
-  },
-  {
-    key: "greens",
-    ids: [
-      "teal-dark",
-      "forest",
-      "olive",
-      "emerald",
-      "moss",
-      "pine",
-    ],
-  },
-  {
-    key: "warmTones",
-    ids: [
-      "espresso",
-      "wine",
-      "rust",
-      "bronze",
-      "terracotta",
-      "amber",
-    ],
-  },
-  {
-    key: "purplesRose",
-    ids: [
-      "purple-haze",
-      "plum",
-      "violet",
-      "rose",
-      "berry",
-    ],
-  },
-] as const satisfies ReadonlyArray<{
-  key: string
-  ids: readonly DarkThemePresetId[]
-}>
-
 /** `near-black` → `nearBlack`, the preset key used under `Settings.presets.theme`. */
 function toPresetKey(id: string): string {
   return id.replace(/-([a-z])/g, (_, char: string) => char.toUpperCase())
@@ -248,7 +177,6 @@ function SwatchButton({
 export function DarkBackgroundPicker() {
   const t = useTranslations("Settings.picker")
   const tPresets = useTranslations("Settings.presets")
-  const tGroups = useTranslations("Settings.groups")
   const { resolvedTheme } = useTheme()
   const [selectedPresetId, setSelectedPresetId] = useState<DarkThemePresetId>(
     defaultDarkThemePresetId,
@@ -269,20 +197,6 @@ export function DarkBackgroundPicker() {
 
   const themeLabel = (id: DarkThemePresetId) =>
     tPresets(`theme.${ toPresetKey(id) }`)
-
-  const groupedPresets = useMemo(() => {
-    const presetById = new Map(
-      darkThemePresets.map((preset) => [preset.id, preset]),
-    )
-
-    return presetGroups.map((group) => ({
-      ...group,
-      presets: group.ids.flatMap((id) => {
-        const preset = presetById.get(id)
-        return preset ? [preset] : []
-      }),
-    }))
-  }, [])
 
   function handleSelect(id: DarkThemePresetId) {
     setSelectedPresetId(id)
@@ -429,43 +343,30 @@ export function DarkBackgroundPicker() {
 
       <div className="space-y-8">
         <div className="space-y-2">
-          <h2 className="font-heading text-lg font-semibold tracking-tight">
-            { t("themeColorsTitle") }
-          </h2>
+          <div className="flex items-end justify-between gap-4">
+            <h2 className="font-heading text-lg font-semibold tracking-tight">
+              { t("themeColorsTitle") }
+            </h2>
+            <span className="text-xs text-muted-foreground">
+              { t("presetsCountTemplate", { count: darkThemePresets.length }) }
+            </span>
+          </div>
           <p className="text-sm text-muted-foreground">
             { t("themeColorsDesc") }
           </p>
         </div>
 
-        { groupedPresets.map((group) => (
-          <section key={ group.key } className="space-y-4">
-            <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <h3 className="font-heading text-base font-semibold">
-                  { tGroups(`theme.${ group.key }.title`) }
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  { tGroups(`theme.${ group.key }.description`) }
-                </p>
-              </div>
-              <span className="text-xs text-muted-foreground">
-                { t("presetsCountTemplate", { count: group.presets.length }) }
-              </span>
-            </div>
-
-            <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
-              { group.presets.map((preset) => (
-                <SwatchButton
-                  key={ preset.id }
-                  preset={ preset }
-                  label={ themeLabel(preset.id) }
-                  isSelected={ mounted && selectedPresetId === preset.id }
-                  onSelect={ handleSelect }
-                />
-              )) }
-            </div>
-          </section>
-        )) }
+        <div className="grid grid-cols-5 gap-2 lg:grid-cols-10">
+          { darkThemePresets.map((preset) => (
+            <SwatchButton
+              key={ preset.id }
+              preset={ preset }
+              label={ themeLabel(preset.id) }
+              isSelected={ mounted && selectedPresetId === preset.id }
+              onSelect={ handleSelect }
+            />
+          )) }
+        </div>
       </div>
     </div>
   )

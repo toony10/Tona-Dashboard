@@ -665,68 +665,15 @@
     "presets": {
       "theme": {
         "nightIndigo": "نيلي ليلي",
-        "charcoal": "فحمي",
-        "nearBlack": "أسود تقريباً",
-        "slateBlue": "أزرق رمادي",
-        "navy": "كحلي",
-        "darkGray": "رمادي داكن",
-        "deepBlue": "أزرق عميق",
-        "blueGray": "رمادي مزرق",
-        "graphite": "غرافيت",
-        "zinc": "زنك",
-        "carbon": "كربون",
-        "github": "وضع GitHub الداكن",
-        "midnight": "منتصف الليل",
-        "indigoNight": "نيلي ليلي",
-        "purpleHaze": "ضباب بنفسجي",
-        "storm": "عاصفة",
-        "tealDark": "تركواز داكن",
-        "forest": "غابة",
-        "olive": "زيتوني",
-        "espresso": "إسبريسو",
-        "wine": "نبيذي",
-        "slate": "أردوازي",
-        "obsidian": "سبج",
+        "material": "ماتيريال الداكن",
         "oled": "أسود خالص",
-        "taupe": "رمادي دافئ",
-        "azure": "أزرق سماوي",
-        "ocean": "محيطي",
-        "ice": "جليدي",
-        "emerald": "زمردي",
-        "moss": "طحلب",
-        "pine": "صنوبر",
-        "rust": "صدئ",
-        "bronze": "برونزي",
-        "terracotta": "تيراكوتا",
-        "amber": "عنبري",
-        "plum": "برقوقي",
-        "violet": "بنفسجي",
-        "rose": "وردي",
-        "berry": "توتي"
-      }
-    },
-    "groups": {
-      "theme": {
-        "neutrals": {
-          "title": "رمادي وأسود",
-          "description": "مظهر بسيط بدون ألوان إضافية"
-        },
-        "blues": {
-          "title": "أزرق",
-          "description": "درجات زرقاء ورمادية باردة"
-        },
-        "greens": {
-          "title": "أخضر",
-          "description": "درجات غابة وتركواز"
-        },
-        "warmTones": {
-          "title": "ألوان دافئة",
-          "description": "بني وصدأ وذهبي"
-        },
-        "purplesRose": {
-          "title": "بنفسجي ووردي",
-          "description": "درجات بنفسجية ووردية"
-        }
+        "zinc": "زنك",
+        "charcoal": "فحمي",
+        "github": "وضع GitHub الداكن",
+        "slate": "أردوازي",
+        "midnight": "منتصف الليل",
+        "nord": "نورد",
+        "dracula": "دراكولا"
       }
     },
     "picker": {

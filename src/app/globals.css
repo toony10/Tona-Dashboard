@@ -238,16 +238,23 @@
   --brand-card: var(--brand-card-dr);
   --brand-border: var(--brand-border-dr);
 
-  --surface-low: #1b2040;
+  /*
+   * Dark presets (src/config/appearance-settings.ts) swap --background and --card at runtime.
+   * Surfaces built on top of them mix the card with a little of the brand hue, so they stay
+   * in tune with whichever preset is active.
+   */
+  --border: color-mix(in srgb, var(--card) 85%, var(--brand-primary));
+  --sidebar-border: var(--border);
+  --surface-low: color-mix(in srgb, var(--card) 94%, var(--brand-primary));
   --primary-foreground: #0d1433;
-  --primary-container: #25397e;
+  --primary-container: color-mix(in srgb, var(--card) 68%, var(--brand-primary));
   --on-primary-container: #dfe8ff;
   --secondary-foreground: #1a0d40;
-  --secondary-container: #3a2a73;
+  --secondary-container: color-mix(in srgb, var(--card) 70%, var(--brand-secondary));
   --on-secondary-container: #ece4ff;
-  --muted: #222850;
+  --muted: color-mix(in srgb, var(--card) 90%, var(--brand-primary));
   --muted-foreground: #a3aacb;
-  --accent: #252d5c;
+  --accent: color-mix(in srgb, var(--card) 84%, var(--brand-primary));
   --accent-foreground: #dfe6ff;
   --success-container: #0f3d34;
   --on-success-container: #b9f2e3;
@@ -256,7 +263,7 @@
   --destructive-foreground: #2a0a14;
   --destructive-container: #55202e;
   --on-destructive-container: #ffd9e0;
-  --input: #3a4278;
+  --input: color-mix(in srgb, var(--card) 75%, var(--brand-primary));
   --chart-4: var(--brand-warning);
   --sidebar-primary-foreground: #0d1433;
   --status-danger: var(--brand-error);

@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { useEditor, EditorContent, useEditorState } from "@tiptap/react"
+import { useEditor, EditorContent, useEditorState, type Editor } from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
 import TextAlign from "@tiptap/extension-text-align"
 import { TextStyle } from "@tiptap/extension-text-style"
@@ -120,6 +120,7 @@ function ToolbarButton({
           size="icon-sm"
           onClick={ onClick }
           disabled={ disabled }
+          aria-label={ tooltip }
           className={ cn(isActive && "bg-primary/20 focus:bg-primary/40") }
           aria-pressed={ isActive ?? false }
         >
@@ -129,6 +130,11 @@ function ToolbarButton({
       <TooltipContent>{ tooltip }</TooltipContent>
     </Tooltip>
   )
+}
+
+/** The editor's HTML, or "" when it is empty (an empty editor still holds `<p></p>`). */
+function getEditorValue(editor: Editor) {
+  return editor.isEmpty ? "" : editor.getHTML()
 }
 
 // ── Component ────────────────────────────────────────────────────────────────
@@ -145,10 +151,12 @@ export function RichTextEditor({
   const t = useTranslations("Forms.richText")
   const minH = typeof minHeight === "number" ? `${ minHeight }px` : minHeight
   const resolvedPlaceholder = placeholder ?? t("placeholder")
+  const hiddenInputRef = React.useRef<HTMLInputElement>(null)
 
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      // Links stay clickable for editing instead of opening a new tab.
+      StarterKit.configure({ link: { openOnClick: false } }),
       TextAlign.configure({ types: ["heading", "paragraph"] }),
       TextStyle,
       Color,
@@ -159,9 +167,24 @@ export function RichTextEditor({
     editable: !disabled,
     immediatelyRender: false,
     onUpdate: ({ editor: e }) => {
-      onChange?.(e.getHTML())
+      const html = getEditorValue(e)
+      // The editor doesn't re-render on every keystroke, so the hidden input is written directly.
+      if (hiddenInputRef.current) hiddenInputRef.current.value = html
+      onChange?.(html)
     },
   })
+
+  /* Follow `value` when the parent changes it (form reset, loaded data). */
+  React.useEffect(() => {
+    if (!editor || value === getEditorValue(editor)) return
+    editor.commands.setContent(value, { emitUpdate: false })
+    if (hiddenInputRef.current) hiddenInputRef.current.value = getEditorValue(editor)
+  }, [editor, value])
+
+  /* Follow `disabled` after mount (e.g. while the form is submitting). */
+  React.useEffect(() => {
+    editor?.setEditable(!disabled, false)
+  }, [editor, disabled])
 
   const state = useEditorState({
     editor,
@@ -203,10 +226,22 @@ export function RichTextEditor({
       editor.chain().focus().unsetLink().run()
       return
     }
-    const url = window.prompt(t("enterUrl"))
-    if (url) {
-      editor.chain().focus().setLink({ href: url, target: "_blank" }).run()
+    const url = window.prompt(t("enterUrl"))?.trim()
+    if (!url) return
+    if (editor.state.selection.empty) {
+      // Nothing selected: insert the URL itself as the link text.
+      editor
+        .chain()
+        .focus()
+        .insertContent({
+          type: "text",
+          text: url,
+          marks: [{ type: "link", attrs: { href: url, target: "_blank" } }],
+        })
+        .run()
+      return
     }
+    editor.chain().focus().setLink({ href: url, target: "_blank" }).run()
   }, [editor, state?.isLink, t])
 
   if (!editor) return null
@@ -277,6 +312,9 @@ export function RichTextEditor({
           cursor: pointer;
         }
         .rte-editor .tiptap mark {
+          /* Highlights are light in both themes, so the text on them stays dark
+             (Tiptap writes an inline color: inherit, hence !important). */
+          color: #1e293b !important;
           border-radius: 3px;
           padding: 0.05em 0.2em;
         }
@@ -430,6 +468,7 @@ export function RichTextEditor({
                     variant="ghost"
                     size="icon-sm"
                     disabled={ disabled }
+                    aria-label={ t("textColor") }
                   >
                     <Palette />
                   </Button>
@@ -447,6 +486,7 @@ export function RichTextEditor({
                     key={ value }
                     type="button"
                     title={ t(`colors.${ key }`) }
+                    aria-label={ t(`colors.${ key }`) }
                     className={ cn(
                       "flex size-6 items-center justify-center rounded border transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-ring",
                       value === "unset"
@@ -481,6 +521,7 @@ export function RichTextEditor({
                     variant={ state?.isHighlight ? "secondary" : "ghost" }
                     size="icon-sm"
                     disabled={ disabled }
+                    aria-label={ t("highlight") }
                   >
                     <Highlighter />
                   </Button>
@@ -498,6 +539,7 @@ export function RichTextEditor({
                     key={ key }
                     type="button"
                     title={ t(`highlightColors.${ key }`) }
+                    aria-label={ t(`highlightColors.${ key }`) }
                     className={ cn(
                       "flex size-6 items-center justify-center rounded border transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-ring",
                       !value
@@ -629,7 +671,12 @@ export function RichTextEditor({
 
         {/* Hidden input for native form submission */ }
         { name && (
-          <input type="hidden" name={ name } value={ editor.getHTML() } />
+          <input
+            ref={ hiddenInputRef }
+            type="hidden"
+            name={ name }
+            defaultValue={ getEditorValue(editor) }
+          />
         ) }
       </div>
     </TooltipProvider>
